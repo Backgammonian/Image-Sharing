@@ -1,0 +1,31 @@
+﻿@*
+    List of Notes marked with the certain Tag
+*@
+
+@model (string, List<(NoteModel, int, List<string>)>)
+
+@{
+    var tag = Model.Item1;
+    var notesInfo = Model.Item2;
+}
+
+<h1>Notes with tag: @tag</h1>
+@foreach (var noteInfo in notesInfo)
+{
+    var note = noteInfo.Item1;
+    var noteScore = noteInfo.Item2;
+    var noteTags = noteInfo.Item3;
+
+    <h3>@note.Title</h3>
+    <h4>@note.Description</h4>
+    <h4>Rating: @noteScore</h4>
+    <h4>Tags:</h4>
+    @foreach (var noteTag in noteTags)
+    {
+        <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@noteTag" class="btn btn-sm btn-outline-secondary">@noteTag</a>
+    }
+
+    <div>
+        <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+    </div>
+}

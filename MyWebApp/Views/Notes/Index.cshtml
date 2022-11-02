@@ -1,0 +1,27 @@
+﻿@*
+    List of available Notes
+*@
+
+@model List<(NoteModel, int, List<string>)>
+
+<h1>Notes</h1>
+@foreach (var item in Model)
+{
+    var note = item.Item1;
+    var score = item.Item2;
+    var tags = item.Item3;
+
+    <div>
+        <h3>@note.Title</h3>
+        <h4>@note.Description</h4>
+        <h4>Rating: @score</h4>
+        <h4>Tags:</h4>
+        @foreach (var tag in tags)
+        {
+            <a asp-controller="Tags" asp-action="GetByTag" asp-route-id="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
+        }
+        <div>
+            <a asp-controller="Notes" asp-action="Details" asp-route-tag="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+        </div>
+    </div>
+}

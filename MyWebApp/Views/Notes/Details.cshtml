@@ -2,19 +2,26 @@
     Details of selected Note
 *@
 
-@model NoteDetailsModel
+@model NoteDetails
 
-<img width="100" height="100" src="@Model.AuthorProfilePicturePath"/>
-<a asp-controller="Users" asp-action="Info" asp-route-id="@Model.AuthorId" class="btn btn-sm btn-outline-secondary">Author: @Model.AuthorName</a>
-<h2>@Model.Title</h2>
-<h3>@Model.Description</h3>
-@foreach (var image in Model.Images)
+@if (Model == null)
 {
-    <img src="@image.ImagePath"/>
+    <h2>There is nothing.</h2>
 }
-<h3>Rating: @Model.Score</h3>
-<h4>Tags:</h4>
-@foreach (var tag in Model.Tags)
+else
 {
-    <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
+    <img width="100" height="100" src="@Model.AuthorProfilePicturePath"/>
+    <a asp-controller="Users" asp-action="Info" asp-route-id="@Model.AuthorId" class="btn btn-sm btn-outline-secondary">Author: @Model.AuthorName</a>
+    <h2>@Model.Title</h2>
+    <h3>@Model.Description</h3>
+    @foreach (var image in Model.Images)
+    {
+        <img src="@image.ImagePath"/>
+    }
+    <h3>Rating: @Model.Score</h3>
+    <h4>Tags:</h4>
+    @foreach (var tag in Model.Tags)
+    {
+        <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
+    }
 }

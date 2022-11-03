@@ -2,9 +2,13 @@
 
 namespace MyWebApp.Models
 {
-    public sealed class NoteDetailsModel
+    public sealed class NoteDetails
     {
-        public NoteDetailsModel(NoteModel noteModel, List<ImageModel> images, UserModel user, int score, List<string> tags)
+        public NoteDetails(NoteModel noteModel,
+            IEnumerable<ImageModel> images,
+            UserModel user,
+            int score,
+            IEnumerable<string> tags)
         {
             Title = noteModel.Title;
             Description = noteModel.Description;
@@ -21,8 +25,8 @@ namespace MyWebApp.Models
         public string AuthorId { get; }
         public string AuthorName { get; }
         public string AuthorProfilePicturePath { get; }
-        public List<ImageModel> Images { get; }
+        public IEnumerable<ImageModel> Images { get; }
         public int Score { get; }
-        public List<string> Tags { get; }
+        public IEnumerable<string> Tags { get; }
     }
 }

@@ -2,30 +2,34 @@
     List of Notes marked with the certain Tag
 *@
 
-@model (string, List<(NoteModel, int, List<string>)>)
+@model NotesMarkedByTag
 
-@{
-    var tag = Model.Item1;
-    var notesInfo = Model.Item2;
-}
-
-<h1>Notes with tag: @tag</h1>
-@foreach (var noteInfo in notesInfo)
+@if (Model == null)
 {
-    var note = noteInfo.Item1;
-    var noteScore = noteInfo.Item2;
-    var noteTags = noteInfo.Item3;
+    <h2>Invalid tag!</h2>
+}
+else
+{
+    var tag = Model.Tag;
+    var tagsAndScoresOfNotes = Model.Notes;
 
-    <h3>@note.Title</h3>
-    <h4>@note.Description</h4>
-    <h4>Rating: @noteScore</h4>
-    <h4>Tags:</h4>
-    @foreach (var noteTag in noteTags)
+    <h1>Notes with tag: @tag</h1>
+    @foreach (var tagsAndScoreOfNote in tagsAndScoresOfNotes)
     {
-        <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@noteTag" class="btn btn-sm btn-outline-secondary">@noteTag</a>
-    }
+        var note = tagsAndScoreOfNote.Note;
+        var score = tagsAndScoreOfNote.Score;
+        var tags = tagsAndScoreOfNote.Tags;
 
-    <div>
-        <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
-    </div>
+        <h3>@note.Title</h3>
+        <h4>@note.Description</h4>
+        <h4>Rating: @score</h4>
+        <h4>Tags:</h4>
+        @foreach (var noteTag in tags)
+        {
+            <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@noteTag" class="btn btn-sm btn-outline-secondary">@noteTag</a>
+        }
+        <div>
+            <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+        </div>
+    }
 }

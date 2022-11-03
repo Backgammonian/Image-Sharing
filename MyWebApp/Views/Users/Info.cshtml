@@ -4,12 +4,17 @@
 
 @model UserModel
 
-<h1>Users</h1>
-
-<div>
-    <img width="100" height="100" src="@Model.ProfilePicturePath"/>
-    <h2>@Model.Name</h2>
-    <h4>@Model.Status</h4>
-    <a asp-controller="Users" asp-action="Notes" asp-route-id="@Model.UserId" class="btn btn-sm btn-outline-secondary">View Notes</a>
-    <a asp-controller="Users" asp-action="Ratings" asp-route-id="@Model.UserId" class="btn btn-sm btn-outline-secondary">View Ratings</a>
-</div>
+@if (Model == null)
+{
+    <h2>This user doesn't exist.</h2>
+}
+else
+{
+    <div>
+        <img width="100" height="100" src="@Model.ProfilePicturePath"/>
+        <h2>@Model.Name</h2>
+        <h4>@Model.Status</h4>
+        <a asp-controller="Users" asp-action="Notes" asp-route-id="@Model.UserId" class="btn btn-sm btn-outline-secondary">View Notes</a>
+        <a asp-controller="Users" asp-action="Ratings" asp-route-id="@Model.UserId" class="btn btn-sm btn-outline-secondary">View Ratings</a>
+    </div>
+}

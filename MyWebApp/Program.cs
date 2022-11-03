@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
+using MyWebApp.Repository;
+using MyWebApp.Repository.Interfaces;
 
 namespace MyWebApp
 {
@@ -11,6 +13,9 @@ namespace MyWebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<INotesRepository, NotesRepository>();
+            builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+            builder.Services.AddScoped<ITagsRepository, TagsRepository>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));

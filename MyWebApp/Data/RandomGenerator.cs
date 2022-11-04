@@ -46,5 +46,7 @@ namespace MyWebApp.Data
 
             return result.ToString();
         }
+
+        public static string GetRandomId() => GetRandomString(Constants.IdLength);
     }
 }

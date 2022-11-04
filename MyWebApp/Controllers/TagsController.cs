@@ -3,7 +3,7 @@ using MyWebApp.Repository.Interfaces;
 
 namespace MyWebApp.Controllers
 {
-    public class TagsController : Controller
+    public sealed class TagsController : Controller
     {
         private readonly ITagsRepository _tagsRepository;
 

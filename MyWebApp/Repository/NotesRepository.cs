@@ -2,16 +2,20 @@
 using MyWebApp.Data;
 using MyWebApp.Models;
 using MyWebApp.Repository.Interfaces;
+using MyWebApp.TableModels;
+using System.Diagnostics;
 
 namespace MyWebApp.Repository
 {
     public sealed class NotesRepository : INotesRepository
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public NotesRepository(ApplicationDbContext dbContext)
+        public NotesRepository(ApplicationDbContext dbContext, IWebHostEnvironment webHostEnvironment)
         {
             _dbContext = dbContext;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IEnumerable<NoteSummary>> GetNotesList()
@@ -28,7 +32,7 @@ namespace MyWebApp.Repository
             return list;
         }
 
-        public async Task<NoteDetails?> GetNoteDetails(string noteId)
+        public async Task<NoteDetails?> GetNoteDetails(string? noteId)
         {
             if (noteId == null ||
                 noteId == string.Empty)
@@ -54,6 +58,63 @@ namespace MyWebApp.Repository
             var noteDetails = new NoteDetails(note, images, user, score, tags);
 
             return noteDetails;
+        }
+
+        public async Task<bool> Create(CreateNoteViewModel createNoteVM)
+        {
+            //TODO
+            var user = await _dbContext.Users.FirstOrDefaultAsync();
+            var noteModel = new NoteModel()
+            {
+                NoteId = createNoteVM.NoteId,
+                UserId = user.UserId, //PLACEHOLDER
+                Title = createNoteVM.Title,
+                Description = createNoteVM.Description,
+            };
+            await _dbContext.AddAsync(noteModel);
+
+            var wwwRootPath = _webHostEnvironment.WebRootPath;
+
+            Debug.WriteLine($"--------------------------(Create) wwwRootPath: {wwwRootPath}");
+            Debug.WriteLine($"--------------------------(Create) createNoteVM.Images.Length: {createNoteVM.Images.Count}");
+
+            foreach (var image in createNoteVM.Images)
+            {
+                var name = RandomGenerator.GetRandomString(80);
+                var extension = Path.GetExtension(image.FileName);
+                var newPath = Path.Combine(wwwRootPath + "/images", $"{name}{extension}");
+                using var stream = new FileStream(newPath, FileMode.Create);
+                await image.CopyToAsync(stream);
+
+                Debug.WriteLine($"--------------------------(Create) newPath: {newPath}");
+
+                var imageRecord = new ImageModel()
+                {
+                    ImageId = RandomGenerator.GetRandomId(),
+                    NoteId = noteModel.NoteId,
+                    ImagePath = newPath
+                };
+                await _dbContext.AddAsync(imageRecord);
+            }
+
+            return await Save();
+        }
+
+        public async Task<bool> Update(NoteModel note)
+        {
+            //TODO
+            return await Save();
+        }
+
+        public async Task<bool> Delete(NoteModel note)
+        {
+            //TODO
+            return await Save();
+        }
+
+        public async Task<bool> Save()
+        {
+            return await _dbContext.SaveChangesAsync() > 0;
         }
     }
 }

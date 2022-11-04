@@ -16,7 +16,7 @@ else
     <h3>@Model.Description</h3>
     @foreach (var image in Model.Images)
     {
-        <img src="@image.ImagePath"/>
+        <img src="@($"~/images/{System.IO.Path.GetFileName(image.ImagePath)}")" asp-append-version="true"/>
     }
     <h3>Rating: @Model.Score</h3>
     <h4>Tags:</h4>

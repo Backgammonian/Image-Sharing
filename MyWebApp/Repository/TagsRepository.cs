@@ -6,7 +6,7 @@ using MyWebApp.TableModels;
 
 namespace MyWebApp.Repository
 {
-    public class TagsRepository : ITagsRepository
+    public sealed class TagsRepository : ITagsRepository
     {
         private readonly ApplicationDbContext _dbContext;
 

@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp.TableModels
 {
-    public sealed class ImageModel
+    public sealed class UserImageModel
     {
         [Key]
         public string ImageId { get; set; } = string.Empty;
-        [ForeignKey(nameof(NoteModel))]
-        public string NoteId { get; set; } = string.Empty;
-        public string ImagePath { get; set; } = string.Empty;
+        [ForeignKey(nameof(UserModel))]
+        public string UserId { get; set; } = string.Empty;
+        public string ImageFileName { get; set; } = string.Empty;
     }
 }

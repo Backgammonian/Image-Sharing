@@ -5,8 +5,9 @@ namespace MyWebApp.Models
     public sealed class NoteDetails
     {
         public NoteDetails(NoteModel noteModel,
-            IEnumerable<ImageModel> images,
+            IEnumerable<NoteImageModel> images,
             UserModel user,
+            UserImageModel profileImage,
             int score,
             IEnumerable<string> tags)
         {
@@ -14,7 +15,7 @@ namespace MyWebApp.Models
             Description = noteModel.Description;
             AuthorId = user.UserId;
             AuthorName = user.Name;
-            AuthorProfilePicturePath = user.ProfilePicturePath;
+            ProfilePicture = profileImage;
             Images = images;
             Score = score;
             Tags = tags;
@@ -24,8 +25,8 @@ namespace MyWebApp.Models
         public string Description { get; }
         public string AuthorId { get; }
         public string AuthorName { get; }
-        public string AuthorProfilePicturePath { get; }
-        public IEnumerable<ImageModel> Images { get; }
+        public UserImageModel ProfilePicture { get; }
+        public IEnumerable<NoteImageModel> Images { get; }
         public int Score { get; }
         public IEnumerable<string> Tags { get; }
     }

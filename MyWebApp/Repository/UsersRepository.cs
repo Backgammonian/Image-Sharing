@@ -2,20 +2,21 @@
 using MyWebApp.Data;
 using MyWebApp.Models;
 using MyWebApp.Repository.Interfaces;
-using MyWebApp.TableModels;
 
 namespace MyWebApp.Repository
 {
     public sealed class UsersRepository : IUsersRepository
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly PicturesLoader _picturesLoader;
 
-        public UsersRepository(ApplicationDbContext dbContext)
+        public UsersRepository(ApplicationDbContext dbContext, PicturesLoader picturesLoader)
         {
             _dbContext = dbContext;
+            _picturesLoader = picturesLoader;
         }
 
-        public async Task<UserModel?> GetUserInfo(string userId)
+        public async Task<UserDetails?> GetUserInfo(string userId)
         {
             if (userId == null ||
                 userId == string.Empty)
@@ -29,7 +30,10 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            return user;
+            var profileImage = await _dbContext.ProfileImages.LastOrDefaultAsync(x => x.UserId == user.UserId);
+            profileImage ??= _picturesLoader.DefaultProfileImage;
+
+            return new UserDetails(user, profileImage);
         }
 
         public async Task<UserNotes?> GetUserNotes(string userId)
@@ -46,17 +50,20 @@ namespace MyWebApp.Repository
                 return null;
             }
 
+            var profileImage = await _dbContext.ProfileImages.LastOrDefaultAsync(x => x.UserId == user.UserId);
+            profileImage ??= _picturesLoader.DefaultProfileImage;
+
             var notes = await _dbContext.Notes.Where(x => x.UserId == userId).ToListAsync();
             var notesDetails = new List<NoteDetails>();
             foreach (var note in notes)
             {
-                var images = await _dbContext.Images.Where(x => x.NoteId == note.NoteId).ToListAsync();
+                var images = await _dbContext.NoteImages.Where(x => x.NoteId == note.NoteId).ToListAsync();
                 var score = await _dbContext.Ratings.Where(x => x.NoteId == note.NoteId).SumAsync(x => x.Score);
                 var noteTags = await _dbContext.TagsForNotes.Where(x => x.NoteId == note.NoteId).Select(x => x.Tag).ToListAsync();
-                notesDetails.Add(new NoteDetails(note, images, user, score, noteTags));
+                notesDetails.Add(new NoteDetails(note, images, user, profileImage, score, noteTags));
             }
 
-            return new UserNotes(user, notesDetails);
+            return new UserNotes(user, profileImage, notesDetails);
         }
 
         public async Task<UserRatings?> GetUserRatings(string userId)
@@ -73,6 +80,9 @@ namespace MyWebApp.Repository
                 return null;
             }
 
+            var profileImage = await _dbContext.ProfileImages.LastOrDefaultAsync(x => x.UserId == user.UserId);
+            profileImage ??= _picturesLoader.DefaultProfileImage;
+
             var ratings = await _dbContext.Ratings.Where(x => x.UserId == userId).ToListAsync();
             var noteRatings = new List<NoteRating>();
             foreach (var rating in ratings)
@@ -86,7 +96,7 @@ namespace MyWebApp.Repository
                 noteRatings.Add(new NoteRating(note, rating));
             }
 
-            return new UserRatings(user, noteRatings);
+            return new UserRatings(user, profileImage, noteRatings);
         }
     }
 }

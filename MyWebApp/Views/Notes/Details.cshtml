@@ -10,13 +10,13 @@
 }
 else
 {
-    <img width="100" height="100" src="@Model.AuthorProfilePicturePath"/>
+    <img width="100" height="100" src="@($"~/images/{Model.ProfilePicture.ImageFileName}")" asp-append-version="true"/>
     <a asp-controller="Users" asp-action="Info" asp-route-id="@Model.AuthorId" class="btn btn-sm btn-outline-secondary">Author: @Model.AuthorName</a>
     <h2>@Model.Title</h2>
     <h3>@Model.Description</h3>
     @foreach (var image in Model.Images)
     {
-        <img src="@($"~/images/{System.IO.Path.GetFileName(image.ImagePath)}")" asp-append-version="true"/>
+        <img src="@($"~/images/{image.ImageFileName}")" asp-append-version="true"/>
     }
     <h3>Rating: @Model.Score</h3>
     <h4>Tags:</h4>

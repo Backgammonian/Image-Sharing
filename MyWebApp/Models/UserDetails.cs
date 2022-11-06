@@ -2,17 +2,15 @@
 
 namespace MyWebApp.Models
 {
-    public sealed class UserRatings
+    public sealed class UserDetails
     {
-        public UserRatings(UserModel user, UserImageModel profilePicture, IEnumerable<NoteRating> ratingsOfNotes)
+        public UserDetails(UserModel user, UserImageModel profilePicture)
         {
             User = user;
             ProfilePicture = profilePicture;
-            RatingsOfNotes = ratingsOfNotes;
         }
 
         public UserModel User { get; }
         public UserImageModel ProfilePicture { get; }
-        public IEnumerable<NoteRating> RatingsOfNotes { get; }
     }
 }

@@ -27,7 +27,7 @@ namespace MyWebApp.Controllers
             return View(await _notesRepository.GetNoteDetails(noteId));
         }
 
-        public IActionResult Create()
+        public IActionResult Create() //TODO try without it
         {
             return View();
         }

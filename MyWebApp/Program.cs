@@ -16,6 +16,7 @@ namespace MyWebApp
             builder.Services.AddScoped<INotesRepository, NotesRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
             builder.Services.AddScoped<ITagsRepository, TagsRepository>();
+            builder.Services.AddScoped<IPicturesLoader, PicturesLoader>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -23,8 +24,13 @@ namespace MyWebApp
 
             var app = builder.Build();
 
-            //await Seed.SeedData(app);
-            
+            await Seed.SeedData(app);
+            /*if (args.Length > 0 &&
+                args[0].ToLower() == "seed")
+            {
+                await Seed.SeedData(app);
+            }*/
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {

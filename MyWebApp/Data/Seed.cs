@@ -1,4 +1,5 @@
 ﻿using MyWebApp.TableModels;
+using System.Diagnostics;
 
 namespace MyWebApp.Data
 {
@@ -7,9 +8,19 @@ namespace MyWebApp.Data
         public static async Task SeedData(IApplicationBuilder applicationBuilder)
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
-            var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-            if (context == null)
+            var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+            if (dbContext == null)
             {
+                Debug.WriteLine("Database context is not available!");
+
+                return;
+            }
+
+            var picturesLoader = serviceScope.ServiceProvider.GetService<PicturesLoader>();
+            if (picturesLoader == null)
+            {
+                Debug.WriteLine("Picture loader is not available!");
+
                 return;
             }
 
@@ -17,112 +28,83 @@ namespace MyWebApp.Data
             {
                 new UserModel()
                 {
-                    UserId = RandomGenerator.GetRandomId(),
+                    UserId = "1",
                     Name = "Blue User",
-                    Status = "Just chillin'",
-                    ProfilePicturePath = "https://pbs.twimg.com/media/FQFopcEXoAcQRQr.png"
+                    Status = "Just chillin'"
                 },
                 new UserModel()
                 {
-                    UserId = RandomGenerator.GetRandomId(),
+                    UserId = "2",
                     Name = "Red user",
-                    Status = "Just morbin'",
-                    ProfilePicturePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4SJUr7VBXp-EOI67T9xqt_Rph8LBVeBDbdQ&usqp=CAU"
+                    Status = "Just morbin'"
                 },
             };
+
+            var userImages = picturesLoader.LoadDemoProfileImages(users);
 
             var notes = new List<NoteModel>()
             {
                 new NoteModel()
                 {
-                    NoteId = RandomGenerator.GetRandomId(),
+                    NoteId = "1",
                     UserId = users[0].UserId,
                     Title = "Kelp Note",
                     Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                 },
                 new NoteModel()
                 {
-                    NoteId = RandomGenerator.GetRandomId(),
+                    NoteId = "2",
                     UserId = users[0].UserId,
                     Title = "Sallad Note",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                    Description = "There are many variations of passages of Lorem Ipsum available, " +
+                    "but the majority have suffered alteration in some form, by injected humour, " +
+                    "or randomised words which don't look even slightly believable."
                 },
                 new NoteModel()
                 {
-                    NoteId = RandomGenerator.GetRandomId(),
+                    NoteId = "3",
                     UserId = users[1].UserId,
                     Title = "Funky Note",
-                    Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                    Description = "It is a long established fact that a reader will be distracted by " +
+                    "the readable content of a page when looking at its layout."
                 }
             };
 
-            var images = new List<ImageModel>()
-            {
-                new ImageModel()
-                {
-                    ImageId = RandomGenerator.GetRandomId(),
-                    NoteId = notes[0].NoteId,
-                    ImagePath = "https://i.imgflip.com/4po7dg.jpg?a462504"
-                },
-                new ImageModel()
-                {
-                    ImageId = RandomGenerator.GetRandomId(),
-                    NoteId = notes[0].NoteId,
-                    ImagePath = "https://i.pinimg.com/736x/2a/73/a9/2a73a9a00e5d695ed861c7654ff9c6e3.jpg"
-                },
-                new ImageModel()
-                {
-                    ImageId = RandomGenerator.GetRandomId(),
-                    NoteId = notes[1].NoteId,
-                    ImagePath = "https://sun9-67.userapi.com/impf/c855016/v855016651/812a4/TOXJydu3NjE.jpg?size=960x385&quality=96&sign=e808786293031ec0679486bb843a7fac&type=album"
-                },
-                new ImageModel()
-                {
-                    ImageId = RandomGenerator.GetRandomId(),
-                    NoteId = notes[2].NoteId,
-                    ImagePath = "https://sun9-25.userapi.com/impg/LbwA2FchEFmTFHY0BH8sIeWEHUJ9EOzxA5Y_ag/MLwQPdEqqe0.jpg?size=478x604&quality=96&sign=ee1909e4838abbf8a95e64a975384643&type=album"
-                },
-                new ImageModel()
-                {
-                    ImageId = RandomGenerator.GetRandomId(),
-                    NoteId = notes[2].NoteId,
-                    ImagePath = "https://sun9-17.userapi.com/impg/9b-gIMBjeem7BHZU9qLyz2vbPmwZX8cwPOiRjg/II2pc2SZ_-o.jpg?size=737x720&quality=96&sign=8d07def39980d2ba084a279513e0e32e&type=album"
-                },
-            };
+            var noteImages = picturesLoader.LoadDemoNoteImages(notes);
 
             var ratings = new List<RatingModel>()
             {
                 new RatingModel()
                 {
-                    RatingId = RandomGenerator.GetRandomId(),
+                    RatingId = "1",
                     UserId = users[0].UserId,
                     NoteId = notes[0].NoteId,
                     Score = 1
                 },
                 new RatingModel()
                 {
-                    RatingId = RandomGenerator.GetRandomId(),
+                    RatingId = "2",
                     UserId = users[1].UserId,
                     NoteId = notes[0].NoteId,
                     Score = -1
                 },
                 new RatingModel()
                 {
-                    RatingId = RandomGenerator.GetRandomId(),
+                    RatingId = "3",
                     UserId = users[0].UserId,
                     NoteId = notes[1].NoteId,
                     Score = 1
                 },
                 new RatingModel()
                 {
-                    RatingId = RandomGenerator.GetRandomId(),
+                    RatingId = "4",
                     UserId = users[1].UserId,
                     NoteId = notes[1].NoteId,
                     Score = 1
                 },
                 new RatingModel()
                 {
-                    RatingId = RandomGenerator.GetRandomId(),
+                    RatingId = "5",
                     UserId = users[0].UserId,
                     NoteId = notes[2].NoteId,
                     Score = 1
@@ -153,81 +135,89 @@ namespace MyWebApp.Data
             {
                 new TagsForNotesModel()
                 {
-                    Id = RandomGenerator.GetRandomId(),
+                    Id = "1",
                     Tag = tags[0].Tag,
                     NoteId = notes[0].NoteId
                 },
                 new TagsForNotesModel()
                 {
-                    Id = RandomGenerator.GetRandomId(),
+                    Id = "2",
                     Tag = tags[1].Tag,
                     NoteId = notes[0].NoteId
                 },
                 new TagsForNotesModel()
                 {
-                    Id = RandomGenerator.GetRandomId(),
+                    Id = "3",
                     Tag = tags[1].Tag,
                     NoteId = notes[1].NoteId
                 },
                 new TagsForNotesModel()
                 {
-                    Id = RandomGenerator.GetRandomId(),
+                    Id = "4",
                     Tag = tags[2].Tag,
                     NoteId = notes[2].NoteId
                 },
                 new TagsForNotesModel()
                 {
-                    Id = RandomGenerator.GetRandomId(),
+                    Id = "5",
                     Tag = tags[3].Tag,
                     NoteId = notes[2].NoteId
                 },
                 new TagsForNotesModel()
                 {
-                    Id = RandomGenerator.GetRandomId(),
+                    Id = "6",
                     Tag = tags[3].Tag,
                     NoteId = notes[0].NoteId
                 },
             };
 
-            context.Database.EnsureCreated();
+            dbContext.Database.EnsureCreated();
 
-            if (context.Users != null &&
-                !context.Users.Any())
+            if (dbContext.Users != null &&
+                !dbContext.Users.Any())
             {
-                context.Users.AddRange(users);
+                await dbContext.Users.AddRangeAsync(users);
             }
 
-            if (context.Notes != null &&
-                !context.Notes.Any())
+            if (dbContext.ProfileImages != null &&
+                !dbContext.ProfileImages.Any())
             {
-                context.Notes.AddRange(notes);
+                await dbContext.ProfileImages.AddRangeAsync(userImages);
+                await dbContext.ProfileImages.AddAsync(picturesLoader.DefaultProfileImage);
             }
 
-            if (context.Images != null &&
-                !context.Images.Any())
+            if (dbContext.Notes != null &&
+                !dbContext.Notes.Any())
             {
-                context.Images.AddRange(images);
+                await dbContext.Notes.AddRangeAsync(notes);
             }
 
-            if (context.Ratings != null &&
-                !context.Ratings.Any())
+            if (dbContext.NoteImages != null &&
+                !dbContext.NoteImages.Any())
             {
-                context.Ratings.AddRange(ratings);
+                await dbContext.NoteImages.AddRangeAsync(noteImages);
+                await dbContext.NoteImages.AddAsync(picturesLoader.DefaultNoteImage);
             }
 
-            if (context.Tags != null &&
-                !context.Tags.Any())
+            if (dbContext.Ratings != null &&
+                !dbContext.Ratings.Any())
             {
-                context.Tags.AddRange(tags);
+                await dbContext.Ratings.AddRangeAsync(ratings);
             }
 
-            if (context.TagsForNotes != null &&
-                !context.TagsForNotes.Any())
+            if (dbContext.Tags != null &&
+                !dbContext.Tags.Any())
             {
-                context.TagsForNotes.AddRange(tagsForNotes);
+                await dbContext.Tags.AddRangeAsync(tags);
             }
 
-            await context.SaveChangesAsync();
+            if (dbContext.TagsForNotes != null &&
+                !dbContext.TagsForNotes.Any())
+            {
+                await dbContext.TagsForNotes.AddRangeAsync(tagsForNotes);
+            }
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }

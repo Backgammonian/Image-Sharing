@@ -10,5 +10,6 @@ namespace MyWebApp.TableModels
         [ForeignKey(nameof(UserModel))]
         public string UserId { get; set; } = string.Empty;
         public string ImageFileName { get; set; } = string.Empty;
+        public int ProfilePictureNumber { get; set; }
     }
 }

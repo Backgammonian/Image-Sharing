@@ -13,10 +13,10 @@ namespace MyWebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<PicturesLoader>();
             builder.Services.AddScoped<INotesRepository, NotesRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
             builder.Services.AddScoped<ITagsRepository, TagsRepository>();
-            builder.Services.AddScoped<IPicturesLoader, PicturesLoader>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));

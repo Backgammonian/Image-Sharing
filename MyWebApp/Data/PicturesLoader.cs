@@ -2,35 +2,12 @@
 
 namespace MyWebApp.Data
 {
-    public sealed class PicturesLoader : IPicturesLoader
+    public sealed class PicturesLoader
     {
-        private const string _imagesFolderName = "note-images";
+        private const string _imagesFolderName = "images";
         private const string _demoNoteImagesFolderName = "demo-note-images";
         private const string _demoProfileImagesFolderName = "demo-profile-images";
         private const string _defaultImageFolderName = "default";
-
-        private static string GetNewFileName(string filePath)
-        {
-            var name = RandomGenerator.GetRandomString(80);
-            var extension = Path.GetExtension(filePath);
-            return $"{name}{extension}";
-        }
-
-        private static string GetNewFileName(IFormFile file)
-        {
-            return GetNewFileName(file.FileName);
-        }
-
-        private static async Task SaveFile(IFormFile file, string destinationPath)
-        {
-            using var stream = new FileStream(destinationPath, FileMode.Create);
-            await file.CopyToAsync(stream);
-        }
-
-        private static void SaveFile(string filePath, string destinationPath)
-        {
-            File.Copy(filePath, destinationPath, true);
-        }
 
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string _wwwRootPath;
@@ -48,13 +25,36 @@ namespace MyWebApp.Data
             _demoProfileImagesPath = $"{_wwwRootPath}/{_demoProfileImagesFolderName}";
             _defaultImagePath = $"{_wwwRootPath}/{_defaultImageFolderName}";
 
-            var defaultImages = LoadDefaultImages();
-            DefaultNoteImage = defaultImages.Item1;
-            DefaultProfileImage = defaultImages.Item2;
+            //NOTE: don't forget to load these
+            DefaultProfileImage = new UserImageModel();
+            DefaultNoteImage = new NoteImageModel();
         }
 
-        public NoteImageModel DefaultNoteImage { get; }
-        public UserImageModel DefaultProfileImage { get; }
+        public UserImageModel DefaultProfileImage { get; private set; }
+        public NoteImageModel DefaultNoteImage { get; private set; }
+
+        private string GetNewFileName(string filePath)
+        {
+            var name = RandomGenerator.GetRandomString(80);
+            var extension = Path.GetExtension(filePath);
+            return $"{name}{extension}";
+        }
+
+        private string GetNewFileName(IFormFile file)
+        {
+            return GetNewFileName(file.FileName);
+        }
+
+        private async Task SaveFile(IFormFile file, string destinationPath)
+        {
+            using var stream = new FileStream(destinationPath, FileMode.Create);
+            await file.CopyToAsync(stream);
+        }
+
+        private void SaveFile(string filePath, string destinationPath)
+        {
+            File.Copy(filePath, destinationPath);
+        }
 
         private void EnsureFolderIsCreated()
         {
@@ -62,6 +62,30 @@ namespace MyWebApp.Data
             {
                 Directory.CreateDirectory(_imagesPath);
             }
+        }
+
+        public (NoteImageModel, UserImageModel) LoadDefaultImages()
+        {
+            EnsureFolderIsCreated();
+
+            SaveFile(Path.Combine(_defaultImagePath, "default.jpg"), Path.Combine(_imagesPath, "default.jpg"));
+            var defaultNoteImage = new NoteImageModel()
+            {
+                ImageId = "default",
+                NoteId = "default",
+                ImageFileName = "default.jpg"
+            };
+            var defaultProfileImage = new UserImageModel()
+            {
+                ImageId = "default",
+                UserId = "default",
+                ImageFileName = "default.jpg"
+            };
+
+            DefaultProfileImage = defaultProfileImage;
+            DefaultNoteImage = defaultNoteImage;
+
+            return (defaultNoteImage, defaultProfileImage);
         }
 
         public async Task<NoteImageModel> LoadNoteImage(IFormFile image, NoteModel note)
@@ -96,6 +120,7 @@ namespace MyWebApp.Data
             return model;
         }
 
+        //use methods from above???
         public List<NoteImageModel> LoadDemoNoteImages(List<NoteModel> notes)
         {
             EnsureFolderIsCreated();
@@ -131,38 +156,21 @@ namespace MyWebApp.Data
             {
                 var fileName = GetNewFileName(image);
                 SaveFile(image, Path.Combine(_imagesPath, fileName));
+                var currentUserIndex = i % users.Count;
+                users[currentUserIndex].CurrentProfilePictureNumber += 1;
                 var model = new UserImageModel()
                 {
                     ImageId = RandomGenerator.GetRandomId(),
-                    UserId = users[i % users.Count].UserId,
+                    UserId = users[currentUserIndex].UserId,
                     ImageFileName = fileName,
+                    ProfilePictureNumber = users[currentUserIndex].CurrentProfilePictureNumber
                 };
                 result.Add(model);
+
                 i += 1;
             }
 
             return result;
-        }
-
-        private (NoteImageModel, UserImageModel) LoadDefaultImages()
-        {
-            EnsureFolderIsCreated();
-
-            SaveFile(_defaultImagePath, Path.Combine(_imagesPath, "default.jpg"));
-            var defaultNoteImage = new NoteImageModel()
-            {
-                ImageId = "default",
-                NoteId = "default",
-                ImageFileName = "default.jpg"
-            };
-            var defaultProfileImage = new UserImageModel()
-            {
-                ImageId = "default",
-                UserId = "default",
-                ImageFileName = "default.jpg"
-            };
-
-            return (defaultNoteImage, defaultProfileImage);
         }
     }
 }

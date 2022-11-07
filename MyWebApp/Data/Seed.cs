@@ -40,8 +40,6 @@ namespace MyWebApp.Data
                 },
             };
 
-            var userImages = picturesLoader.LoadDemoProfileImages(users);
-
             var notes = new List<NoteModel>()
             {
                 new NoteModel()
@@ -71,6 +69,8 @@ namespace MyWebApp.Data
             };
 
             var noteImages = picturesLoader.LoadDemoNoteImages(notes);
+            var userImages = picturesLoader.LoadDemoProfileImages(users);
+            var defaultImages = picturesLoader.LoadDefaultImages();
 
             var ratings = new List<RatingModel>()
             {
@@ -182,8 +182,8 @@ namespace MyWebApp.Data
             if (dbContext.ProfileImages != null &&
                 !dbContext.ProfileImages.Any())
             {
-                await dbContext.ProfileImages.AddRangeAsync(userImages);
                 await dbContext.ProfileImages.AddAsync(picturesLoader.DefaultProfileImage);
+                await dbContext.ProfileImages.AddRangeAsync(userImages);
             }
 
             if (dbContext.Notes != null &&
@@ -195,8 +195,8 @@ namespace MyWebApp.Data
             if (dbContext.NoteImages != null &&
                 !dbContext.NoteImages.Any())
             {
-                await dbContext.NoteImages.AddRangeAsync(noteImages);
                 await dbContext.NoteImages.AddAsync(picturesLoader.DefaultNoteImage);
+                await dbContext.NoteImages.AddRangeAsync(noteImages);
             }
 
             if (dbContext.Ratings != null &&

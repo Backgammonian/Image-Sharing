@@ -38,6 +38,12 @@ namespace MyWebApp.Data
                     Name = "Red user",
                     Status = "Just morbin'"
                 },
+                new UserModel()
+                {
+                    UserId = "3",
+                    Name = "Green user",
+                    Status = "Just mindlessly scrolling the Internet pages until the end of the world. =)"
+                }
             };
 
             var notes = new List<NoteModel>()
@@ -64,13 +70,22 @@ namespace MyWebApp.Data
                     UserId = users[1].UserId,
                     Title = "Funky Note",
                     Description = "It is a long established fact that a reader will be distracted by " +
-                    "the readable content of a page when looking at its layout."
+                    "the readable content of a page when looking at its layout. " +
+                    "\n<a href=\"google.com\">Not a link at all!</a>"
+                },
+                new NoteModel()
+                {
+                    NoteId = "4",
+                    UserId = users[2].UserId,
+                    Title = "Interesting Observation",
+                    Description = "If you'll watch long enough how paint dries out, the paint WILL eventually dry out. " +
+                    "\n#CelestialThoughts"
                 }
             };
 
+            picturesLoader.LoadDefaultImage();
             var noteImages = picturesLoader.LoadDemoNoteImages(notes);
             var userImages = picturesLoader.LoadDemoProfileImages(users);
-            var defaultImages = picturesLoader.LoadDefaultImages();
 
             var ratings = new List<RatingModel>()
             {
@@ -107,6 +122,13 @@ namespace MyWebApp.Data
                     RatingId = "5",
                     UserId = users[0].UserId,
                     NoteId = notes[2].NoteId,
+                    Score = 1
+                },
+                new RatingModel()
+                {
+                    RatingId = "6",
+                    UserId = users[2].UserId,
+                    NoteId = notes[3].NoteId,
                     Score = 1
                 },
             };
@@ -169,6 +191,18 @@ namespace MyWebApp.Data
                     Tag = tags[3].Tag,
                     NoteId = notes[0].NoteId
                 },
+                new TagsForNotesModel()
+                {
+                    Id = "7",
+                    Tag = tags[0].Tag,
+                    NoteId = notes[3].NoteId
+                },
+                new TagsForNotesModel()
+                {
+                    Id = "8",
+                    Tag = tags[2].Tag,
+                    NoteId = notes[3].NoteId
+                },
             };
 
             dbContext.Database.EnsureCreated();
@@ -182,7 +216,7 @@ namespace MyWebApp.Data
             if (dbContext.ProfileImages != null &&
                 !dbContext.ProfileImages.Any())
             {
-                await dbContext.ProfileImages.AddAsync(picturesLoader.DefaultProfileImage);
+                await dbContext.ProfileImages.AddAsync(picturesLoader.GetDefaultProfileImage());
                 await dbContext.ProfileImages.AddRangeAsync(userImages);
             }
 
@@ -195,7 +229,7 @@ namespace MyWebApp.Data
             if (dbContext.NoteImages != null &&
                 !dbContext.NoteImages.Any())
             {
-                await dbContext.NoteImages.AddAsync(picturesLoader.DefaultNoteImage);
+                await dbContext.NoteImages.AddAsync(picturesLoader.GetDefaultNoteImage());
                 await dbContext.NoteImages.AddRangeAsync(noteImages);
             }
 

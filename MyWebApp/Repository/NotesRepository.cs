@@ -51,8 +51,8 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.LastOrDefaultAsync(x => x.UserId == user.UserId);
-            profileImage ??= _picturesLoader.DefaultProfileImage;
+            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
+            profileImage ??= _picturesLoader.GetDefaultProfileImage();
 
             var images = await _dbContext.NoteImages.Where(x => x.NoteId == noteId).ToListAsync();
             var score = await _dbContext.Ratings.Where(x => x.NoteId == noteId).SumAsync(x => x.Score);

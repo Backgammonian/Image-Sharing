@@ -13,7 +13,7 @@ namespace MyWebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<PicturesLoader>();
+            builder.Services.AddSingleton<PicturesLoader>();
             builder.Services.AddScoped<INotesRepository, NotesRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
             builder.Services.AddScoped<ITagsRepository, TagsRepository>();
@@ -23,13 +23,15 @@ namespace MyWebApp
             });
 
             var app = builder.Build();
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-            await Seed.SeedData(app);
-            /*if (args.Length > 0 &&
+            if (args.Length > 0 &&
                 args[0].ToLower() == "seed")
             {
                 await Seed.SeedData(app);
-            }*/
+
+                return;
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -50,7 +52,7 @@ namespace MyWebApp
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

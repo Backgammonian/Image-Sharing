@@ -30,8 +30,8 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.LastOrDefaultAsync(x => x.UserId == user.UserId);
-            profileImage ??= _picturesLoader.DefaultProfileImage;
+            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
+            profileImage ??= _picturesLoader.GetDefaultProfileImage();
 
             return new UserDetails(user, profileImage);
         }
@@ -50,8 +50,8 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.LastOrDefaultAsync(x => x.UserId == user.UserId);
-            profileImage ??= _picturesLoader.DefaultProfileImage;
+            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
+            profileImage ??= _picturesLoader.GetDefaultProfileImage();
 
             var notes = await _dbContext.Notes.Where(x => x.UserId == userId).ToListAsync();
             var notesDetails = new List<NoteDetails>();
@@ -80,8 +80,8 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.LastOrDefaultAsync(x => x.UserId == user.UserId);
-            profileImage ??= _picturesLoader.DefaultProfileImage;
+            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
+            profileImage ??= _picturesLoader.GetDefaultProfileImage();
 
             var ratings = await _dbContext.Ratings.Where(x => x.UserId == userId).ToListAsync();
             var noteRatings = new List<NoteRating>();

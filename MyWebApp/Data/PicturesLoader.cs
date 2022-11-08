@@ -7,7 +7,7 @@ namespace MyWebApp.Data
         private const string _imagesFolderName = "images";
         private const string _demoNoteImagesFolderName = "demo-note-images";
         private const string _demoProfileImagesFolderName = "demo-profile-images";
-        private const string _defaultImageFolderName = "default";
+        private const string _defaultImageFolderName = "default-images";
 
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string _wwwRootPath;
@@ -24,14 +24,7 @@ namespace MyWebApp.Data
             _demoNoteImagesPath = $"{_wwwRootPath}/{_demoNoteImagesFolderName}";
             _demoProfileImagesPath = $"{_wwwRootPath}/{_demoProfileImagesFolderName}";
             _defaultImagePath = $"{_wwwRootPath}/{_defaultImageFolderName}";
-
-            //NOTE: don't forget to load these
-            DefaultProfileImage = new UserImageModel();
-            DefaultNoteImage = new NoteImageModel();
         }
-
-        public UserImageModel DefaultProfileImage { get; private set; }
-        public NoteImageModel DefaultNoteImage { get; private set; }
 
         private string GetNewFileName(string filePath)
         {
@@ -51,9 +44,9 @@ namespace MyWebApp.Data
             await file.CopyToAsync(stream);
         }
 
-        private void SaveFile(string filePath, string destinationPath)
+        private void SaveFile(string sourcePath, string destinationPath)
         {
-            File.Copy(filePath, destinationPath);
+            File.Copy(sourcePath, destinationPath, true);
         }
 
         private void EnsureFolderIsCreated()
@@ -62,30 +55,6 @@ namespace MyWebApp.Data
             {
                 Directory.CreateDirectory(_imagesPath);
             }
-        }
-
-        public (NoteImageModel, UserImageModel) LoadDefaultImages()
-        {
-            EnsureFolderIsCreated();
-
-            SaveFile(Path.Combine(_defaultImagePath, "default.jpg"), Path.Combine(_imagesPath, "default.jpg"));
-            var defaultNoteImage = new NoteImageModel()
-            {
-                ImageId = "default",
-                NoteId = "default",
-                ImageFileName = "default.jpg"
-            };
-            var defaultProfileImage = new UserImageModel()
-            {
-                ImageId = "default",
-                UserId = "default",
-                ImageFileName = "default.jpg"
-            };
-
-            DefaultProfileImage = defaultProfileImage;
-            DefaultNoteImage = defaultNoteImage;
-
-            return (defaultNoteImage, defaultProfileImage);
         }
 
         public async Task<NoteImageModel> LoadNoteImage(IFormFile image, NoteModel note)
@@ -120,7 +89,36 @@ namespace MyWebApp.Data
             return model;
         }
 
-        //use methods from above???
+        public void LoadDefaultImage()
+        {
+            EnsureFolderIsCreated();
+
+            var defaultFileName = "default.jpg";
+            SaveFile(Path.Combine(_defaultImagePath, defaultFileName),
+                Path.Combine(_imagesPath, defaultFileName));
+        }
+
+        public UserImageModel GetDefaultProfileImage()
+        {
+            return new UserImageModel()
+            {
+                ImageId = "default",
+                UserId = "default",
+                ImageFileName = "default.jpg",
+                UploadTime = DateTimeOffset.MinValue
+            };
+        }
+
+        public NoteImageModel GetDefaultNoteImage()
+        {
+            return new NoteImageModel()
+            {
+                ImageId = "default",
+                NoteId = "default",
+                ImageFileName = "default.jpg"
+            };
+        }
+
         public List<NoteImageModel> LoadDemoNoteImages(List<NoteModel> notes)
         {
             EnsureFolderIsCreated();
@@ -130,12 +128,13 @@ namespace MyWebApp.Data
             var i = 0;
             foreach (var image in images)
             {
-                var fileName = GetNewFileName(image);
+                var fileName = Path.GetFileName(image);
                 SaveFile(image, Path.Combine(_imagesPath, fileName));
+                var currentModelIndex = i % notes.Count;
                 var model = new NoteImageModel()
                 {
                     ImageId = RandomGenerator.GetRandomId(),
-                    NoteId = notes[i % notes.Count].NoteId,
+                    NoteId = notes[currentModelIndex].NoteId,
                     ImageFileName = fileName,
                 };
                 result.Add(model);
@@ -154,16 +153,15 @@ namespace MyWebApp.Data
             var i = 0;
             foreach (var image in images)
             {
-                var fileName = GetNewFileName(image);
+                var fileName = Path.GetFileName(image);
                 SaveFile(image, Path.Combine(_imagesPath, fileName));
-                var currentUserIndex = i % users.Count;
-                users[currentUserIndex].CurrentProfilePictureNumber += 1;
+                var currentModelIndex = i % users.Count;
                 var model = new UserImageModel()
                 {
                     ImageId = RandomGenerator.GetRandomId(),
-                    UserId = users[currentUserIndex].UserId,
+                    UserId = users[currentModelIndex].UserId,
                     ImageFileName = fileName,
-                    ProfilePictureNumber = users[currentUserIndex].CurrentProfilePictureNumber
+                    UploadTime = DateTimeOffset.Now
                 };
                 result.Add(model);
 

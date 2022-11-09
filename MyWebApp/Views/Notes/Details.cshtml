@@ -24,4 +24,8 @@ else
     {
         <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
     }
+    <div>
+        <a asp-controller="Notes" asp-action="Edit" asp-route-id="@Model.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
+        <a asp-controller="Notes" asp-action="Delete" asp-route-id="@Model.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+    </div>
 }

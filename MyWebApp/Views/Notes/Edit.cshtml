@@ -1,10 +1,11 @@
 ﻿@*
-    View for creating a new Note
+    Note edit page
 *@
 
-@model CreateNoteViewModel
+@model EditNoteViewModel
 
-<form method="post" asp-action="Create" enctype="multipart/form-data">
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" value="NoteId" id="NoteId" />
     <div class="form-group">
         <label asp-for="Title">Title</label>
         <input asp-for="Title" class="form-control" placeholder="Title of the Note"/>
@@ -14,6 +15,9 @@
         <label asp-for="Description">Description</label>
         <input asp-for="Description" class="form-control" placeholder="Description of the Note"/>
         <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        Don't select new images if you want to keep the old ones.
     </div>
     <div class="form-group">
         <label asp-for="Images">Images</label>

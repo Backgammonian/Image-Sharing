@@ -12,7 +12,9 @@ namespace MyWebApp.Data
         public DbSet<UserModel> Users { get; set; }
         public DbSet<UserImageModel> ProfileImages { get; set; }
         public DbSet<NoteModel> Notes { get; set; }
+        public DbSet<PreviousNoteModel> PreviousNotes { get; set; }
         public DbSet<NoteImageModel> NoteImages { get; set; }
+        public DbSet<PreviousNoteImageModel> PreviousNoteImages { get; set; }
         public DbSet<RatingModel> Ratings { get; set; }
         public DbSet<TagModel> Tags { get; set; }
         public DbSet<TagsForNotesModel> TagsForNotes { get; set; }

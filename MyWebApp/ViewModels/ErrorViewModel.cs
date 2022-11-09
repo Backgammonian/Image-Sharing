@@ -1,4 +1,4 @@
-namespace MyWebApp.Models
+namespace MyWebApp.ViewModels
 {
     public sealed class ErrorViewModel
     {

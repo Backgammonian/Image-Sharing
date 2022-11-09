@@ -1,6 +1,6 @@
 ﻿using MyWebApp.Data;
 
-namespace MyWebApp.Models
+namespace MyWebApp.ViewModels
 {
     public sealed class CreateNoteViewModel
     {

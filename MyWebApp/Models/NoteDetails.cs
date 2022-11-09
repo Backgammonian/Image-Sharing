@@ -11,6 +11,7 @@ namespace MyWebApp.Models
             int score,
             IEnumerable<string> tags)
         {
+            NoteId = noteModel.NoteId;
             Title = noteModel.Title;
             Description = noteModel.Description;
             AuthorId = user.UserId;
@@ -21,6 +22,7 @@ namespace MyWebApp.Models
             Tags = tags;
         }
 
+        public string NoteId { get; }
         public string Title { get; }
         public string Description { get; }
         public string AuthorId { get; }

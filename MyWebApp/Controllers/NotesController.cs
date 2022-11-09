@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Models;
+using MyWebApp.Extensions;
 using MyWebApp.Repository.Interfaces;
+using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
 {
@@ -17,17 +18,25 @@ namespace MyWebApp.Controllers
         [Route("Notes")]
         public async Task<IActionResult> Index()
         {
-            return View(await _notesRepository.GetNotesList());
+            var notes = await _notesRepository.GetNotesList();
+            return View(notes);
         }
 
         [HttpGet]
         [Route("Notes/Details/{noteId}")]
-        public async Task<IActionResult> Details(string? noteId)
+        public async Task<IActionResult> Details(string noteId)
         {
-            return View(await _notesRepository.GetNoteDetails(noteId));
+            if (noteId.IsEmpty())
+            {
+                return View("Error");
+            }
+
+            var noteDetails = await _notesRepository.GetNoteDetails(noteId);
+            return View(noteDetails);
         }
 
-        public IActionResult Create() //TODO try without it
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
@@ -35,12 +44,97 @@ namespace MyWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateNoteViewModel createNoteVM)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(createNoteVM);
+                await _notesRepository.Create(createNoteVM);
+                return RedirectToAction("Index");
             }
 
-            await _notesRepository.Create(createNoteVM);
+            ModelState.AddModelError(string.Empty, "Failed to create new note");
+            return View(createNoteVM);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string noteId)
+        {
+            if (noteId.IsEmpty())
+            {
+                return View("Error");
+            }
+
+            var note = await _notesRepository.GetNoteModel(noteId);
+            if (note == null)
+            {
+                return View("Error");
+            }
+
+            var editNoteVM = new EditNoteViewModel()
+            {
+                NoteId = note.NoteId,
+                UserId = note.UserId,
+                Title = note.Title,
+                Description = note.Description
+            };
+
+            return View(editNoteVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(string noteId, EditNoteViewModel editNoteVM)
+        {
+            if (noteId.IsEmpty())
+            {
+                return View("Error");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Failed to edit the note");
+                return View("Edit", editNoteVM);
+            }
+
+            var originalNote = await _notesRepository.GetNoteModelNoTracking(noteId);
+            if (originalNote == null)
+            {
+                return View("Error");
+            }
+
+            await _notesRepository.Update(originalNote, editNoteVM);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string noteId)
+        {
+            if (noteId.IsEmpty())
+            {
+                return View("Error");
+            }
+
+            var note = await _notesRepository.GetNoteModel(noteId);
+            if (note == null)
+            {
+                return View("Error");
+            }
+
+            return View(note);
+        }
+
+        [HttpPost, ActionName(nameof(Delete))]
+        public async Task<IActionResult> DeleteNote(string noteId)
+        {
+            if (noteId.IsEmpty())
+            {
+                return View("Error");
+            }
+
+            var note = await _notesRepository.GetNoteModel(noteId);
+            if (note == null)
+            {
+                return View("Error");
+            }
+
+            await _notesRepository.Delete(note);
             return RedirectToAction("Index");
         }
     }

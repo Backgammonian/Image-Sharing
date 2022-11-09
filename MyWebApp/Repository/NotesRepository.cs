@@ -3,6 +3,7 @@ using MyWebApp.Data;
 using MyWebApp.Models;
 using MyWebApp.Repository.Interfaces;
 using MyWebApp.TableModels;
+using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
@@ -31,14 +32,8 @@ namespace MyWebApp.Repository
             return list;
         }
 
-        public async Task<NoteDetails?> GetNoteDetails(string? noteId)
+        public async Task<NoteDetails?> GetNoteDetails(string noteId)
         {
-            if (noteId == null ||
-                noteId == string.Empty)
-            {
-                return null;
-            }
-
             var note = await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == noteId);
             if (note == null)
             {
@@ -62,6 +57,16 @@ namespace MyWebApp.Repository
             return noteDetails;
         }
 
+        public async Task<NoteModel?> GetNoteModel(string noteId)
+        {
+            return await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == noteId);
+        }
+
+        public async Task<NoteModel?> GetNoteModelNoTracking(string noteId)
+        {
+            return await _dbContext.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == noteId);
+        }
+
         public async Task<bool> Create(CreateNoteViewModel createNoteVM)
         {
             //TODO
@@ -83,15 +88,57 @@ namespace MyWebApp.Repository
             return await Save();
         }
 
-        public async Task<bool> Update(NoteModel note)
+        public async Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM)
         {
-            //TODO
+            var newImages = editNoteVM.Images;
+            if (newImages.Count != 0)
+            {
+                var oldImages = await _dbContext.NoteImages.Where(x => x.NoteId == editNoteVM.NoteId).ToListAsync();
+                foreach (var oldImage in oldImages)
+                {
+                    var previousImage = new PreviousNoteImageModel()
+                    {
+                        Id = RandomGenerator.GetRandomId(),
+                        FormerImageId = oldImage.ImageId,
+                        NoteId = oldImage.NoteId,
+                        ImageFileName = oldImage.ImageFileName
+                    };
+                    await _dbContext.PreviousNoteImages.AddAsync(previousImage);
+                    _dbContext.NoteImages.Remove(oldImage);
+                }
+
+                foreach (var newImage in newImages)
+                {
+                    await _dbContext.AddAsync(_picturesLoader.LoadNoteImage(newImage, note));
+                }
+            }
+
+            var updatedNote = new NoteModel()
+            {
+                NoteId = editNoteVM.NoteId,
+                UserId = editNoteVM.UserId,
+                Title = editNoteVM.Title,
+                Description = editNoteVM.Description
+            };
+            _dbContext.Notes.Update(updatedNote);
+
             return await Save();
         }
 
         public async Task<bool> Delete(NoteModel note)
         {
-            //TODO
+            var noteModelArchiveCopy = new PreviousNoteModel()
+            {
+                Id = RandomGenerator.GetRandomId(),
+                FormerId = note.NoteId,
+                UserId = note.UserId,
+                Title = note.Title,
+                Description = note.Description
+            };
+
+            await _dbContext.PreviousNotes.AddAsync(noteModelArchiveCopy);
+            _dbContext.Notes.Remove(note);
+
             return await Save();
         }
 

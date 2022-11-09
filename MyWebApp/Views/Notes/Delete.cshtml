@@ -1,0 +1,21 @@
+﻿@*
+    Note delete page
+*@
+
+@model NoteModel
+
+<h2>Are you sure you want to delete this note?</h2>
+<div>
+    <input type="hidden" value="NoteId" id="NoteId" />
+    <div class="form-group">
+        <label asp-for="Title">Title</label>
+        <input asp-for="Title" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description">Description</label>
+        <input asp-for="Description" class="form-control" readonly/>
+    </div>
+</div>
+<form method="post" asp-action="Delete">
+    <button type="submit" class="btn btn-danger float-right mt-3">Delete</button>
+</form>

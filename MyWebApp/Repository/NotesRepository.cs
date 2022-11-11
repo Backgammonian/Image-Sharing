@@ -82,7 +82,8 @@ namespace MyWebApp.Repository
 
             foreach (var image in createNoteVM.Images)
             {
-                await _dbContext.AddAsync(_picturesLoader.LoadNoteImage(image, noteModel));
+                var noteImageModel = await _picturesLoader.LoadNoteImage(image, noteModel);
+                await _dbContext.AddAsync(noteImageModel);
             }
 
             return await Save();
@@ -93,7 +94,7 @@ namespace MyWebApp.Repository
             var newImages = editNoteVM.Images;
             if (newImages.Count != 0)
             {
-                var oldImages = await _dbContext.NoteImages.Where(x => x.NoteId == editNoteVM.NoteId).ToListAsync();
+                var oldImages = await _dbContext.NoteImages.Where(x => x.NoteId == note.NoteId).ToListAsync();
                 foreach (var oldImage in oldImages)
                 {
                     var previousImage = new PreviousNoteImageModel()
@@ -109,14 +110,15 @@ namespace MyWebApp.Repository
 
                 foreach (var newImage in newImages)
                 {
-                    await _dbContext.AddAsync(_picturesLoader.LoadNoteImage(newImage, note));
+                    var newNoteImage = await _picturesLoader.LoadNoteImage(newImage, note);
+                    await _dbContext.AddAsync(newNoteImage);
                 }
             }
 
             var updatedNote = new NoteModel()
             {
-                NoteId = editNoteVM.NoteId,
-                UserId = editNoteVM.UserId,
+                NoteId = note.NoteId,
+                UserId = note.UserId,
                 Title = editNoteVM.Title,
                 Description = editNoteVM.Description
             };

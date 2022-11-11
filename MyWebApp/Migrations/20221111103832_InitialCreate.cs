@@ -37,6 +37,35 @@ namespace MyWebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PreviousNoteImages",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    FormerImageId = table.Column<string>(type: "text", nullable: false),
+                    NoteId = table.Column<string>(type: "text", nullable: false),
+                    ImageFileName = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PreviousNoteImages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PreviousNotes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    FormerId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PreviousNotes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProfileImages",
                 columns: table => new
                 {
@@ -109,6 +138,12 @@ namespace MyWebApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Notes");
+
+            migrationBuilder.DropTable(
+                name: "PreviousNoteImages");
+
+            migrationBuilder.DropTable(
+                name: "PreviousNotes");
 
             migrationBuilder.DropTable(
                 name: "ProfileImages");

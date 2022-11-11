@@ -62,6 +62,54 @@ namespace MyWebApp.Migrations
                     b.ToTable("Notes");
                 });
 
+            modelBuilder.Entity("MyWebApp.TableModels.PreviousNoteImageModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FormerImageId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageFileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NoteId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PreviousNoteImages");
+                });
+
+            modelBuilder.Entity("MyWebApp.TableModels.PreviousNoteModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FormerId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PreviousNotes");
+                });
+
             modelBuilder.Entity("MyWebApp.TableModels.RatingModel", b =>
                 {
                     b.Property<string>("RatingId")

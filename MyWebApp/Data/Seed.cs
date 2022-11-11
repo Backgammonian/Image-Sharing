@@ -28,19 +28,19 @@ namespace MyWebApp.Data
             {
                 new UserModel()
                 {
-                    UserId = "1",
+                    UserId = RandomGenerator.GetRandomId(),
                     Name = "Blue User",
                     Status = "Just chillin'"
                 },
                 new UserModel()
                 {
-                    UserId = "2",
+                    UserId = RandomGenerator.GetRandomId(),
                     Name = "Red user",
                     Status = "Just morbin'"
                 },
                 new UserModel()
                 {
-                    UserId = "3",
+                    UserId = RandomGenerator.GetRandomId(),
                     Name = "Green user",
                     Status = "Just mindlessly scrolling the Internet pages until the end of the world. =)"
                 }

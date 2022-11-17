@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Repository.Interfaces;
+using MyWebApp.TableModels;
 
 namespace MyWebApp
 {
@@ -21,6 +24,12 @@ namespace MyWebApp
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddIdentity<UserModel, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSession();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
 
             var app = builder.Build();
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -28,9 +37,8 @@ namespace MyWebApp
             if (args.Length > 0 &&
                 args[0].ToLower() == "seed")
             {
+                await Seed.SeedUsersAndRolesAsync(app);
                 await Seed.SeedData(app);
-
-                return;
             }
 
             // Configure the HTTP request pipeline.

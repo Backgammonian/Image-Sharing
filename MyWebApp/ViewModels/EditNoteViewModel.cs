@@ -1,6 +1,6 @@
 ﻿namespace MyWebApp.ViewModels
 {
-    public class EditNoteViewModel
+    public sealed class EditNoteViewModel
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

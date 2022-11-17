@@ -1,15 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyWebApp.TableModels;
 
 namespace MyWebApp.Data
 {
-    public sealed class ApplicationDbContext : DbContext
+    public sealed class ApplicationDbContext : IdentityDbContext<UserModel>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        public DbSet<UserModel> Users { get; set; }
         public DbSet<UserImageModel> ProfileImages { get; set; }
         public DbSet<NoteModel> Notes { get; set; }
         public DbSet<PreviousNoteModel> PreviousNotes { get; set; }

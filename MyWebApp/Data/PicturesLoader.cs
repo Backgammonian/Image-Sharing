@@ -82,7 +82,7 @@ namespace MyWebApp.Data
             var model = new UserImageModel()
             {
                 ImageId = RandomGenerator.GetRandomId(),
-                UserId = user.UserId,
+                UserId = user.Id,
                 ImageFileName = fileName,
             };
 
@@ -159,7 +159,7 @@ namespace MyWebApp.Data
                 var model = new UserImageModel()
                 {
                     ImageId = RandomGenerator.GetRandomId(),
-                    UserId = users[currentModelIndex].UserId,
+                    UserId = users[currentModelIndex].Id,
                     ImageFileName = fileName,
                     UploadTime = DateTimeOffset.Now
                 };

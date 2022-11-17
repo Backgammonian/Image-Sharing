@@ -1,4 +1,5 @@
-﻿using MyWebApp.TableModels;
+﻿using Microsoft.AspNetCore.Identity;
+using MyWebApp.TableModels;
 using System.Diagnostics;
 
 namespace MyWebApp.Data
@@ -28,20 +29,20 @@ namespace MyWebApp.Data
             {
                 new UserModel()
                 {
-                    UserId = RandomGenerator.GetRandomId(),
-                    Name = "Blue User",
+                    Id = RandomGenerator.GetRandomId(),
+                    UserName = "Blue User",
                     Status = "Just chillin'"
                 },
                 new UserModel()
                 {
-                    UserId = RandomGenerator.GetRandomId(),
-                    Name = "Red user",
+                    Id = RandomGenerator.GetRandomId(),
+                    UserName = "Red user",
                     Status = "Just morbin'"
                 },
                 new UserModel()
                 {
-                    UserId = RandomGenerator.GetRandomId(),
-                    Name = "Green user",
+                    Id = RandomGenerator.GetRandomId(),
+                    UserName = "Green user",
                     Status = "Just mindlessly scrolling the Internet pages until the end of the world. =)"
                 }
             };
@@ -51,14 +52,14 @@ namespace MyWebApp.Data
                 new NoteModel()
                 {
                     NoteId = "1",
-                    UserId = users[0].UserId,
+                    UserId = users[0].Id,
                     Title = "Kelp Note",
                     Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                 },
                 new NoteModel()
                 {
                     NoteId = "2",
-                    UserId = users[0].UserId,
+                    UserId = users[0].Id,
                     Title = "Sallad Note",
                     Description = "There are many variations of passages of Lorem Ipsum available, " +
                     "but the majority have suffered alteration in some form, by injected humour, " +
@@ -67,7 +68,7 @@ namespace MyWebApp.Data
                 new NoteModel()
                 {
                     NoteId = "3",
-                    UserId = users[1].UserId,
+                    UserId = users[1].Id,
                     Title = "Funky Note",
                     Description = "It is a long established fact that a reader will be distracted by " +
                     "the readable content of a page when looking at its layout. " +
@@ -76,7 +77,7 @@ namespace MyWebApp.Data
                 new NoteModel()
                 {
                     NoteId = "4",
-                    UserId = users[2].UserId,
+                    UserId = users[2].Id,
                     Title = "Interesting Observation",
                     Description = "If you'll watch long enough how paint dries out, the paint WILL eventually dry out. " +
                     "\n#CelestialThoughts"
@@ -92,42 +93,42 @@ namespace MyWebApp.Data
                 new RatingModel()
                 {
                     RatingId = "1",
-                    UserId = users[0].UserId,
+                    UserId = users[0].Id,
                     NoteId = notes[0].NoteId,
                     Score = 1
                 },
                 new RatingModel()
                 {
                     RatingId = "2",
-                    UserId = users[1].UserId,
+                    UserId = users[1].Id,
                     NoteId = notes[0].NoteId,
                     Score = -1
                 },
                 new RatingModel()
                 {
                     RatingId = "3",
-                    UserId = users[0].UserId,
+                    UserId = users[0].Id,
                     NoteId = notes[1].NoteId,
                     Score = 1
                 },
                 new RatingModel()
                 {
                     RatingId = "4",
-                    UserId = users[1].UserId,
+                    UserId = users[1].Id,
                     NoteId = notes[1].NoteId,
                     Score = 1
                 },
                 new RatingModel()
                 {
                     RatingId = "5",
-                    UserId = users[0].UserId,
+                    UserId = users[0].Id,
                     NoteId = notes[2].NoteId,
                     Score = 1
                 },
                 new RatingModel()
                 {
                     RatingId = "6",
-                    UserId = users[2].UserId,
+                    UserId = users[2].Id,
                     NoteId = notes[3].NoteId,
                     Score = 1
                 },
@@ -252,6 +253,51 @@ namespace MyWebApp.Data
             }
 
             await dbContext.SaveChangesAsync();
+        }
+
+        public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        {
+            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+            {
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            }
+            if (!await roleManager.RoleExistsAsync(UserRoles.User))
+            {
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+            }
+
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
+            string adminUserEmail = "totallynotadmin@gmail.com";
+            var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
+            if (adminUser == null)
+            {
+                var newAdminUser = new UserModel()
+                {
+                    UserName = "totallynotadmin",
+                    Email = adminUserEmail,
+                    EmailConfirmed = true,
+                    Status = "Totally not in charge!"
+                };
+                await userManager.CreateAsync(newAdminUser, "qwerty");
+                await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
+            }
+
+            string appUserEmail = "user@gmail.com";
+            var appUser = await userManager.FindByEmailAsync(appUserEmail);
+            if (appUser == null)
+            {
+                var newAppUser = new UserModel()
+                {
+                    UserName = "app-user",
+                    Email = appUserEmail,
+                    EmailConfirmed = true,
+                    Status = "Just justifying justice."
+                };
+                await userManager.CreateAsync(newAppUser, "Coding@1234?");
+                await userManager.AddToRoleAsync(newAppUser, UserRoles.User);
+            }
         }
     }
 }

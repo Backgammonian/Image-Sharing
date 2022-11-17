@@ -40,13 +40,13 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserId == note.UserId);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == note.UserId);
             if (user == null)
             {
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
+            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
             profileImage ??= _picturesLoader.GetDefaultProfileImage();
 
             var images = await _dbContext.NoteImages.Where(x => x.NoteId == noteId).ToListAsync();
@@ -74,7 +74,7 @@ namespace MyWebApp.Repository
             var noteModel = new NoteModel()
             {
                 NoteId = createNoteVM.NoteId,
-                UserId = user.UserId, //PLACEHOLDER
+                UserId = user.Id, //PLACEHOLDER
                 Title = createNoteVM.Title,
                 Description = createNoteVM.Description,
             };

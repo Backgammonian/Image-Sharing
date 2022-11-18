@@ -27,9 +27,16 @@ else
                 <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
             }
             <div>
+                @if (User != null &&
+                    User.Identity != null &&
+                    User.Identity.IsAuthenticated &&
+                    User.IsInRole(UserRoles.Admin))
+                {
+                    <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+                }
+
                 <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
-                <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
             </div>
         </div>
     }

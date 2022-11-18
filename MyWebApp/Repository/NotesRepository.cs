@@ -4,6 +4,7 @@ using MyWebApp.Models;
 using MyWebApp.Repository.Interfaces;
 using MyWebApp.TableModels;
 using MyWebApp.ViewModels;
+using System.Net;
 
 namespace MyWebApp.Repository
 {
@@ -69,6 +70,7 @@ namespace MyWebApp.Repository
 
         public async Task<bool> Create(CreateNoteViewModel createNoteVM)
         {
+            
             //TODO
             var user = await _dbContext.Users.FirstOrDefaultAsync();
             var noteModel = new NoteModel()

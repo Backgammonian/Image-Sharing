@@ -119,7 +119,7 @@ namespace MyWebApp.Data
             };
         }
 
-        public List<NoteImageModel> LoadDemoNoteImages(List<NoteModel> notes)
+        public List<NoteImageModel> LoadDemoNoteImages(NoteModel[] notes)
         {
             EnsureFolderIsCreated();
 
@@ -130,7 +130,7 @@ namespace MyWebApp.Data
             {
                 var fileName = Path.GetFileName(image);
                 SaveFile(image, Path.Combine(_imagesPath, fileName));
-                var currentModelIndex = i % notes.Count;
+                var currentModelIndex = i % notes.Length;
                 var model = new NoteImageModel()
                 {
                     ImageId = RandomGenerator.GetRandomId(),
@@ -144,7 +144,7 @@ namespace MyWebApp.Data
             return result;
         }
 
-        public List<UserImageModel> LoadDemoProfileImages(List<UserModel> users)
+        public List<UserImageModel> LoadDemoProfileImages(UserModel[] users)
         {
             EnsureFolderIsCreated();
 
@@ -155,7 +155,7 @@ namespace MyWebApp.Data
             {
                 var fileName = Path.GetFileName(image);
                 SaveFile(image, Path.Combine(_imagesPath, fileName));
-                var currentModelIndex = i % users.Count;
+                var currentModelIndex = i % users.Length;
                 var model = new UserImageModel()
                 {
                     ImageId = RandomGenerator.GetRandomId(),

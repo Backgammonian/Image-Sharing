@@ -6,11 +6,15 @@ namespace MyWebApp.Controllers
 {
     public sealed class HomeController : Controller
     {
+        [HttpGet]
+        [Route("Home")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
+        [Route("Home/Privacy")]
         public IActionResult Privacy()
         {
             return View();

@@ -15,9 +15,9 @@ else
     var profilePicture = Model.ProfilePicture;
 
     <img width="100" height="100" src="@($"~/images/{profilePicture.ImageFileName}")" asp-append-version="true"/>
-    <h2>@user.Name</h2>
+    <h2>@user.UserName</h2>
     <h4>@user.Status</h4>
-    <h3>Notes of user @user.Name</h3>
+    <h3>Notes of user @user.UserName</h3>
     @foreach (var note in notes)
     {
         <h3>@note.Title</h3>

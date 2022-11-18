@@ -8,7 +8,7 @@ using MyWebApp.TableModels;
 
 namespace MyWebApp
 {
-    public class Program
+    public sealed class Program
     {
         public static async Task Main(string[] args)
         {
@@ -37,8 +37,8 @@ namespace MyWebApp
             if (args.Length > 0 &&
                 args[0].ToLower() == "seed")
             {
-                await Seed.SeedUsersAndRolesAsync(app);
-                await Seed.SeedData(app);
+                var users = await Seed.SeedUsersAndRolesAsync(app);
+                await Seed.SeedData(app, users);
             }
 
             // Configure the HTTP request pipeline.
@@ -53,7 +53,7 @@ namespace MyWebApp
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

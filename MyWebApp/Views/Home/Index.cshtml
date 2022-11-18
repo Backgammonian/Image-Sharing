@@ -6,5 +6,20 @@
     <h1 class="display-4">Image Sharing</h1>
     <p>Simple sharing platform and web storage for images.</p>
     <p>Built using <a href="https://docs.microsoft.com/aspnet/core">ASP.NET Core</a> MVC.</p>
-    <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">Create new note</a>
+
+    @if (User != null &&
+        User.Identity != null &&
+        User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">Create a new note</a>
+    }
+    else
+    {
+        <p>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-outline-secondary">Create account</a>
+            or
+            <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-secondary">Sign in</a>
+            to create a new note.
+        </p>
+    }
 </div>

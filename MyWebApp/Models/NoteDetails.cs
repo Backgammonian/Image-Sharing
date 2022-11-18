@@ -14,8 +14,8 @@ namespace MyWebApp.Models
             NoteId = noteModel.NoteId;
             Title = noteModel.Title;
             Description = noteModel.Description;
-            AuthorId = user.UserId;
-            AuthorName = user.Name;
+            AuthorId = user.Id;
+            AuthorName = user.UserName;
             ProfilePicture = profileImage;
             Images = images;
             Score = score;

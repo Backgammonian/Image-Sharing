@@ -24,13 +24,13 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
             {
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
+            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
             profileImage ??= _picturesLoader.GetDefaultProfileImage();
 
             return new UserDetails(user, profileImage);
@@ -44,13 +44,13 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
             {
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
+            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
             profileImage ??= _picturesLoader.GetDefaultProfileImage();
 
             var notes = await _dbContext.Notes.Where(x => x.UserId == userId).ToListAsync();
@@ -74,7 +74,7 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
             {
                 return null;

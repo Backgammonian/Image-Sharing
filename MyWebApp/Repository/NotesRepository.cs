@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Models;
-using MyWebApp.Repository.Interfaces;
 using MyWebApp.TableModels;
 using MyWebApp.ViewModels;
-using System.Net;
 
 namespace MyWebApp.Repository
 {
-    public sealed class NotesRepository : INotesRepository
+    public sealed class NotesRepository
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly PicturesLoader _picturesLoader;
@@ -19,15 +17,74 @@ namespace MyWebApp.Repository
             _picturesLoader = picturesLoader;
         }
 
-        public async Task<IEnumerable<NoteSummary>> GetNotesList()
+        public async Task<List<NoteModel>> GetAll()
         {
-            var list = new List<NoteSummary>();
+            return await _dbContext.Notes.ToListAsync();
+        }
+
+        public async Task<NoteModel?> GetNoteModel(string noteId)
+        {
+            return await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == noteId);
+        }
+
+        public async Task<NoteModel?> GetNoteModelNoTracking(string noteId)
+        {
+            return await _dbContext.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == noteId);
+        }
+
+        public async Task<int> GetNoteScore(string noteId)
+        {
+            return await _dbContext.Ratings.Where(x => x.NoteId == noteId).SumAsync(x => x.Score);
+        }
+
+        public async Task<IEnumerable<string>> GetNoteTags(string noteId)
+        {
+            return await _dbContext.TagsForNotes.Where(x => x.NoteId == noteId).Select(x => x.Tag).ToListAsync();
+        }
+
+        public async Task<string> GetNoteFirstImageName(string noteId)
+        {
+            var firstNoteImage = await _dbContext.NoteImages.OrderBy(x => x.UploadTime).FirstOrDefaultAsync(x => x.NoteId == noteId);
+            if (firstNoteImage != null)
+            {
+                return firstNoteImage.ImageFileName;
+            }
+
+            return string.Empty;
+        }
+
+        public async Task<NotesListViewModel> GetNotesList()
+        {
+            var noteSummaries = new List<NoteSummaryViewModel>();
+            var allNotes = await GetAll();
+            foreach (var note in allNotes)
+            {
+                var noteId = note.NoteId;
+                var noteSummary = new NoteSummaryViewModel()
+                {
+                    Note = note,
+                    Score = await GetNoteScore(noteId),
+                    Tags = await GetNoteTags(noteId),
+                    FirstImageName = await GetNoteFirstImageName(noteId)
+                };
+                noteSummaries.Add(noteSummary);
+            }
+
+            return new NotesListViewModel()
+            {
+                NoteSummaries = noteSummaries
+            };
+        }
+
+        public async Task<IEnumerable<NoteSummaryViewModel>> GetNotesList()
+        {
+            var list = new List<NoteSummaryViewModel>();
             var notes = await _dbContext.Notes.ToListAsync();
             foreach (var note in notes)
             {
                 var noteScore = await _dbContext.Ratings.Where(x => x.NoteId == note.NoteId).SumAsync(x => x.Score);
                 var noteTags = await _dbContext.TagsForNotes.Where(x => x.NoteId == note.NoteId).Select(x => x.Tag).ToListAsync();
-                list.Add(new NoteSummary(note, noteScore, noteTags));
+                list.Add(new NoteSummaryViewModel(note, noteScore, noteTags));
             }
 
             return list;
@@ -56,16 +113,6 @@ namespace MyWebApp.Repository
             var noteDetails = new NoteDetails(note, images, user, profileImage, score, tags);
 
             return noteDetails;
-        }
-
-        public async Task<NoteModel?> GetNoteModel(string noteId)
-        {
-            return await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == noteId);
-        }
-
-        public async Task<NoteModel?> GetNoteModelNoTracking(string noteId)
-        {
-            return await _dbContext.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
         public async Task<bool> Create(CreateNoteViewModel createNoteVM)

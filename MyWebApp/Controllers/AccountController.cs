@@ -6,19 +6,15 @@ using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
 {
-    public class AccountController : Controller
+    public sealed class AccountController : Controller
     {
         private readonly UserManager<UserModel> _userManager;
         private readonly SignInManager<UserModel> _signInManager;
-        private readonly ApplicationDbContext _dbContext;
 
-        public AccountController(UserManager<UserModel> userManager,
-            SignInManager<UserModel> signInManager,
-            ApplicationDbContext dbContext)
+        public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _dbContext = dbContext;
         }
 
         [HttpGet]
@@ -35,6 +31,7 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData["Error"] = "Input is not valid";
                 return View(loginVM);
             }
 
@@ -70,6 +67,7 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData["Error"] = "Input is not valid";
                 return View(registerVM);
             }
 
@@ -87,8 +85,8 @@ namespace MyWebApp.Controllers
                 UserName = registerVM.Email
             };
 
-            var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
-            if (newUserResponse.Succeeded)
+            var newUserCreateResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
+            if (newUserCreateResponse.Succeeded)
             {
                 await _userManager.AddToRoleAsync(newUser, UserRoles.User);
                 var signInResult = await _signInManager.PasswordSignInAsync(newUser, registerVM.Password, false, false);
@@ -98,7 +96,7 @@ namespace MyWebApp.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "Can't sign in to created account!";
+                    TempData["Error"] = "Can't login into created account!";
                     return View(registerVM);
                 }
             }
@@ -112,7 +110,7 @@ namespace MyWebApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Race");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

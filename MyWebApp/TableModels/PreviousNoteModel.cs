@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp.TableModels
 {
-    public class PreviousNoteModel
+    public sealed class PreviousNoteModel
     {
         [Key]
         public string Id { get; set; } = string.Empty;

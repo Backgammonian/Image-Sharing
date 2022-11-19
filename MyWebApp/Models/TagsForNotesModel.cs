@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyWebApp.TableModels
+namespace MyWebApp.Models
 {
     public sealed class TagsForNotesModel
     {

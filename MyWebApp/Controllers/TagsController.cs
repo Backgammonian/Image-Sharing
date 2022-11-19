@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Repository.Interfaces;
+using MyWebApp.Repository;
 
 namespace MyWebApp.Controllers
 {
     public sealed class TagsController : Controller
     {
-        private readonly ITagsRepository _tagsRepository;
+        private readonly TagsRepository _tagsRepository;
 
-        public TagsController(ITagsRepository tagsRepository)
+        public TagsController(TagsRepository tagsRepository)
         {
             _tagsRepository = tagsRepository;
         }

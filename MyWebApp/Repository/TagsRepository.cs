@@ -1,47 +1,60 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Models;
-using MyWebApp.TableModels;
+using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
     public sealed class TagsRepository
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly NotesRepository _notesRepository;
 
-        public TagsRepository(ApplicationDbContext dbContext)
+        public TagsRepository(ApplicationDbContext dbContext,
+            NotesRepository notesRepository)
         {
             _dbContext = dbContext;
+            _notesRepository = notesRepository;
         }
 
-        public async Task<NotesMarkedByTag?> GetByTag(string? tag)
+        public async Task<IEnumerable<TagsForNotesModel>> GetTaggedNotes(string tag)
         {
-            if (tag == null ||
-                tag == string.Empty)
-            {
-                return null;
-            }
+            return await _dbContext.TagsForNotes.Where(x => x.Tag == tag).ToListAsync();
+        }
 
-            var idsOfNotesWithTag = await _dbContext.TagsForNotes.Where(x => x.Tag == tag).ToListAsync();
+        public async Task<TaggedNotesViewModel?> GetByTag(string tag)
+        {
+            var taggedNotes = await GetTaggedNotes(tag);
+
             var notes = new List<NoteModel>();
-            for (int i = 0; i < idsOfNotesWithTag.Count; i++)
+            foreach (var taggedNote in taggedNotes)
             {
-                var note = await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == idsOfNotesWithTag[i].NoteId);
+                var note = await _notesRepository.GetNoteNoTracking(taggedNote.NoteId);
                 if (note != null)
                 {
                     notes.Add(note);
                 }
             }
 
-            var tagsAndScoresOfNotes = new List<TagsAndScoreOfNote>();
-            foreach (var note in notes)
+            var taggedNotesDetails = new List<NoteDetailsViewModel>();
+            foreach (var taggedNote in taggedNotes)
             {
-                var noteScore = await _dbContext.Ratings.Where(x => x.NoteId == note.NoteId).SumAsync(x => x.Score);
-                var noteTags = await _dbContext.TagsForNotes.Where(x => x.NoteId == note.NoteId).Select(x => x.Tag).ToListAsync();
-                tagsAndScoresOfNotes.Add(new TagsAndScoreOfNote(note, noteScore, noteTags));
+                var note = await _notesRepository.GetNoteNoTracking(taggedNote.NoteId);
+                if (note != null)
+                {
+                    var noteDetails = await _notesRepository.GetNoteDetails(note.NoteId);
+                    if (noteDetails != null)
+                    {
+                        taggedNotesDetails.Add(noteDetails);
+                    }
+                }
             }
 
-            return new NotesMarkedByTag(tag, tagsAndScoresOfNotes);
+            return new TaggedNotesViewModel()
+            {
+                TaggedNotesDetails = taggedNotesDetails,
+                Tag = tag
+            };
         }
     }
 }

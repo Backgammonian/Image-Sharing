@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Repository;
-using MyWebApp.TableModels;
+using MyWebApp.Models;
 using System.Diagnostics;
 
 namespace MyWebApp
@@ -17,9 +17,11 @@ namespace MyWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddSingleton<PicturesLoader>();
+            //cyclic dependency
             builder.Services.AddScoped<NotesRepository>();
             builder.Services.AddScoped<UsersRepository>();
             builder.Services.AddScoped<TagsRepository>();
+            builder.Services.AddScoped<DashboardRepository>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));

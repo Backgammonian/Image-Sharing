@@ -1,22 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Data;
+using MyWebApp.Repository;
+using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
 {
     public sealed class DashboardController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly DashboardRepository _dashboardRepository;
 
-        public DashboardController(ApplicationDbContext dbContext)
+        public DashboardController(DashboardRepository dashboardRepository)
         {
-            _dbContext = dbContext;
+            _dashboardRepository = dashboardRepository;
         }
 
         [HttpGet]
         [Route("Dashboard")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(new DashboardViewModel()
+            {
+                UserNotes = await _dashboardRepository.GetAllUserNotes(),
+                UserRatings = await _dashboardRepository.GetAllUserRatings()
+            });
         }
     }
 }

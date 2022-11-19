@@ -1,4 +1,4 @@
-﻿using MyWebApp.TableModels;
+﻿using MyWebApp.Models;
 
 namespace MyWebApp.ViewModels
 {
@@ -6,6 +6,6 @@ namespace MyWebApp.ViewModels
     {
         public UserModel? User { get; set; }
         public UserImageModel? ProfilePicture { get; set; }
-        public IEnumerable<NoteRatingViewModel> UsersRatingsOfNotes { get; set; } = Enumerable.Empty<NoteRatingViewModel>();
+        public IEnumerable<NoteRatingViewModel> UserRatingsOfNotes { get; set; } = Enumerable.Empty<NoteRatingViewModel>();
     }
 }

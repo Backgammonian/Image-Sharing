@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyWebApp.TableModels
+namespace MyWebApp.Models
 {
     public sealed class TagModel
     {

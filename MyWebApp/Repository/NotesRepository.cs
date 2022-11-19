@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
-using MyWebApp.TableModels;
+using MyWebApp.Models;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
@@ -70,8 +70,9 @@ namespace MyWebApp.Repository
             return await _dbContext.NoteImages.AsNoTracking().Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
         }
 
-        public async Task<IEnumerable<NoteModel>> GetUsersNotes(UserModel? user)
+        public async Task<IEnumerable<NoteModel>> GetUsersNotes(string userId)
         {
+            var user = await _usersRepository.GetUserNoTracking(userId);
             if (user == null)
             {
                 return Enumerable.Empty<NoteModel>();

@@ -2,7 +2,7 @@
     List of Notes marked with the certain Tag
 *@
 
-@model NotesMarkedByTag
+@model TaggedNotesViewModel
 
 @if (Model == null)
 {
@@ -11,14 +11,14 @@
 else
 {
     var tag = Model.Tag;
-    var tagsAndScoresOfNotes = Model.Notes;
+    var taggedNotesDetails = Model.TaggedNotesDetails;
 
     <h1>Notes with tag: @tag</h1>
-    @foreach (var tagsAndScoreOfNote in tagsAndScoresOfNotes)
+    @foreach (var noteDetails in taggedNotesDetails)
     {
-        var note = tagsAndScoreOfNote.Note;
-        var score = tagsAndScoreOfNote.Score;
-        var tags = tagsAndScoreOfNote.Tags;
+        var note = noteDetails.Note;
+        var score = noteDetails.Score;
+        var tags = noteDetails.Tags;
 
         <h3>@note.Title</h3>
         <h4>@note.Description</h4>

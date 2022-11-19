@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
-using MyWebApp.TableModels;
+using MyWebApp.Models;
 using MyWebApp.ViewModels;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace MyWebApp.Repository
 {
@@ -73,10 +72,15 @@ namespace MyWebApp.Repository
             };
         }
 
-        public async Task<UserNotesViewModel> GetUserNotes(string userId)
+        public async Task<UserNotesViewModel?> GetUserNotes(string userId)
         {
             var user = await GetUserNoTracking(userId);
-            var notes = await _notesRepository.GetUsersNotes(user);
+            if (user == null)
+            {
+                return null;
+            }
+
+            var notes = await _notesRepository.GetUsersNotes(user.Id);
             var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var note in notes)
             {
@@ -116,7 +120,7 @@ namespace MyWebApp.Repository
             {
                 User = user,
                 ProfilePicture = await GetUsersCurrentProfilePicture(user),
-                UsersRatingsOfNotes = noteRatings
+                UserRatingsOfNotes = noteRatings
             };
         }
     }

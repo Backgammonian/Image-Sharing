@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MyWebApp.TableModels;
+using MyWebApp.Models;
 
 namespace MyWebApp.Data
 {

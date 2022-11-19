@@ -1,4 +1,4 @@
-﻿using MyWebApp.TableModels;
+﻿using MyWebApp.Models;
 
 namespace MyWebApp.Data
 {
@@ -68,6 +68,7 @@ namespace MyWebApp.Data
                 ImageId = RandomGenerator.GetRandomId(),
                 NoteId = note.NoteId,
                 ImageFileName = fileName,
+                UploadTime = DateTimeOffset.Now
             };
 
             return model;
@@ -84,6 +85,7 @@ namespace MyWebApp.Data
                 ImageId = RandomGenerator.GetRandomId(),
                 UserId = user.Id,
                 ImageFileName = fileName,
+                UploadTime = DateTimeOffset.Now
             };
 
             return model;
@@ -136,6 +138,7 @@ namespace MyWebApp.Data
                     ImageId = RandomGenerator.GetRandomId(),
                     NoteId = notes[currentModelIndex].NoteId,
                     ImageFileName = fileName,
+                    UploadTime = DateTimeOffset.Now
                 };
                 result.Add(model);
                 i += 1;

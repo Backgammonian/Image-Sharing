@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using MyWebApp.TableModels;
+using MyWebApp.Models;
 using System.Diagnostics;
 
 namespace MyWebApp.Data

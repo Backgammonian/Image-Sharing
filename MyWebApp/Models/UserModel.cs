@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace MyWebApp.TableModels
+namespace MyWebApp.Models
 {
     public sealed class UserModel : IdentityUser
     {

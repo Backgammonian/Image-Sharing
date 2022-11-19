@@ -1,4 +1,4 @@
-﻿using MyWebApp.TableModels;
+﻿using MyWebApp.Models;
 
 namespace MyWebApp.ViewModels
 {

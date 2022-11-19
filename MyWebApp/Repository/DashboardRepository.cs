@@ -6,40 +6,49 @@ namespace MyWebApp.Repository
 {
     public sealed class DashboardRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IHttpContextAccessor _contextAccessor;
 
-        public DashboardRepository(ApplicationDbContext dbContext, IHttpContextAccessor contextAccessor)
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly NotesRepository _notesRepository;
+        private readonly UsersRepository _usersRepository;
+
+        public DashboardRepository(IHttpContextAccessor contextAccessor,
+            NotesRepository notesRepository,
+            UsersRepository usersRepository)
         {
-            _dbContext = dbContext;
             _contextAccessor = contextAccessor;
+            _notesRepository = notesRepository;
+            _usersRepository = usersRepository;
         }
 
         public async Task<IEnumerable<NoteDetailsViewModel>> GetAllUserNotes()
         {
-            return Enumerable.Empty<NoteDetailsViewModel>();
-            /*var currentUser = _contextAccessor.HttpContext?.User;
+            var currentUser = _contextAccessor.HttpContext?.User;
             if (currentUser == null)
             {
-                return Enumerable.Empty<NoteDetails>();
+                return Enumerable.Empty<NoteDetailsViewModel>();
             }
 
-            var userId = currentUser.ToString();
-
-            var notes = await _dbContext.Notes.Where(x => x.UserId == userId).ToListAsync();
-            var notesDetails = new List<NoteDetails>();
-            foreach (var note in notes)
+            var userId = currentUser.Identity.GetUserId();
+            var userNotes = await _notesRepository.GetUsersNotes(userId);
+            var notesDetails = new List<NoteDetailsViewModel>();
+            foreach (var userNote in userNotes)
             {
-                var images = await _dbContext.NoteImages.Where(x => x.NoteId == note.NoteId).ToListAsync();
-                var score = await _dbContext.Ratings.Where(x => x.NoteId == note.NoteId).SumAsync(x => x.Score);
-                var noteTags = await _dbContext.TagsForNotes.Where(x => x.NoteId == note.NoteId).Select(x => x.Tag).ToListAsync();
-                notesDetails.Add(new NoteDetails(note, images, user, profileImage, score, noteTags));
-            }*/
+                notesDetails.Add(await _notesRepository.GetNoteDetails(userNote.NoteId));
+            }
+
+            return notesDetails;
         }
 
-        public async Task<IEnumerable<UserRatingsViewModel>> GetAllUserRatings()
+        public async Task<UserRatingsViewModel?> GetAllUserRatings()
         {
-            throw new NotImplementedException();
+            var currentUser = _contextAccessor.HttpContext?.User;
+            if (currentUser == null)
+            {
+                return null;
+            }
+
+            var userId = currentUser.Identity.GetUserId();
+            return await _usersRepository.GetUserRatings(userId);
         }
     }
 }

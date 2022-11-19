@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyWebApp.TableModels
+namespace MyWebApp.Models
 {
     public sealed class RatingModel
     {

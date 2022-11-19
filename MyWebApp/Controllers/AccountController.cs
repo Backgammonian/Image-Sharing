@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Data;
-using MyWebApp.TableModels;
+using MyWebApp.Models;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers

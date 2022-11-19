@@ -17,6 +17,7 @@ namespace MyWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddSingleton<PicturesLoader>();
+            //cyclic dependency
             builder.Services.AddScoped<NotesRepository>();
             builder.Services.AddScoped<UsersRepository>();
             builder.Services.AddScoped<TagsRepository>();

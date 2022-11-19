@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Models;
-using MyWebApp.Repository.Interfaces;
 using MyWebApp.TableModels;
 
 namespace MyWebApp.Repository
 {
-    public sealed class TagsRepository : ITagsRepository
+    public sealed class TagsRepository
     {
         private readonly ApplicationDbContext _dbContext;
 

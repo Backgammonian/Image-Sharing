@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using MyWebApp.Data;
-using MyWebApp.Models;
-using MyWebApp.Repository.Interfaces;
+using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
-    public sealed class DashboardRepository : IDashboardRepository
+    public sealed class DashboardRepository
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IHttpContextAccessor _contextAccessor;
@@ -16,9 +15,10 @@ namespace MyWebApp.Repository
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<IEnumerable<NoteDetails>> GetAllUserNotes()
+        public async Task<IEnumerable<NoteDetailsViewModel>> GetAllUserNotes()
         {
-            var currentUser = _contextAccessor.HttpContext?.User;
+            return Enumerable.Empty<NoteDetailsViewModel>();
+            /*var currentUser = _contextAccessor.HttpContext?.User;
             if (currentUser == null)
             {
                 return Enumerable.Empty<NoteDetails>();
@@ -34,10 +34,10 @@ namespace MyWebApp.Repository
                 var score = await _dbContext.Ratings.Where(x => x.NoteId == note.NoteId).SumAsync(x => x.Score);
                 var noteTags = await _dbContext.TagsForNotes.Where(x => x.NoteId == note.NoteId).Select(x => x.Tag).ToListAsync();
                 notesDetails.Add(new NoteDetails(note, images, user, profileImage, score, noteTags));
-            }
+            }*/
         }
 
-        public async Task<IEnumerable<UserRatings>> GetAllUserRatings()
+        public async Task<IEnumerable<UserRatingsViewModel>> GetAllUserRatings()
         {
             throw new NotImplementedException();
         }

@@ -1,102 +1,123 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
-using MyWebApp.Models;
-using MyWebApp.Repository.Interfaces;
+using MyWebApp.TableModels;
+using MyWebApp.ViewModels;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace MyWebApp.Repository
 {
-    public sealed class UsersRepository : IUsersRepository
+    public sealed class UsersRepository
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly PicturesLoader _picturesLoader;
+        private readonly NotesRepository _notesRepository;
 
-        public UsersRepository(ApplicationDbContext dbContext, PicturesLoader picturesLoader)
+        public UsersRepository(ApplicationDbContext dbContext,
+            PicturesLoader picturesLoader,
+            NotesRepository notesRepository)
         {
             _dbContext = dbContext;
             _picturesLoader = picturesLoader;
+            _notesRepository = notesRepository;
         }
 
-        public async Task<UserDetails?> GetUserInfo(string userId)
+        public async Task<UserModel?> GetUser(string userId)
         {
-            if (userId == null ||
-                userId == string.Empty)
-            {
-                return null;
-            }
-
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null)
-            {
-                return null;
-            }
-
-            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
-            profileImage ??= _picturesLoader.GetDefaultProfileImage();
-
-            return new UserDetails(user, profileImage);
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
         }
 
-        public async Task<UserNotes?> GetUserNotes(string userId)
+        public async Task<UserModel?> GetUserNoTracking(string userId)
         {
-            if (userId == null ||
-                userId == string.Empty)
-            {
-                return null;
-            }
+            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
+        }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+        public async Task<UserImageModel> GetUsersCurrentProfilePicture(UserModel? user)
+        {
             if (user == null)
             {
+                return _picturesLoader.GetDefaultProfileImage();
+            }
+
+            var profilePicture = await _dbContext.ProfileImages.AsNoTracking().OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
+            return profilePicture ?? _picturesLoader.GetDefaultProfileImage();
+        }
+
+        public async Task<UserModel?> GetNoteAuthor(NoteModel? note)
+        {
+            if (note == null)
+            {
                 return null;
             }
 
-            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
-            profileImage ??= _picturesLoader.GetDefaultProfileImage();
+            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == note.UserId);
+        }
 
-            var notes = await _dbContext.Notes.Where(x => x.UserId == userId).ToListAsync();
-            var notesDetails = new List<NoteDetails>();
+        public async Task<IEnumerable<RatingModel>> GetUserRatings(UserModel? user)
+        {
+            if (user == null)
+            {
+                return Enumerable.Empty<RatingModel>();
+            }
+
+            return await _dbContext.Ratings.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
+        }
+
+        public async Task<UserDetailsViewModel> GetUserDetails(string userId)
+        {
+            var user = await GetUserNoTracking(userId);
+
+            return new UserDetailsViewModel()
+            {
+                User = await GetUserNoTracking(userId),
+                ProfilePicture = await GetUsersCurrentProfilePicture(user)
+            };
+        }
+
+        public async Task<UserNotesViewModel> GetUserNotes(string userId)
+        {
+            var user = await GetUserNoTracking(userId);
+            var notes = await _notesRepository.GetUsersNotes(user);
+            var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var note in notes)
             {
-                var images = await _dbContext.NoteImages.Where(x => x.NoteId == note.NoteId).ToListAsync();
-                var score = await _dbContext.Ratings.Where(x => x.NoteId == note.NoteId).SumAsync(x => x.Score);
-                var noteTags = await _dbContext.TagsForNotes.Where(x => x.NoteId == note.NoteId).Select(x => x.Tag).ToListAsync();
-                notesDetails.Add(new NoteDetails(note, images, user, profileImage, score, noteTags));
+                notesDetails.Add(await _notesRepository.GetNoteDetails(note.NoteId));
             }
 
-            return new UserNotes(user, profileImage, notesDetails);
+            return new UserNotesViewModel()
+            {
+                User = user,
+                ProfilePicture = await GetUsersCurrentProfilePicture(user),
+                Notes = notesDetails
+            };
         }
 
-        public async Task<UserRatings?> GetUserRatings(string userId)
+        public async Task<UserRatingsViewModel> GetUserRatings(string userId)
         {
-            if (userId == null ||
-                userId == string.Empty)
-            {
-                return null;
-            }
+            var user = await GetUserNoTracking(userId);
+            var ratings = await GetUserRatings(user);
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null)
-            {
-                return null;
-            }
-
-            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.UserId);
-            profileImage ??= _picturesLoader.GetDefaultProfileImage();
-
-            var ratings = await _dbContext.Ratings.Where(x => x.UserId == userId).ToListAsync();
-            var noteRatings = new List<NoteRating>();
+            var noteRatings = new List<NoteRatingViewModel>();
             foreach (var rating in ratings)
             {
-                var note = await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == rating.NoteId);
+                var note = await _notesRepository.GetNoteNoTracking(rating.NoteId);
                 if (note == null)
                 {
                     continue;
                 }
 
-                noteRatings.Add(new NoteRating(note, rating));
+                noteRatings.Add(new NoteRatingViewModel()
+                {
+                    Rating = rating,
+                    NoteDetails = await _notesRepository.GetNoteDetails(note.NoteId)
+                });
             }
 
-            return new UserRatings(user, profileImage, noteRatings);
+            return new UserRatingsViewModel()
+            {
+                User = user,
+                ProfilePicture = await GetUsersCurrentProfilePicture(user),
+                UsersRatingsOfNotes = noteRatings
+            };
         }
     }
 }

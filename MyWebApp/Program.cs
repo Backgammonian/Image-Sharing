@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Repository;
-using MyWebApp.Repository.Interfaces;
 using MyWebApp.TableModels;
+using System.Diagnostics;
 
 namespace MyWebApp
 {
@@ -17,9 +17,9 @@ namespace MyWebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddSingleton<PicturesLoader>();
-            builder.Services.AddScoped<INotesRepository, NotesRepository>();
-            builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-            builder.Services.AddScoped<ITagsRepository, TagsRepository>();
+            builder.Services.AddScoped<NotesRepository>();
+            builder.Services.AddScoped<UsersRepository>();
+            builder.Services.AddScoped<TagsRepository>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -59,6 +59,8 @@ namespace MyWebApp
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            Debug.WriteLine($"-Program.cs-------------{app.Environment.EnvironmentName}");
 
             await app.RunAsync();
         }

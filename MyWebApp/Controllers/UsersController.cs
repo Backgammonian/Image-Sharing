@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Repository.Interfaces;
+using MyWebApp.Repository;
 
 namespace MyWebApp.Controllers
 {
     public sealed class UsersController : Controller
     {
-        private readonly IUsersRepository _usersRepository;
+        private readonly UsersRepository _usersRepository;
 
-        public UsersController(IUsersRepository usersRepository)
+        public UsersController(UsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }
 
         [HttpGet]
-        [Route("Users/Info/{userId}")]
-        public async Task<IActionResult> Info(string userId)
+        [Route("Users/Details/{userId}")]
+        public async Task<IActionResult> Details(string userId)
         {
-            return View(await _usersRepository.GetUserInfo(userId));
+            return View(await _usersRepository.GetUserDetails(userId));
         }
 
         [HttpGet]

@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
-using MyWebApp.Models;
 using MyWebApp.TableModels;
 using MyWebApp.ViewModels;
 
@@ -8,131 +8,148 @@ namespace MyWebApp.Repository
 {
     public sealed class NotesRepository
     {
+        private readonly IHttpContextAccessor _contextAccessor;
         private readonly ApplicationDbContext _dbContext;
         private readonly PicturesLoader _picturesLoader;
+        private readonly UsersRepository _usersRepository;
 
-        public NotesRepository(ApplicationDbContext dbContext, PicturesLoader picturesLoader)
+        public NotesRepository(IHttpContextAccessor contextAccessor,
+            ApplicationDbContext dbContext,
+            PicturesLoader picturesLoader,
+            UsersRepository usersRepository)
         {
+            _contextAccessor = contextAccessor;
             _dbContext = dbContext;
             _picturesLoader = picturesLoader;
+            _usersRepository = usersRepository;
         }
 
-        public async Task<List<NoteModel>> GetAll()
+        public async Task<IEnumerable<NoteModel>> GetAllNotes()
         {
-            return await _dbContext.Notes.ToListAsync();
+            return await _dbContext.Notes.AsNoTracking().ToListAsync();
         }
 
-        public async Task<NoteModel?> GetNoteModel(string noteId)
+        public async Task<NoteModel?> GetNote(string noteId)
         {
             return await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
-        public async Task<NoteModel?> GetNoteModelNoTracking(string noteId)
+        public async Task<NoteModel?> GetNoteNoTracking(string noteId)
         {
             return await _dbContext.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
         public async Task<int> GetNoteScore(string noteId)
         {
-            return await _dbContext.Ratings.Where(x => x.NoteId == noteId).SumAsync(x => x.Score);
+            return await _dbContext.Ratings.AsNoTracking().Where(x => x.NoteId == noteId).SumAsync(x => x.Score);
         }
 
         public async Task<IEnumerable<string>> GetNoteTags(string noteId)
         {
-            return await _dbContext.TagsForNotes.Where(x => x.NoteId == noteId).Select(x => x.Tag).ToListAsync();
+            return await _dbContext.TagsForNotes.AsNoTracking().Where(x => x.NoteId == noteId).Select(x => x.Tag).ToListAsync();
         }
 
-        public async Task<string> GetNoteFirstImageName(string noteId)
+        public async Task<NoteImageModel> GetNoteFirstImage(string noteId)
         {
-            var firstNoteImage = await _dbContext.NoteImages.OrderBy(x => x.UploadTime).FirstOrDefaultAsync(x => x.NoteId == noteId);
+            var firstNoteImage = await _dbContext.NoteImages.AsNoTracking().OrderBy(x => x.UploadTime).FirstOrDefaultAsync(x => x.NoteId == noteId);
             if (firstNoteImage != null)
             {
-                return firstNoteImage.ImageFileName;
+                return firstNoteImage;
             }
 
-            return string.Empty;
+            return _picturesLoader.GetDefaultNoteImage();
+        }
+
+        public async Task<IEnumerable<NoteImageModel>> GetNoteImages(string noteId)
+        {
+            return await _dbContext.NoteImages.Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
+        }
+
+        public async Task<IEnumerable<NoteImageModel>> GetNoteImagesNoTracking(string noteId)
+        {
+            return await _dbContext.NoteImages.AsNoTracking().Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
+        }
+
+        public async Task<IEnumerable<NoteModel>> GetUsersNotes(UserModel? user)
+        {
+            if (user == null)
+            {
+                return Enumerable.Empty<NoteModel>();
+            }
+
+            return await _dbContext.Notes.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
         }
 
         public async Task<NotesListViewModel> GetNotesList()
         {
-            var noteSummaries = new List<NoteSummaryViewModel>();
-            var allNotes = await GetAll();
+            var allNotes = await GetAllNotes();
+
+            var noteDetails = new List<NoteDetailsViewModel>();
             foreach (var note in allNotes)
             {
+                var author = await _usersRepository.GetNoteAuthor(note);
                 var noteId = note.NoteId;
-                var noteSummary = new NoteSummaryViewModel()
+                var noteSummary = new NoteDetailsViewModel()
                 {
                     Note = note,
                     Score = await GetNoteScore(noteId),
                     Tags = await GetNoteTags(noteId),
-                    FirstImageName = await GetNoteFirstImageName(noteId)
+                    Images = new List<NoteImageModel>()
+                    {
+                        await GetNoteFirstImage(noteId)
+                    },
+                    Author = author,
+                    ProfilePicture = await _usersRepository.GetUsersCurrentProfilePicture(author)
                 };
-                noteSummaries.Add(noteSummary);
+
+                noteDetails.Add(noteSummary);
             }
 
             return new NotesListViewModel()
             {
-                NoteSummaries = noteSummaries
+                NotesDetails = noteDetails
             };
         }
 
-        public async Task<IEnumerable<NoteSummaryViewModel>> GetNotesList()
+        public async Task<NoteDetailsViewModel> GetNoteDetails(string noteId)
         {
-            var list = new List<NoteSummaryViewModel>();
-            var notes = await _dbContext.Notes.ToListAsync();
-            foreach (var note in notes)
+            var note = await GetNoteNoTracking(noteId);
+            var author = await _usersRepository.GetNoteAuthor(note);
+
+            return new NoteDetailsViewModel()
             {
-                var noteScore = await _dbContext.Ratings.Where(x => x.NoteId == note.NoteId).SumAsync(x => x.Score);
-                var noteTags = await _dbContext.TagsForNotes.Where(x => x.NoteId == note.NoteId).Select(x => x.Tag).ToListAsync();
-                list.Add(new NoteSummaryViewModel(note, noteScore, noteTags));
-            }
-
-            return list;
-        }
-
-        public async Task<NoteDetails?> GetNoteDetails(string noteId)
-        {
-            var note = await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == noteId);
-            if (note == null)
-            {
-                return null;
-            }
-
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == note.UserId);
-            if (user == null)
-            {
-                return null;
-            }
-
-            var profileImage = await _dbContext.ProfileImages.OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
-            profileImage ??= _picturesLoader.GetDefaultProfileImage();
-
-            var images = await _dbContext.NoteImages.Where(x => x.NoteId == noteId).ToListAsync();
-            var score = await _dbContext.Ratings.Where(x => x.NoteId == noteId).SumAsync(x => x.Score);
-            var tags = await _dbContext.TagsForNotes.Where(x => x.NoteId == noteId).Select(x => x.Tag).ToListAsync();
-            var noteDetails = new NoteDetails(note, images, user, profileImage, score, tags);
-
-            return noteDetails;
+                Note = note,
+                Score = await GetNoteScore(noteId),
+                Tags = await GetNoteTags(noteId),
+                Images = await GetNoteImagesNoTracking(noteId),
+                Author = author,
+                ProfilePicture = await _usersRepository.GetUsersCurrentProfilePicture(author)
+            };
         }
 
         public async Task<bool> Create(CreateNoteViewModel createNoteVM)
         {
-            
-            //TODO
-            var user = await _dbContext.Users.FirstOrDefaultAsync();
-            var noteModel = new NoteModel()
+            var currentUser = _contextAccessor.HttpContext?.User;
+            if (currentUser == null)
+            {
+                return false;
+            }
+
+            var userId = currentUser.Identity.GetUserId();
+
+            var note = new NoteModel()
             {
                 NoteId = createNoteVM.NoteId,
-                UserId = user.Id, //PLACEHOLDER
+                UserId = userId,
                 Title = createNoteVM.Title,
                 Description = createNoteVM.Description,
             };
-            await _dbContext.AddAsync(noteModel);
+            await _dbContext.AddAsync(note);
 
             foreach (var image in createNoteVM.Images)
             {
-                var noteImageModel = await _picturesLoader.LoadNoteImage(image, noteModel);
-                await _dbContext.AddAsync(noteImageModel);
+                var noteImage = await _picturesLoader.LoadNoteImage(image, note);
+                await _dbContext.AddAsync(noteImage);
             }
 
             return await Save();
@@ -143,7 +160,7 @@ namespace MyWebApp.Repository
             var newImages = editNoteVM.Images;
             if (newImages.Count != 0)
             {
-                var oldImages = await _dbContext.NoteImages.Where(x => x.NoteId == note.NoteId).ToListAsync();
+                var oldImages = await GetNoteImages(note.NoteId);
                 foreach (var oldImage in oldImages)
                 {
                     var previousImage = new PreviousNoteImageModel()
@@ -153,6 +170,7 @@ namespace MyWebApp.Repository
                         NoteId = oldImage.NoteId,
                         ImageFileName = oldImage.ImageFileName
                     };
+
                     await _dbContext.PreviousNoteImages.AddAsync(previousImage);
                     _dbContext.NoteImages.Remove(oldImage);
                 }

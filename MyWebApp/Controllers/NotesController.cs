@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Repository.Interfaces;
+using MyWebApp.Repository;
 using MyWebApp.ViewModels;
-using System.Diagnostics;
 
 namespace MyWebApp.Controllers
 {
     public sealed class NotesController : Controller
     {
-        private readonly INotesRepository _notesRepository;
+        private readonly NotesRepository _notesRepository;
 
-        public NotesController(INotesRepository notesRepository)
+        public NotesController(NotesRepository notesRepository)
         {
             _notesRepository = notesRepository;
         }
@@ -41,21 +40,21 @@ namespace MyWebApp.Controllers
         [Route("Notes/Create")]
         public async Task<IActionResult> Create(CreateNoteViewModel createNoteVM)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _notesRepository.Create(createNoteVM);
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, "Failed to create new note");
+                return View(createNoteVM);
             }
 
-            ModelState.AddModelError(string.Empty, "Failed to create new note");
-            return View(createNoteVM);
+            await _notesRepository.Create(createNoteVM);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         [Route("Notes/Edit/{noteId}")]
         public async Task<IActionResult> Edit(string noteId)
         {
-            var note = await _notesRepository.GetNoteModel(noteId);
+            var note = await _notesRepository.GetNote(noteId);
             if (note == null)
             {
                 return View("Error");
@@ -80,7 +79,7 @@ namespace MyWebApp.Controllers
                 return View("Edit", editNoteVM);
             }
 
-            var originalNote = await _notesRepository.GetNoteModelNoTracking(noteId);
+            var originalNote = await _notesRepository.GetNoteNoTracking(noteId);
             if (originalNote == null)
             {
                 return View("Error");
@@ -94,7 +93,7 @@ namespace MyWebApp.Controllers
         [Route("Notes/Delete/{noteId}")]
         public async Task<IActionResult> Delete(string noteId)
         {
-            var note = await _notesRepository.GetNoteModel(noteId);
+            var note = await _notesRepository.GetNote(noteId);
             if (note == null)
             {
                 return View("Error");
@@ -107,7 +106,7 @@ namespace MyWebApp.Controllers
         [Route("Notes/Delete/{noteId}")]
         public async Task<IActionResult> DeleteNote(string noteId)
         {
-            var note = await _notesRepository.GetNoteModelNoTracking(noteId);
+            var note = await _notesRepository.GetNoteNoTracking(noteId);
             if (note == null)
             {
                 return View("Error");

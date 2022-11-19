@@ -3,7 +3,7 @@ using MyWebApp.Data;
 
 namespace MyWebApp.Controllers
 {
-    public class DashboardController : Controller
+    public sealed class DashboardController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
 

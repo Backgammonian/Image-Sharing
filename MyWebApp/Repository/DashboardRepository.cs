@@ -5,7 +5,7 @@ using MyWebApp.Repository.Interfaces;
 
 namespace MyWebApp.Repository
 {
-    public class DashboardRepository : IDashboardRepository
+    public sealed class DashboardRepository : IDashboardRepository
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IHttpContextAccessor _contextAccessor;

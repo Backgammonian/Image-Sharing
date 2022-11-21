@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Models;
-using System.Diagnostics;
 
 namespace MyWebApp
 {
@@ -16,8 +15,8 @@ namespace MyWebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddSingleton<RandomGenerator>();
-            builder.Services.AddSingleton<PicturesLoader>();
+            builder.Services.AddScoped<RandomGenerator>();
+            builder.Services.AddScoped<PicturesLoader>();
             builder.Services.AddScoped<NotesRepository>();
             builder.Services.AddScoped<UsersRepository>();
             builder.Services.AddScoped<TagsRepository>();
@@ -63,8 +62,6 @@ namespace MyWebApp
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            Debug.WriteLine($"---------------------------(Program.cs) {app.Environment.EnvironmentName}");
 
             await app.RunAsync();
         }

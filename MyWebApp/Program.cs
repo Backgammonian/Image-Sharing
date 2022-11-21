@@ -16,8 +16,8 @@ namespace MyWebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSingleton<RandomGenerator>();
             builder.Services.AddSingleton<PicturesLoader>();
-            //cyclic dependency
             builder.Services.AddScoped<NotesRepository>();
             builder.Services.AddScoped<UsersRepository>();
             builder.Services.AddScoped<TagsRepository>();
@@ -39,8 +39,10 @@ namespace MyWebApp
             if (args.Length > 0 &&
                 args[0].ToLower() == "seed")
             {
-                var users = await Seed.SeedUsersAndRolesAsync(app);
-                await Seed.SeedData(app, users);
+                var result = await Seed.SeedUsersAndRolesAsync(app);
+                var admin = result.Item1;
+                var users = result.Item2;
+                await Seed.SeedData(app, admin, users);
             }
 
             // Configure the HTTP request pipeline.
@@ -62,7 +64,7 @@ namespace MyWebApp
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            Debug.WriteLine($"-Program.cs-------------{app.Environment.EnvironmentName}");
+            Debug.WriteLine($"---------------------------(Program.cs) {app.Environment.EnvironmentName}");
 
             await app.RunAsync();
         }

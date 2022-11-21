@@ -1,4 +1,5 @@
-﻿using MyWebApp.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MyWebApp.Models;
 
 namespace MyWebApp.Data
 {
@@ -8,17 +9,25 @@ namespace MyWebApp.Data
         private const string _demoNoteImagesFolderName = "demo-note-images";
         private const string _demoProfileImagesFolderName = "demo-profile-images";
         private const string _defaultImageFolderName = "default-images";
+        private const string _defaultImageNameWithouExtension = "default";
+        public const string DefaultImageName = "default.jpg";
 
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly RandomGenerator _randomGenerator;
         private readonly string _wwwRootPath;
         private readonly string _imagesPath;
         private readonly string _demoNoteImagesPath;
         private readonly string _demoProfileImagesPath;
         private readonly string _defaultImagePath;
 
-        public PicturesLoader(IWebHostEnvironment webHostEnvironment)
+        public PicturesLoader(IWebHostEnvironment webHostEnvironment,
+            ApplicationDbContext dbContext,
+            RandomGenerator randomGenerator)
         {
             _webHostEnvironment = webHostEnvironment;
+            _dbContext = dbContext;
+            _randomGenerator = randomGenerator;
             _wwwRootPath = _webHostEnvironment.WebRootPath;
             _imagesPath = $"{_wwwRootPath}/{_imagesFolderName}";
             _demoNoteImagesPath = $"{_wwwRootPath}/{_demoNoteImagesFolderName}";
@@ -28,7 +37,7 @@ namespace MyWebApp.Data
 
         private string GetNewFileName(string filePath)
         {
-            var name = RandomGenerator.GetRandomString(80);
+            var name = _randomGenerator.GetRandomString(60);
             var extension = Path.GetExtension(filePath);
             return $"{name}{extension}";
         }
@@ -62,16 +71,16 @@ namespace MyWebApp.Data
             EnsureFolderIsCreated();
 
             var fileName = GetNewFileName(image);
-            await SaveFile(image, Path.Combine(_imagesPath, fileName));
-            var model = new NoteImageModel()
+            var savePath = Path.Combine(_imagesPath, fileName);
+            await SaveFile(image, savePath);
+
+            return new NoteImageModel()
             {
-                ImageId = RandomGenerator.GetRandomId(),
+                ImageId = _randomGenerator.GetRandomId(),
                 NoteId = note.NoteId,
                 ImageFileName = fileName,
                 UploadTime = DateTimeOffset.Now
             };
-
-            return model;
         }
 
         public async Task<UserImageModel> LoadProfileImage(IFormFile image, UserModel user)
@@ -79,34 +88,34 @@ namespace MyWebApp.Data
             EnsureFolderIsCreated();
 
             var fileName = GetNewFileName(image);
-            await SaveFile(image, Path.Combine(_imagesPath, fileName));
-            var model = new UserImageModel()
+            var savePath = Path.Combine(_imagesPath, fileName);
+            await SaveFile(image, savePath);
+
+            return new UserImageModel()
             {
-                ImageId = RandomGenerator.GetRandomId(),
+                ImageId = _randomGenerator.GetRandomId(),
                 UserId = user.Id,
                 ImageFileName = fileName,
                 UploadTime = DateTimeOffset.Now
             };
-
-            return model;
         }
 
         public void LoadDefaultImage()
         {
             EnsureFolderIsCreated();
 
-            var defaultFileName = "default.jpg";
-            SaveFile(Path.Combine(_defaultImagePath, defaultFileName),
-                Path.Combine(_imagesPath, defaultFileName));
+            var sourcePath = Path.Combine(_defaultImagePath, DefaultImageName);
+            var savePath = Path.Combine(_imagesPath, DefaultImageName);
+            SaveFile(sourcePath, savePath);
         }
 
         public UserImageModel GetDefaultProfileImage()
         {
             return new UserImageModel()
             {
-                ImageId = "default",
-                UserId = "default",
-                ImageFileName = "default.jpg",
+                ImageId = _defaultImageNameWithouExtension,
+                UserId = _defaultImageNameWithouExtension,
+                ImageFileName = DefaultImageName,
                 UploadTime = DateTimeOffset.MinValue
             };
         }
@@ -115,9 +124,10 @@ namespace MyWebApp.Data
         {
             return new NoteImageModel()
             {
-                ImageId = "default",
-                NoteId = "default",
-                ImageFileName = "default.jpg"
+                ImageId = _defaultImageNameWithouExtension,
+                NoteId = _defaultImageNameWithouExtension,
+                ImageFileName = DefaultImageName,
+                UploadTime = DateTimeOffset.MinValue
             };
         }
 
@@ -125,53 +135,67 @@ namespace MyWebApp.Data
         {
             EnsureFolderIsCreated();
 
-            var images = Directory.GetFiles(_demoNoteImagesPath);
-            var result = new List<NoteImageModel>();
+            var imagesPaths = Directory.GetFiles(_demoNoteImagesPath);
+            var images = new List<NoteImageModel>();
             var i = 0;
-            foreach (var image in images)
+            foreach (var imagePath in imagesPaths)
             {
-                var fileName = Path.GetFileName(image);
-                SaveFile(image, Path.Combine(_imagesPath, fileName));
+                var fileName = Path.GetFileName(imagePath);
+                var savePath = Path.Combine(_imagesPath, fileName);
+                SaveFile(imagePath, savePath);
                 var currentModelIndex = i % notes.Length;
-                var model = new NoteImageModel()
+
+                images.Add(new NoteImageModel()
                 {
-                    ImageId = RandomGenerator.GetRandomId(),
+                    ImageId = _randomGenerator.GetRandomId(),
                     NoteId = notes[currentModelIndex].NoteId,
                     ImageFileName = fileName,
                     UploadTime = DateTimeOffset.Now
-                };
-                result.Add(model);
+                });
+
                 i += 1;
             }
 
-            return result;
+            return images;
         }
 
         public List<UserImageModel> LoadDemoProfileImages(UserModel[] users)
         {
             EnsureFolderIsCreated();
 
-            var images = Directory.GetFiles(_demoProfileImagesPath);
-            var result = new List<UserImageModel>();
+            var imagesPaths = Directory.GetFiles(_demoProfileImagesPath);
+            var images = new List<UserImageModel>();
             var i = 0;
-            foreach (var image in images)
+            foreach (var imagePath in imagesPaths)
             {
-                var fileName = Path.GetFileName(image);
-                SaveFile(image, Path.Combine(_imagesPath, fileName));
+                var fileName = Path.GetFileName(imagePath);
+                var savePath = Path.Combine(_imagesPath, fileName);
+                SaveFile(imagePath, savePath);
                 var currentModelIndex = i % users.Length;
-                var model = new UserImageModel()
+
+                images.Add(new UserImageModel()
                 {
-                    ImageId = RandomGenerator.GetRandomId(),
+                    ImageId = _randomGenerator.GetRandomId(),
                     UserId = users[currentModelIndex].Id,
                     ImageFileName = fileName,
                     UploadTime = DateTimeOffset.Now
-                };
-                result.Add(model);
+                });
 
                 i += 1;
             }
 
-            return result;
+            return images;
+        }
+
+        public async Task<UserImageModel> GetUserCurrentProfilePicture(UserModel? user)
+        {
+            if (user == null)
+            {
+                return GetDefaultProfileImage();
+            }
+
+            var profilePicture = await _dbContext.ProfileImages.AsNoTracking().OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
+            return profilePicture ?? GetDefaultProfileImage();
         }
     }
 }

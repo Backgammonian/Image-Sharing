@@ -41,14 +41,15 @@ namespace MyWebApp.Repository
             return profilePicture ?? _picturesLoader.GetDefaultProfileImage();
         }
 
-        public async Task<UserModel?> GetNoteAuthor(NoteModel? note)
+        public async Task<IEnumerable<NoteModel>> GetNotesOfUser(string userId)
         {
-            if (note == null)
+            var user = await GetUserNoTracking(userId);
+            if (user == null)
             {
-                return null;
+                return Enumerable.Empty<NoteModel>();
             }
 
-            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == note.UserId);
+            return await _dbContext.Notes.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
         }
 
         public async Task<IEnumerable<RatingModel>> GetUserRatings(UserModel? user)
@@ -80,7 +81,7 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var notes = await _notesRepository.GetUsersNotes(user.Id);
+            var notes = await GetNotesOfUser(user.Id);
             var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var note in notes)
             {

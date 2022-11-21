@@ -3,39 +3,39 @@ using System.Security.Cryptography;
 
 namespace MyWebApp.Data
 {
-    public static class RandomGenerator
+    public sealed class RandomGenerator
     {
-        private const string _chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        private const string _chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
 
-        public static int GetRandomInt()
+        public int GetRandomInt()
         {
             var randomBytes = RandomNumberGenerator.GetBytes(sizeof(int));
 
             return BitConverter.ToInt32(randomBytes, 0);
         }
 
-        public static uint GetRandomUInt()
+        public uint GetRandomUInt()
         {
             var randomBytes = RandomNumberGenerator.GetBytes(sizeof(uint));
 
             return BitConverter.ToUInt32(randomBytes, 0);
         }
 
-        public static long GetRandomLong()
+        public long GetRandomLong()
         {
             var randomBytes = RandomNumberGenerator.GetBytes(sizeof(long));
 
             return BitConverter.ToInt64(randomBytes, 0);
         }
 
-        public static ulong GetRandomULong()
+        public ulong GetRandomULong()
         {
             var randomBytes = RandomNumberGenerator.GetBytes(sizeof(ulong));
 
             return BitConverter.ToUInt64(randomBytes, 0);
         }
 
-        public static string GetRandomString(int length)
+        public string GetRandomString(int length)
         {
             var result = new StringBuilder();
             for (var j = 0; j < length; j++)
@@ -47,6 +47,6 @@ namespace MyWebApp.Data
             return result.ToString();
         }
 
-        public static string GetRandomId() => GetRandomString(Constants.IdLength);
+        public string GetRandomId() => GetRandomString(Constants.IdLength);
     }
 }

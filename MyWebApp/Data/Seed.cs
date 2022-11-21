@@ -6,7 +6,7 @@ namespace MyWebApp.Data
 {
     public static class Seed
     {
-        public static async Task<UserModel[]> SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        public static async Task<(UserModel, UserModel[])> SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -21,6 +21,14 @@ namespace MyWebApp.Data
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
             }
 
+            var randomGenetator = serviceScope.ServiceProvider.GetService<RandomGenerator>();
+            if (randomGenetator == null)
+            {
+                Debug.WriteLine("(SeedUsersAndRolesAsync) Random generator is not available!");
+
+                return (new UserModel(), Array.Empty<UserModel>());
+            }
+
             var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
             string adminUserEmail = "totallynotadmin@gmail.com";
             var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
@@ -28,6 +36,7 @@ namespace MyWebApp.Data
             {
                 var newAdminUser = new UserModel()
                 {
+                    Id = "notadmin",
                     UserName = "totallynotadmin",
                     Email = adminUserEmail,
                     EmailConfirmed = true,
@@ -35,6 +44,8 @@ namespace MyWebApp.Data
                 };
                 await userManager.CreateAsync(newAdminUser, "qwerty");
                 await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
+
+                adminUser = newAdminUser;
             }
 
             var users = new List<UserModel>();
@@ -54,7 +65,7 @@ namespace MyWebApp.Data
                 {
                     var newUser = new UserModel()
                     {
-                        Id = RandomGenerator.GetRandomId(),
+                        Id = randomGenetator.GetRandomId(),
                         UserName = nickname,
                         Email = email,
                         EmailConfirmed = true,
@@ -67,16 +78,16 @@ namespace MyWebApp.Data
                 }
             }
 
-            return users.ToArray();
+            return (adminUser, users.ToArray());
         }
 
-        public static async Task SeedData(IApplicationBuilder applicationBuilder, UserModel[] users)
+        public static async Task SeedData(IApplicationBuilder applicationBuilder, UserModel admin, UserModel[] users)
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
             var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
             if (dbContext == null)
             {
-                Debug.WriteLine("Database context is not available!");
+                Debug.WriteLine("(SeedData) Database context is not available!");
 
                 return;
             }
@@ -84,7 +95,7 @@ namespace MyWebApp.Data
             var picturesLoader = serviceScope.ServiceProvider.GetService<PicturesLoader>();
             if (picturesLoader == null)
             {
-                Debug.WriteLine("Picture loader is not available!");
+                Debug.WriteLine("(SeedData) Picture loader is not available!");
 
                 return;
             }
@@ -112,7 +123,7 @@ namespace MyWebApp.Data
                     NoteId = "3",
                     UserId = users[1].Id,
                     Title = "Funky Note",
-                    Description = "It is a long established fact that a reader will be distracted by " +
+                    Description = "It is a long established <b>fact</b> that a reader will be distracted by " +
                     "the readable content of a page when looking at its layout. " +
                     "\n<a href=\"google.com\">Not a link at all!</a>"
                 },
@@ -123,7 +134,14 @@ namespace MyWebApp.Data
                     Title = "Interesting Observation",
                     Description = "If you'll watch long enough how paint dries out, the paint WILL eventually dry out. " +
                     "\n#CelestialThoughts"
-                }
+                },
+                new NoteModel()
+                {
+                    NoteId = "5",
+                    UserId = admin.Id,
+                    Title = "Announcement from Admin",
+                    Description = "Hello every1! Just a friendly reminder: ALL YOUR IMAGES ARE BELONG TO US ඞ"
+                },
             };
 
             picturesLoader.LoadDefaultImage();

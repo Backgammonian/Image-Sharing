@@ -2,20 +2,65 @@
     Note delete page
 *@
 
-@model NoteModel
+@model DeleteNoteViewModel
 
-<h2>Are you sure you want to delete this note?</h2>
-<div>
-    <input type="hidden" value="NoteId" id="NoteId"/>
-    <div class="form-group">
-        <label asp-for="Title">Title</label>
-        <input asp-for="Title" class="form-control" readonly/>
+@{
+    var noteDetails = Model.NoteDetails;
+
+    if (noteDetails == null ||
+        noteDetails.Note == null)
+    {
+        <h2>There is nothing to delete.</h2>
+
+        return;
+    }
+
+    var note = noteDetails.Note;
+    var score = noteDetails.Score;
+    var tags = noteDetails.Tags;
+    var images = noteDetails.Images;
+    var author = noteDetails.Author;
+    var authorProfilePicture = noteDetails.ProfilePicture;
+
+    <h2>Are you sure you want to delete this note?</h2>
+
+    <div>
+        @if (author != null)
+        {
+            <img width="100" height="100" src="@ImagePathHelper.GetPath(authorProfilePicture.ImageFileName)" asp-append-version="true" />
+            <a asp-controller="Users" asp-action="Info" asp-route-id="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
+        }
+        else
+        {
+            <img width="100" height="100" src="@ImagePathHelper.GetDefaultImagePath()" asp-append-version="true" />
+            <a class="btn btn-sm btn-outline-secondary">Unknown author</a>
+        }
     </div>
-    <div class="form-group">
-        <label asp-for="Description">Description</label>
-        <input asp-for="Description" class="form-control" readonly/>
+
+    <div>
+        <input type="hidden" value="NoteId" id="NoteId" />
+        <div class="form-group">
+            <label asp-for="@note.Title">Title</label>
+            <input asp-for="@note.Title" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <label asp-for="@note.Description">Description</label>
+            <input asp-for="@note.Description" class="form-control" readonly />
+        </div>
+
+        @foreach (var image in images)
+        {
+            <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true" />
+        }
+
+        <h3>Rating: @score</h3>
+        <h4>Tags:</h4>
+        @foreach (var tag in tags)
+        {
+            <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
+        }
     </div>
-</div>
-<form method="post" asp-action="Delete">
-    <button type="submit" class="btn btn-danger float-right mt-3">Delete</button>
-</form> 
+    <form method="post" asp-action="Delete">
+        <button type="submit" class="btn btn-danger float-right mt-3">Delete</button>
+    </form> 
+}

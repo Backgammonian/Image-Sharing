@@ -9,6 +9,6 @@ namespace MyWebApp.ViewModels
         public IEnumerable<string> Tags { get; set; } = Enumerable.Empty<string>();
         public IEnumerable<NoteImageModel> Images { get; set; } = Enumerable.Empty<NoteImageModel>();
         public UserModel? Author { get; set; }
-        public UserImageModel? ProfilePicture { get; set; }
+        public UserImageModel ProfilePicture { get; set; } = new UserImageModel();
     }
 }

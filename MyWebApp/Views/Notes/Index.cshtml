@@ -1,36 +1,64 @@
 ﻿@*
-    List of available Notes
+    List of available notes
 *@
 
-@model IEnumerable<NoteDetailsViewModel>
+@model NotesListViewModel
 
-@if (Model.Count() == 0)
+@if (Model.NotesDetails.Count() == 0)
 {
     <h2>There are no notes yet.</h2>
 }
 else
 {
+    var notesDetails = Model.NotesDetails;
+
     <h1>Notes</h1>  
-    @foreach (var item in Model)
+    @foreach (var noteDetail in notesDetails)
     {
-        var note = item.Note;
-        var score = item.Score;
-        var tags = item.Tags;
+        var note = noteDetail.Note;
+        if (note == null)
+        {
+            continue;
+        }
+
+        var score = noteDetail.Score;
+        var tags = noteDetail.Tags;
+        var firstImage = noteDetail.Images.FirstOrDefault();
+        var author = noteDetail.Author;
+        var authorProfilePicture = noteDetail.ProfilePicture;
 
         <div>
+            <div>
+                @if (author != null)
+                {
+                    <img width="100" height="100" src="@ImagePathHelper.GetPath(authorProfilePicture.ImageFileName)" asp-append-version="true" />
+                    <a asp-controller="Users" asp-action="Info" asp-route-id="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
+                }
+                else
+                {
+                    <img width="100" height="100" src="@ImagePathHelper.GetDefaultImagePath()" asp-append-version="true" />
+                    <a class="btn btn-sm btn-outline-secondary">Unknown author</a>
+                }
+            </div>
+
             <h3>@note.Title</h3>
             <h4>@note.Description</h4>
+
+            @if (firstImage != null)
+            {
+                <img src="@ImagePathHelper.GetPath(firstImage.ImageFileName)" asp-append-version="true" />
+            }
+
             <h4>Rating: @score</h4>
             <h4>Tags:</h4>
             @foreach (var tag in tags)
             {
                 <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
             }
+
             <div>
-                @if (User != null &&
-                    User.Identity != null &&
-                    User.Identity.IsAuthenticated &&
-                    User.IsInRole(UserRoles.Admin))
+                @if (User.IsAdmin() ||
+                    User.IsOwner(note))
                 {
                     <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
                     <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>

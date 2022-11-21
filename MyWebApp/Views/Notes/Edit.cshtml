@@ -5,7 +5,7 @@
 @model EditNoteViewModel
 
 <form method="post" asp-action="Edit" enctype="multipart/form-data">
-    <input type="hidden" value="NoteId" id="NoteId"/>
+    <input type="hidden" value="NoteId" id="NoteId" />
     <div class="form-group">
         <label asp-for="Title">Title</label>
         <input asp-for="Title" class="form-control" placeholder="Title of the Note"/>

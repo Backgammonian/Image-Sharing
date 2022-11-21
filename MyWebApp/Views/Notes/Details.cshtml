@@ -1,31 +1,62 @@
 ﻿@*
-    Details of selected Note
+    Details of selected note
 *@
 
 @model NoteDetailsViewModel
 
-@if (Model == null)
-{
-    <h2>There is nothing.</h2>
-}
-else
-{
-    <img width="100" height="100" src="@ImagePathHelper.GetPath(Model.ProfilePicture.ImageFileName)" asp-append-version="true"/>
-    <a asp-controller="Users" asp-action="Info" asp-route-id="@Model.Author.Id" class="btn btn-sm btn-outline-secondary">Author: @Model.Author.UserName</a>
-    <h2>@Model.Note.Title</h2>
-    <h3>@Model.Note.Description</h3>
-    @foreach (var image in Model.Images)
+@{
+    var note = Model.Note;
+    if (note == null)
     {
-        <img src="@($"~/images/{image.ImageFileName}")" asp-append-version="true"/>
+        <h2>There is nothing.</h2>
+
+        return;
     }
-    <h3>Rating: @Model.Score</h3>
-    <h4>Tags:</h4>
-    @foreach (var tag in Model.Tags)
-    {
-        <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
-    }
+
+    var score = Model.Score;
+    var tags = Model.Tags;
+    var images = Model.Images;
+    var author = Model.Author;
+    var authorProfilePicture = Model.ProfilePicture;
+
     <div>
-        <a asp-controller="Notes" asp-action="Edit" asp-route-id="@Model.Note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-        <a asp-controller="Notes" asp-action="Delete" asp-route-id="@Model.Note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+        <div>
+            @if (author != null)
+            {
+                <img width="100" height="100" src="@ImagePathHelper.GetPath(authorProfilePicture.ImageFileName)" asp-append-version="true" />
+                <a asp-controller="Users" asp-action="Info" asp-route-id="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
+            }
+            else
+            {
+                <img width="100" height="100" src="@ImagePathHelper.GetDefaultImagePath()" asp-append-version="true" />
+                <a class="btn btn-sm btn-outline-secondary">Unknown author</a>
+            }
+        </div>
+
+        <h3>@note.Title</h3>
+        <h4>@note.Description</h4>
+
+        @foreach (var image in images)
+        {
+            <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true" />
+        }
+
+        <h3>Rating: @score</h3>
+        <h4>Tags:</h4>
+        @foreach (var tag in tags)
+        {
+            <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
+        }
+
+        <div>
+            @if (User.IsAdmin() ||
+                User.IsOwner(note))
+            {
+                <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+            }
+
+            <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+        </div>
     </div>
 }

@@ -6,5 +6,11 @@
         {
             return $"~/images/{imageFileName}";
         }
+
+        public static string GetDefaultImagePath()
+        {
+            return $"~/images/{PicturesLoader.DefaultImageName}";
+        }
+
     }
 }

@@ -42,8 +42,8 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Failed to create new note");
-                return View(createNoteVM);
+                ModelState.AddModelError(string.Empty, "Failed to create a new note");
+                return View("Create", createNoteVM);
             }
 
             await _notesRepository.Create(createNoteVM);
@@ -99,12 +99,18 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            return View(note);
+            var deleteNoteVM = new DeleteNoteViewModel()
+            {
+                NoteId = note.NoteId,
+                NoteDetails = await _notesRepository.GetNoteDetails(noteId)
+            };
+
+            return View(deleteNoteVM);
         }
 
-        [HttpPost, ActionName(nameof(Delete))]
+        [HttpPost]
         [Route("Notes/Delete/{noteId}")]
-        public async Task<IActionResult> DeleteNote(string noteId)
+        public async Task<IActionResult> Delete(string noteId, DeleteNoteViewModel deleteNoteVM)
         {
             var note = await _notesRepository.GetNoteNoTracking(noteId);
             if (note == null)
@@ -112,7 +118,7 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            await _notesRepository.Delete(note);
+            await _notesRepository.Delete(deleteNoteVM);
             return RedirectToAction("Index");
         }
     }

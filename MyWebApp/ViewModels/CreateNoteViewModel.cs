@@ -1,11 +1,9 @@
-﻿using MyWebApp.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp.ViewModels
 {
     public sealed class CreateNoteViewModel
     {
-        public string NoteId { get; set; } = RandomGenerator.GetRandomId();
         [Required]
         public string Title { get; set; } = string.Empty;
         [Required]

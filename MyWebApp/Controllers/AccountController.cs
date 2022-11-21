@@ -10,11 +10,15 @@ namespace MyWebApp.Controllers
     {
         private readonly UserManager<UserModel> _userManager;
         private readonly SignInManager<UserModel> _signInManager;
+        private readonly RandomGenerator _randomGenerator;
 
-        public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager)
+        public AccountController(UserManager<UserModel> userManager,
+            SignInManager<UserModel> signInManager,
+            RandomGenerator randomGenerator)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _randomGenerator = randomGenerator;
         }
 
         [HttpGet]
@@ -80,7 +84,7 @@ namespace MyWebApp.Controllers
 
             var newUser = new UserModel()
             {
-                Id = RandomGenerator.GetRandomId(),
+                Id = _randomGenerator.GetRandomId(),
                 Email = registerVM.Email,
                 UserName = registerVM.Email
             };

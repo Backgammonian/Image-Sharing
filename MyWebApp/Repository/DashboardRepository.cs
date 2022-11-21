@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using MyWebApp.Data;
-using MyWebApp.ViewModels;
+﻿using MyWebApp.ViewModels;
+using MyWebApp.Extensions;
 
 namespace MyWebApp.Repository
 {
@@ -22,18 +21,19 @@ namespace MyWebApp.Repository
 
         public async Task<IEnumerable<NoteDetailsViewModel>> GetAllUserNotes()
         {
-            var currentUser = _contextAccessor.HttpContext?.User;
-            if (currentUser == null)
+            var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
+            if (currentUserId == null ||
+                currentUserId.IsEmpty())
             {
                 return Enumerable.Empty<NoteDetailsViewModel>();
             }
 
-            var userId = currentUser.Identity.GetUserId();
-            var userNotes = await _notesRepository.GetUsersNotes(userId);
+            var userNotes = await _usersRepository.GetNotesOfUser(currentUserId);
             var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var userNote in userNotes)
             {
-                notesDetails.Add(await _notesRepository.GetNoteDetails(userNote.NoteId));
+                var noteDetail = await _notesRepository.GetNoteDetails(userNote.NoteId);
+                notesDetails.Add(noteDetail);
             }
 
             return notesDetails;
@@ -41,14 +41,14 @@ namespace MyWebApp.Repository
 
         public async Task<UserRatingsViewModel?> GetAllUserRatings()
         {
-            var currentUser = _contextAccessor.HttpContext?.User;
-            if (currentUser == null)
+            var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
+            if (currentUserId == null ||
+                currentUserId.IsEmpty())
             {
                 return null;
             }
 
-            var userId = currentUser.Identity.GetUserId();
-            return await _usersRepository.GetUserRatings(userId);
+            return await _usersRepository.GetUserRatings(currentUserId);
         }
     }
 }

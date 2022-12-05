@@ -5,12 +5,27 @@ namespace MyWebApp.Data
 {
     public sealed class PicturesLoader
     {
+        #region Constants
         private const string _imagesFolderName = "images";
         private const string _demoNoteImagesFolderName = "demo-note-images";
         private const string _demoProfileImagesFolderName = "demo-profile-images";
         private const string _defaultImageFolderName = "default-images";
         private const string _defaultImageNameWithouExtension = "default";
         public const string DefaultImageName = "default.jpg";
+        #endregion
+
+        #region Static methods
+        private static async Task SaveFile(IFormFile file, string destinationPath)
+        {
+            using var stream = new FileStream(destinationPath, FileMode.Create);
+            await file.CopyToAsync(stream);
+        }
+
+        private static void SaveFile(string sourcePath, string destinationPath)
+        {
+            File.Copy(sourcePath, destinationPath, true);
+        }
+        #endregion
 
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ApplicationDbContext _dbContext;
@@ -45,17 +60,6 @@ namespace MyWebApp.Data
         private string GetNewFileName(IFormFile file)
         {
             return GetNewFileName(file.FileName);
-        }
-
-        private async Task SaveFile(IFormFile file, string destinationPath)
-        {
-            using var stream = new FileStream(destinationPath, FileMode.Create);
-            await file.CopyToAsync(stream);
-        }
-
-        private void SaveFile(string sourcePath, string destinationPath)
-        {
-            File.Copy(sourcePath, destinationPath, true);
         }
 
         private void EnsureFolderIsCreated()

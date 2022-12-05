@@ -1,4 +1,8 @@
-﻿@{
+﻿@*
+    Home page
+*@
+
+@{
     ViewData["Title"] = "Main Page";
 }
 
@@ -7,9 +11,7 @@
     <p>Simple sharing platform and web storage for images.</p>
     <p>Built using <a href="https://docs.microsoft.com/aspnet/core">ASP.NET Core</a> MVC.</p>
 
-    @if (User != null &&
-        User.Identity != null &&
-        User.Identity.IsAuthenticated)
+    @if (User.IsAuthenticated())
     {
         <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">Create a new note</a>
     }

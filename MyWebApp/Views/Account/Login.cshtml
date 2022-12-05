@@ -14,9 +14,7 @@
             <h4>Sing in to your account</h4>
         </p>
 
-        @if (User != null &&
-            User.Identity != null &&
-            User.Identity.IsAuthenticated)
+        @if (User.IsAuthenticated())
         {
             <div class="row">
                 <span>

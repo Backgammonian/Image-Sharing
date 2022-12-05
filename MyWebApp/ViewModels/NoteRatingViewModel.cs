@@ -4,7 +4,7 @@ namespace MyWebApp.ViewModels
 {
     public sealed class NoteRatingViewModel
     {
-        public NoteDetailsViewModel? NoteDetails { get; set; }
-        public RatingModel? Rating { get; set; }
+        public NoteDetailsViewModel NoteDetails { get; set; } = new NoteDetailsViewModel();
+        public RatingModel Rating { get; set; } = new RatingModel();
     }
 }

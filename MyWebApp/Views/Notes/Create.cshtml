@@ -1,24 +1,35 @@
 ﻿@*
-    View for creating a new Note
+    View for creating a new note
 *@
 
 @model CreateNoteViewModel
 
-<form method="post" asp-action="Create" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Title">Title</label>
-        <input asp-for="Title" class="form-control" placeholder="Note title"/>
-        <span asp-validation-for="Title" class="text-danger"></span>
+@if (User.IsAuthenticated())
+{
+    <form method="post" asp-action="Create" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Title">Title</label>
+            <input asp-for="Title" class="form-control" placeholder="Note title"/>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <input asp-for="Description" class="form-control" placeholder="Description"/>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Images">Images</label>
+            <input asp-for="Images" class="form-control" placeholder="Images" accept="image/*"/>
+            <span asp-validation-for="Images" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+}
+else
+{
+    <div class="row">
+        <span>
+            You are not logged in!
+        </span>
     </div>
-    <div class="form-group">
-        <label asp-for="Description">Description</label>
-        <input asp-for="Description" class="form-control" placeholder="Description"/>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Images">Images</label>
-        <input asp-for="Images" class="form-control" placeholder="Images" accept="image/*"/>
-        <span asp-validation-for="Images" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+}

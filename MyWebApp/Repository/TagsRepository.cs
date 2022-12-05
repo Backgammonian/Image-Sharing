@@ -22,7 +22,7 @@ namespace MyWebApp.Repository
             return await _dbContext.TagsForNotes.Where(x => x.Tag == tag).ToListAsync();
         }
 
-        public async Task<TaggedNotesViewModel?> GetByTag(string tag)
+        public async Task<TaggedNotesViewModel> GetByTag(string tag)
         {
             var taggedNotes = await GetTaggedNotes(tag);
 
@@ -52,8 +52,8 @@ namespace MyWebApp.Repository
 
             return new TaggedNotesViewModel()
             {
-                TaggedNotesDetails = taggedNotesDetails,
-                Tag = tag
+                Tag = tag,
+                TaggedNotesDetails = taggedNotesDetails
             };
         }
     }

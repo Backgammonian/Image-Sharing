@@ -14,7 +14,7 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Tags/GetByTag/{tag}")]
-        public async Task<IActionResult> GetByTag(string? tag)
+        public async Task<IActionResult> GetByTag(string tag)
         {
             return View(await _tagsRepository.GetByTag(tag));
         }

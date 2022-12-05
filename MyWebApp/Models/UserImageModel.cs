@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using MyWebApp.Data;
 
 namespace MyWebApp.Models
 {
@@ -9,7 +10,7 @@ namespace MyWebApp.Models
         public string ImageId { get; set; } = string.Empty;
         [ForeignKey(nameof(UserModel))]
         public string UserId { get; set; } = string.Empty;
-        public string ImageFileName { get; set; } = string.Empty;
+        public string ImageFileName { get; set; } = PicturesLoader.DefaultImageName;
         public DateTimeOffset UploadTime { get; set; }
     }
 }

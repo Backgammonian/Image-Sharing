@@ -1,15 +1,15 @@
 ﻿@*
-    List of notes marked with the certain tag
+    List of notes marked with the certain thread
 *@
 
-@model TaggedNotesViewModel
+@model NotesFromThreadViewModel
 
 @{
-    var selectedTag = Model.Tag;
-    var taggedNotesDetails = Model.TaggedNotesDetails;
+    var selectedThread = Model.Thread;
+    var threadNotesDetails = Model.NotesDetails;
 
-    if (selectedTag == string.Empty ||
-        taggedNotesDetails.Count() == 0)
+    if (selectedThread == string.Empty ||
+        threadNotesDetails.Count() == 0)
     {
         <div class="row">
             <span>
@@ -19,20 +19,20 @@
     }
     else
     {
-        <h2>Notes with tag: @selectedTag</h2>
-        @foreach (var taggedNoteDetail in taggedNotesDetails)
+        <h1>Notes from thread: @selectedThread</h1>
+        @foreach (var threadNoteDetail in threadNotesDetails)
         {
-            var note = taggedNoteDetail.Note;
+            var note = threadNoteDetail.Note;
             if (note == null)
             {
                 continue;
             }
 
-            var score = taggedNoteDetail.Score;
-            var tags = taggedNoteDetail.Tags;
-            var images = taggedNoteDetail.Images;
-            var author = taggedNoteDetail.Author;
-            var authorProfilePicture = taggedNoteDetail.ProfilePicture;
+            var score = threadNoteDetail.Score;
+            var thread = threadNoteDetail.Thread;
+            var images = threadNoteDetail.Images;
+            var author = threadNoteDetail.Author;
+            var authorProfilePicture = threadNoteDetail.ProfilePicture;
 
             <div>
                 <div>
@@ -57,11 +57,8 @@
                 }
 
                 <h3>Rating: @score</h3>
-                <h4>Tags:</h4>
-                @foreach (var tag in tags)
-                {
-                    <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
-                }
+                <h4>Thread:</h4>
+                <a asp-controller="Threads" asp-action="GetByThread" asp-route-tag="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
 
                 <div>
                     @if (User.IsAdmin() ||

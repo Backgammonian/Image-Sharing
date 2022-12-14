@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp.Models
 {
-    public sealed class TagsForNotesModel
+    public sealed class ThreadOfNoteModel
     {
         [Key]
         public string Id { get; set; } = string.Empty;
-        [ForeignKey(nameof(TagModel))]
-        public string Tag { get; set; } = string.Empty;
+        [ForeignKey(nameof(ThreadModel))]
+        public string Thread { get; set; } = string.Empty;
         [ForeignKey(nameof(NoteModel))]
         public string NoteId { get; set; } = string.Empty;
     }

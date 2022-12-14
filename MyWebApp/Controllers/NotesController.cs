@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
 
@@ -31,9 +32,29 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Notes/Create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var availableThreads = await _notesRepository.GetAvailableThreads();
+            var selectedListItems = availableThreads.Select(x => new SelectListItem()
+            {
+                Value = x.Thread,
+                Text = x.Thread,
+            });
+
+            var selectedThread = string.Empty;
+            var firstThread = selectedListItems.First();
+            if (firstThread != null)
+            {
+                selectedThread = firstThread.Value;
+            }
+
+            var createNoteViewModel = new CreateNoteViewModel()
+            {
+                AvailableThreads = selectedListItems,
+                SelectedThread = selectedThread
+            };
+
+            return View(createNoteViewModel);
         }
 
         [HttpPost]
@@ -46,8 +67,15 @@ namespace MyWebApp.Controllers
                 return View("Create", createNoteVM);
             }
 
-            await _notesRepository.Create(createNoteVM);
-            return RedirectToAction("Index");
+            if (await _notesRepository.Create(createNoteVM))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "You are not logged in!");
+                return View("Create", createNoteVM);
+            }
         }
 
         [HttpGet]
@@ -60,10 +88,32 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
+            var availableThreads = await _notesRepository.GetAvailableThreads();
+            var selectedListItems = availableThreads.Select(x => new SelectListItem()
+            {
+                Value = x.Thread,
+                Text = x.Thread,
+            });
+
+            var threadOfNote = await _notesRepository.GetNoteThread(note.NoteId);
+            if (threadOfNote != null)
+            {
+                foreach (var selectedListItem in selectedListItems)
+                {
+                    if (selectedListItem.Value == threadOfNote.Thread)
+                    {
+                        selectedListItem.Selected = true;
+                        break;
+                    }
+                }
+            }
+
             var editNoteVM = new EditNoteViewModel()
             {
                 Title = note.Title,
-                Description = note.Description
+                Description = note.Description,
+                AvailableThreads = selectedListItems,
+                SelectedThread = threadOfNote == null ? string.Empty : threadOfNote.Thread
             };
 
             return View(editNoteVM);
@@ -85,8 +135,15 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            await _notesRepository.Update(originalNote, editNoteVM);
-            return RedirectToAction("Index");
+            if (await _notesRepository.Update(originalNote, editNoteVM))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "You have no permission to edit this note.");
+                return View("Edit", editNoteVM);
+            }
         }
 
         [HttpGet]

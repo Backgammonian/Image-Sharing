@@ -2,9 +2,9 @@
 
 namespace MyWebApp.Models
 {
-    public sealed class TagModel
+    public sealed class ThreadModel
     {
         [Key]
-        public string Tag { get; set; } = string.Empty;
+        public string Thread { get; set; } = string.Empty;
     }
 }

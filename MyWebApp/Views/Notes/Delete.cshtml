@@ -18,7 +18,7 @@
 
     var note = noteDetails.Note;
     var score = noteDetails.Score;
-    var tags = noteDetails.Tags;
+    var thread = noteDetails.Thread;
     var images = noteDetails.Images;
     var author = noteDetails.Author;
     var authorProfilePicture = noteDetails.ProfilePicture;
@@ -48,6 +48,9 @@
             <label asp-for="@note.Description">Description</label>
             <input asp-for="@note.Description" class="form-control" readonly />
         </div>
+        <div class="form-group">
+            <label asp-for="@thread">Thread</label>
+        </div>
 
         @foreach (var image in images)
         {
@@ -55,11 +58,8 @@
         }
 
         <h3>Rating: @score</h3>
-        <h4>Tags:</h4>
-        @foreach (var tag in tags)
-        {
-            <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
-        }
+        <h4>Thread:</h4>
+        <a asp-controller="Threads" asp-action="GetByThread" asp-route-tag="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
     </div>
 
     <form method="post" asp-action="Delete">

@@ -13,13 +13,12 @@ namespace MyWebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<RandomGenerator>();
             builder.Services.AddScoped<PicturesLoader>();
             builder.Services.AddScoped<NotesRepository>();
             builder.Services.AddScoped<UsersRepository>();
-            builder.Services.AddScoped<TagsRepository>();
+            builder.Services.AddScoped<ThreadsRepository>();
             builder.Services.AddScoped<DashboardRepository>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -44,7 +43,6 @@ namespace MyWebApp
                 await Seed.SeedData(app, admin, users);
             }
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");

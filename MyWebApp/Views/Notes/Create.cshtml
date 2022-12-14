@@ -18,6 +18,13 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
+            <label asp-for="SelectedThread">Thread</label>
+            <select asp-for="SelectedThread" asp-items="@Model.AvailableThreads" class="form-control form-control-lg">
+                <option>--Select a thread--</option>
+            </select>
+            <span asp-validation-for="SelectedThread" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <label asp-for="Images">Images</label>
             <input asp-for="Images" class="form-control" placeholder="Images" accept="image/*"/>
             <span asp-validation-for="Images" class="text-danger"></span>

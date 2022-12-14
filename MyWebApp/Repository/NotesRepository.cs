@@ -24,6 +24,11 @@ namespace MyWebApp.Repository
             _randomGenerator = randomGenerator;
         }
 
+        public async Task<IEnumerable<ThreadModel>> GetAvailableThreads()
+        {
+            return await _dbContext.Threads.AsNoTracking().ToListAsync();
+        }
+
         public async Task<IEnumerable<NoteModel>> GetAllNotes()
         {
             return await _dbContext.Notes.AsNoTracking().ToListAsync();
@@ -54,9 +59,9 @@ namespace MyWebApp.Repository
             return await _dbContext.Ratings.AsNoTracking().Where(x => x.NoteId == noteId).SumAsync(x => x.Score);
         }
 
-        public async Task<IEnumerable<string>> GetNoteTags(string noteId)
+        public async Task<ThreadOfNoteModel?> GetNoteThread(string noteId)
         {
-            return await _dbContext.TagsForNotes.AsNoTracking().Where(x => x.NoteId == noteId).Select(x => x.Tag).ToListAsync();
+            return await _dbContext.ThreadsOfNotes.AsNoTracking().Where(x => x.NoteId == noteId).FirstOrDefaultAsync();
         }
 
         public async Task<NoteImageModel> GetNoteFirstImage(string noteId)
@@ -93,7 +98,7 @@ namespace MyWebApp.Repository
                 {
                     Note = note,
                     Score = await GetNoteScore(noteId),
-                    Tags = await GetNoteTags(noteId),
+                    Thread = await GetNoteThread(noteId),
                     Images = new List<NoteImageModel>()
                     {
                         await GetNoteFirstImage(noteId)
@@ -120,7 +125,7 @@ namespace MyWebApp.Repository
             {
                 Note = note,
                 Score = await GetNoteScore(noteId),
-                Tags = await GetNoteTags(noteId),
+                Thread = await GetNoteThread(noteId),
                 Images = await GetNoteImagesNoTracking(noteId),
                 Author = author,
                 ProfilePicture = await _picturesLoader.GetUserCurrentProfilePicture(author)
@@ -148,12 +153,27 @@ namespace MyWebApp.Repository
                 Title = createNoteVM.Title,
                 Description = createNoteVM.Description,
             };
-            await _dbContext.AddAsync(note);
+            await _dbContext.Notes.AddAsync(note);
 
             foreach (var image in createNoteVM.Images)
             {
                 var noteImage = await _picturesLoader.LoadNoteImage(image, note);
-                await _dbContext.AddAsync(noteImage);
+                await _dbContext.NoteImages.AddAsync(noteImage);
+            }
+
+            var selectedThread = createNoteVM.SelectedThread;
+            if (selectedThread != string.Empty)
+            {
+                var availableThreads = await GetAvailableThreads();
+                if (availableThreads.Any(x => x.Thread == selectedThread))
+                {
+                    await _dbContext.ThreadsOfNotes.AddAsync(new ThreadOfNoteModel()
+                    {
+                        Id = _randomGenerator.GetRandomId(),
+                        Thread = selectedThread,
+                        NoteId = note.NoteId
+                    });
+                }
             }
 
             return await Save();
@@ -180,7 +200,7 @@ namespace MyWebApp.Repository
             }
 
             var newImages = editNoteVM.Images;
-            if (newImages.Count != 0)
+            if (newImages.Count() != 0)
             {
                 var oldImages = await GetNoteImages(note.NoteId);
                 foreach (var oldImage in oldImages)
@@ -200,7 +220,28 @@ namespace MyWebApp.Repository
                 foreach (var newImage in newImages)
                 {
                     var newNoteImage = await _picturesLoader.LoadNoteImage(newImage, note);
-                    await _dbContext.AddAsync(newNoteImage);
+                    await _dbContext.NoteImages.AddAsync(newNoteImage);
+                }
+            }
+
+            var selectedThread = editNoteVM.SelectedThread;
+            if (selectedThread != string.Empty)
+            {
+                var availableThreads = await GetAvailableThreads();
+                if (availableThreads.Any(x => x.Thread == selectedThread))
+                {
+                    await _dbContext.ThreadsOfNotes.AddAsync(new ThreadOfNoteModel()
+                    {
+                        Id = _randomGenerator.GetRandomId(),
+                        Thread = selectedThread,
+                        NoteId = note.NoteId
+                    });
+
+                    var oldThreadOfNote = await GetNoteThread(note.NoteId);
+                    if (oldThreadOfNote != null)
+                    {
+                        _dbContext.ThreadsOfNotes.Remove(oldThreadOfNote);
+                    }
                 }
             }
 

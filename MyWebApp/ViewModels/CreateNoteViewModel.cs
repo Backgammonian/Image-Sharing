@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp.ViewModels
 {
@@ -8,6 +9,8 @@ namespace MyWebApp.ViewModels
         public string Title { get; set; } = string.Empty;
         [Required]
         public string Description { get; set; } = string.Empty;
-        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
+        public IEnumerable<SelectListItem> AvailableThreads { get; set; } = Enumerable.Empty<SelectListItem>();
+        public string SelectedThread { get; set; } = string.Empty;
+        public IEnumerable<IFormFile> Images { get; set; } = Enumerable.Empty<IFormFile>();
     }
 }

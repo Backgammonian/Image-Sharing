@@ -49,7 +49,8 @@ namespace MyWebApp.Data
             }
 
             var users = new List<UserModel>();
-            var usersCredentials = new[] { ("blue@gmail.com", "Mr. Blue", "12345678", "Just chillin'"),
+            var usersCredentials = new[] { 
+                ("blue@gmail.com", "Mr. Blue", "12345678", "Just chillin'"),
                 ("green@gmail.com", "Mr. Green", "12345678", "Just morbin'"),
                 ("red@gmail.com", "Mr. Red", "12345678", "Just mindlessly scrolling the Internet pages until the end of the world. =)") };
 
@@ -194,75 +195,57 @@ namespace MyWebApp.Data
                 },
             };
 
-            var tags = new List<TagModel>()
+            var tags = new List<ThreadModel>()
             {
-                new TagModel()
+                new ThreadModel()
                 {
-                    Tag = "funny"
+                    Thread = "funny"
                 },
-                new TagModel()
+                new ThreadModel()
                 {
-                    Tag = "news"
+                    Thread = "news"
                 },
-                new TagModel()
+                new ThreadModel()
                 {
-                    Tag = "text"
+                    Thread = "text"
                 },
-                new TagModel()
+                new ThreadModel()
                 {
-                    Tag = "photos"
+                    Thread = "photos"
                 },
             };
 
-            var tagsForNotes = new List<TagsForNotesModel>()
+            var threadsOfNotes = new List<ThreadOfNoteModel>()
             {
-                new TagsForNotesModel()
+                new ThreadOfNoteModel()
                 {
                     Id = "1",
-                    Tag = tags[0].Tag,
+                    Thread = tags[0].Thread,
                     NoteId = notes[0].NoteId
                 },
-                new TagsForNotesModel()
+                new ThreadOfNoteModel()
                 {
                     Id = "2",
-                    Tag = tags[1].Tag,
-                    NoteId = notes[0].NoteId
-                },
-                new TagsForNotesModel()
-                {
-                    Id = "3",
-                    Tag = tags[1].Tag,
+                    Thread = tags[1].Thread,
                     NoteId = notes[1].NoteId
                 },
-                new TagsForNotesModel()
+                new ThreadOfNoteModel()
+                {
+                    Id = "3",
+                    Thread = tags[2].Thread,
+                    NoteId = notes[2].NoteId
+                },
+                new ThreadOfNoteModel()
                 {
                     Id = "4",
-                    Tag = tags[2].Tag,
-                    NoteId = notes[2].NoteId
+                    Thread = tags[0].Thread,
+                    NoteId = notes[3].NoteId
                 },
-                new TagsForNotesModel()
+                new ThreadOfNoteModel()
                 {
                     Id = "5",
-                    Tag = tags[3].Tag,
-                    NoteId = notes[2].NoteId
-                },
-                new TagsForNotesModel()
-                {
-                    Id = "6",
-                    Tag = tags[3].Tag,
-                    NoteId = notes[0].NoteId
-                },
-                new TagsForNotesModel()
-                {
-                    Id = "7",
-                    Tag = tags[0].Tag,
-                    NoteId = notes[3].NoteId
-                },
-                new TagsForNotesModel()
-                {
-                    Id = "8",
-                    Tag = tags[2].Tag,
-                    NoteId = notes[3].NoteId
+                    Thread = tags[1].Thread,
+                    NoteId = notes[4].NoteId
                 },
             };
 
@@ -294,16 +277,16 @@ namespace MyWebApp.Data
                 await dbContext.Ratings.AddRangeAsync(ratings);
             }
 
-            if (dbContext.Tags != null &&
-                !dbContext.Tags.Any())
+            if (dbContext.Threads != null &&
+                !dbContext.Threads.Any())
             {
-                await dbContext.Tags.AddRangeAsync(tags);
+                await dbContext.Threads.AddRangeAsync(tags);
             }
 
-            if (dbContext.TagsForNotes != null &&
-                !dbContext.TagsForNotes.Any())
+            if (dbContext.ThreadsOfNotes != null &&
+                !dbContext.ThreadsOfNotes.Any())
             {
-                await dbContext.TagsForNotes.AddRangeAsync(tagsForNotes);
+                await dbContext.ThreadsOfNotes.AddRangeAsync(threadsOfNotes);
             }
 
             await dbContext.SaveChangesAsync();

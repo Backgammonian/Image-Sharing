@@ -19,6 +19,13 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
+            <label asp-for="SelectedThread">Thread</label>
+            <select asp-for="SelectedThread" asp-items="@Model.AvailableThreads" class="form-control form-control-lg">
+                <option>--Select a thread--</option>
+            </select>
+            <span asp-validation-for="SelectedThread" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             Don't select new images if you want to keep the old ones.
         </div>
         <div class="form-group">

@@ -33,7 +33,7 @@
 
             var images = noteDetail.Images;
             var score = noteDetail.Score;
-            var tags = noteDetail.Tags;
+            var thread = noteDetail.Thread;
 
             <h3>@note.Title</h3>
             <h4>@note.Description</h4>
@@ -44,11 +44,8 @@
             }
 
             <h3>Rating: @score</h3>
-            <h4>Tags:</h4>
-            @foreach (var tag in tags)
-            {
-                <a asp-controller="Tags" asp-action="GetByTag" asp-route-tag="@tag" class="btn btn-sm btn-outline-secondary">@tag</a>
-            }
+            <h4>Thread:</h4>
+            <a asp-controller="Threads" asp-action="GetByThread" asp-route-tag="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
 
             <div>
                 @if (User.IsAdmin() ||

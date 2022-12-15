@@ -71,11 +71,9 @@ namespace MyWebApp.Controllers
             {
                 return RedirectToAction("Index");
             }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "You are not logged in!");
-                return View("Create", createNoteVM);
-            }
+          
+            ModelState.AddModelError(string.Empty, "You are not logged in!");
+            return View("Create", createNoteVM);
         }
 
         [HttpGet]
@@ -139,11 +137,9 @@ namespace MyWebApp.Controllers
             {
                 return RedirectToAction("Index");
             }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "You have no permission to edit this note.");
-                return View("Edit", editNoteVM);
-            }
+          
+            ModelState.AddModelError(string.Empty, "You have no permission to edit this note.");
+            return View("Edit", editNoteVM);
         }
 
         [HttpGet]

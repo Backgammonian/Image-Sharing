@@ -26,9 +26,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index">Notes</a>
                         </li>
 
-                        @if (User != null &&
-                            User.Identity != null &&
-                            User.Identity.IsAuthenticated)
+                        @if (User.IsAuthenticated())
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>

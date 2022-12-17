@@ -9,7 +9,7 @@
     <form method="post" asp-action="EditUserProfile" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="Status">Status</label>
-            <input asp-for="Status" class="form-control" placeholder="Your status" />
+            <input asp-for="Status" class="form-control" placeholder="Your status"/>
             <span asp-validation-for="Status" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -17,7 +17,7 @@
         </div>
         <div class="form-group">
             <label asp-for="ProfileImage">Profile picture</label>
-            <input asp-for="ProfileImage" class="form-control" placeholder="Select new profile picture" accept="image/*" />
+            <input asp-for="ProfileImage" class="form-control" placeholder="Select new profile picture" accept="image/*"/>
             <span asp-validation-for="ProfileImage" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

@@ -17,7 +17,7 @@
     {
          <div>
             <img width="100" height="100" src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true"/>
-            <a asp-controller="Users" asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
+            <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
             <h4>@user.Status</h4>
 
             <h3>Ratings of user <b>@user.UserName</b></h3>
@@ -43,13 +43,13 @@
 
             @foreach (var image in images)
             {
-                <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true" />
+                <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
             }
 
             <h3>Rating: @score</h3>
             <h3>Rating from @user.UserName: @rating.Score</h3>
             <h4>Thread:</h4>
-            <a asp-controller="Threads" asp-action="GetByThreads" asp-route-tag="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
+            <a asp-controller="Threads" asp-action="GetByThreads" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
 
             <div>
                 @if (User.IsAdmin() ||

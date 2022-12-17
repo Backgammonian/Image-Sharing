@@ -24,7 +24,7 @@ namespace MyWebApp.Controllers
         [Route("Dashboard/EditUserProfile")]
         public async Task<IActionResult> EditUserProfile()
         {
-            var currentUser = await _dashboardRepository.GetCurrentUser();
+            var currentUser = await _dashboardRepository.GetCurrentUserNoTracking();
             if (currentUser == null)
             {
                 return View("Error");
@@ -54,7 +54,7 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            if (await _dashboardRepository.Update(editUserProfileVM))
+            if (await _dashboardRepository.Update(currentUser, editUserProfileVM))
             {
                 return RedirectToAction("Index");
             }

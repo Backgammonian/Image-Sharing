@@ -20,6 +20,7 @@ namespace MyWebApp
             builder.Services.AddScoped<UsersRepository>();
             builder.Services.AddScoped<ThreadsRepository>();
             builder.Services.AddScoped<DashboardRepository>();
+            builder.Services.AddScoped<RatingsRepository>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));

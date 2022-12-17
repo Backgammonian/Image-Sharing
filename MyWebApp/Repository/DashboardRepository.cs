@@ -2,7 +2,6 @@
 using MyWebApp.Extensions;
 using MyWebApp.Models;
 using MyWebApp.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace MyWebApp.Repository
 {
@@ -52,7 +51,7 @@ namespace MyWebApp.Repository
             };
         }
 
-        public async Task<UserModel?> GetCurrentUser()
+        public async Task<UserModel?> GetCurrentUserNoTracking()
         {
             var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
             if (currentUserId == null ||
@@ -64,21 +63,20 @@ namespace MyWebApp.Repository
             return await _usersRepository.GetUserNoTracking(currentUserId);
         }
 
-        public async Task<bool> Update(EditUserProfileViewModel editUserProfileVM)
+        public async Task<UserModel?> GetCurrentUser()
         {
-            var currentUser = _contextAccessor.HttpContext?.User;
-            if (currentUser == null)
+            var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
+            if (currentUserId == null ||
+                currentUserId.IsEmpty())
             {
-                return false;
+                return null;
             }
 
-            var currentUserId = currentUser.GetUserId();
-            if (currentUserId == string.Empty)
-            {
-                return false;
-            }
+            return await _usersRepository.GetUser(currentUserId);
+        }
 
-            var user = await _usersRepository.GetUserNoTracking(currentUserId);
+        public async Task<bool> Update(UserModel user, EditUserProfileViewModel editUserProfileVM)
+        {
             if (user == null)
             {
                 return false;

@@ -17,7 +17,7 @@
     {
         <div>
             <img width="100" height="100" src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true"/>
-            <a asp-controller="Users" asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
+            <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
             <h4>@user.Status</h4>
 
             <h3>Notes of user <b>@user.UserName</b></h3>
@@ -45,17 +45,25 @@
 
             <h3>Rating: @score</h3>
             <h4>Thread:</h4>
-            <a asp-controller="Threads" asp-action="GetByThread" asp-route-tag="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
+            <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
+
+            <div>
+                if (User.IsAuthenticated())
+                {
+                    <a asp-controller="Ratings" asp-action="Upvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👍</a>
+                    <a asp-controller="Ratings" asp-action="Downvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👎</a>
+                }
+            </div>
 
             <div>
                 @if (User.IsAdmin() ||
                     User.IsOwner(note))
                 {
-                    <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                    <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+                    <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
                 }
 
-                <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+                <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
             </div>
         }
     }

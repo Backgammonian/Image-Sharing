@@ -9,5 +9,6 @@ Simple Web platform for image sharing built using ASP.NET Core MVC.
 * Image uploading
 * Notes can be assigned to a certain thread
 * Users can upvote and downvote the notes
+* IP geolocation (kind of)
 ## Demonstation
 * WIP

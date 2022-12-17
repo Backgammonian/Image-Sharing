@@ -16,21 +16,25 @@ namespace MyWebApp.Controllers
         [Route("Ratings/Upvote/{noteId}")]
         public async Task<IActionResult> Upvote(string noteId)
         {
-
-
-            if (await _ratingsRepository.VoteUp(noteId))
+            var result = await _ratingsRepository.VoteUp(noteId);
+            if (result != null)
             {
-                var 
                 return View();
             }
 
-            
+            return View();
         }
 
         [HttpGet]
         [Route("Ratings/Downvote/{noteId}")]
         public async Task<IActionResult> Downvote(string noteId)
         {
+            var result = await _ratingsRepository.VoteDown(noteId);
+            if (result != null)
+            {
+                return View();
+            }
+
             return View();
         }
     }

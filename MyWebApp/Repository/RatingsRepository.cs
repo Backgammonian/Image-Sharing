@@ -66,7 +66,7 @@ namespace MyWebApp.Repository
 
             return new RatingAppliedViewModel();
         }
-'
+
         public async Task<RatingAppliedViewModel?> VoteDown(string noteId)
         {
             var user = await TryGetUser();

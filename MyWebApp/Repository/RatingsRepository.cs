@@ -6,12 +6,6 @@ using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
-    public enum VoteType
-    {
-        UpVote,
-        DownVote
-    }
-
     public sealed class RatingsRepository
     {
         private readonly IHttpContextAccessor _contextAccessor;
@@ -19,21 +13,18 @@ namespace MyWebApp.Repository
         private readonly ApplicationDbContext _dbContext;
         private readonly NotesRepository _notesRepository;
         private readonly UsersRepository _usersRepository;
-        private readonly MyUrlHelper _urlHelper;
 
         public RatingsRepository(IHttpContextAccessor contextAccessor,
             RandomGenerator randomGenerator,
             ApplicationDbContext dbContext,
             NotesRepository notesRepository,
-            UsersRepository usersRepository,
-            MyUrlHelper urlHelper)
+            UsersRepository usersRepository)
         {
             _contextAccessor = contextAccessor;
             _randomGenerator = randomGenerator;
             _dbContext = dbContext;
             _notesRepository = notesRepository;
             _usersRepository = usersRepository;
-            _urlHelper = urlHelper;
         }
 
         public async Task<UserModel?> GetUser()
@@ -115,8 +106,7 @@ namespace MyWebApp.Repository
 
         public async Task<RatingAppliedViewModel> Vote(string noteId, VoteType voteType)
         {
-            var url = _urlHelper.GetCurrentUrl();
-            var ratingAppliedViewModel = new RatingAppliedViewModel(url);
+            var ratingAppliedViewModel = new RatingAppliedViewModel();
 
             var user = await GetUser();
             if (user == null)

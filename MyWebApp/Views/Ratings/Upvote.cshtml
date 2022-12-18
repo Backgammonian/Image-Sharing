@@ -29,8 +29,8 @@
         var score = rating.Score;
         var isUpvoted = score == 1;
 
-        <h2>You have @(isUpvoted ? "up" : "down")voted this note: "@note.Title".</h2>
+        <h2>You have <b>@(isUpvoted ? "up" : "down")</b>voted this note: "@note.Title".</h2>
     }
 }
 
-<a href="@Model.PreviousUrl" class="btn btn-sm btn-outline-secondary">Go back</a>
+<a href="javascript:history.go(-1)" class="btn btn-sm btn-outline-secondary">Go back</a>

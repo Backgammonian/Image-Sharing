@@ -16,6 +16,7 @@ namespace MyWebApp
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<RandomGenerator>();
             builder.Services.AddScoped<PicturesLoader>();
+            builder.Services.AddScoped<MyUrlHelper>();
             builder.Services.AddScoped<NotesRepository>();
             builder.Services.AddScoped<UsersRepository>();
             builder.Services.AddScoped<ThreadsRepository>();

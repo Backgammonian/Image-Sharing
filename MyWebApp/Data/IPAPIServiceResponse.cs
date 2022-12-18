@@ -2,7 +2,7 @@
 
 namespace MyWebApp.Data
 {
-    public sealed class IpApiResponse
+    public sealed class IPAPIServiceResponse
     {
         [JsonProperty("status")]
         public string Status { get; set; } = string.Empty;

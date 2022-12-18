@@ -27,7 +27,7 @@ else
     }
     else
     {
-        <h2>Dashboard of user <b>@user.UserName</b></h2>
+        <h2>Your dashboard: <b>@user.UserName</b></h2>
         <div>
             <img width="100" height="100" src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true"/>
             <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
@@ -41,7 +41,7 @@ else
         var notesCount = notesDetails.Count();
         if (notesCount == 0)
         {
-            <h3>User don't have any notes</h3>
+            <h3>You don't have any notes.</h3>
         }
         else
         {
@@ -87,7 +87,7 @@ else
         var ratingsCount = @ratings.Count();
         if (ratingsCount == 0)
         {
-            <h3>User don't have any ratings</h3>
+            <h3>You don't have any ratings.</h3>
         }
         else
         {

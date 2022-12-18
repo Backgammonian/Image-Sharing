@@ -7,7 +7,6 @@ namespace MyWebApp.Repository
 {
     public sealed class DashboardRepository
     {
-
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly NotesRepository _notesRepository;
         private readonly UsersRepository _usersRepository;

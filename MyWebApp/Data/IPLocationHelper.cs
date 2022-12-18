@@ -18,7 +18,7 @@ namespace MyWebApp.Data
                 using var client = new HttpClient();
                 var response = await client.GetAsync(url);
                 var content = await response.Content.ReadAsStringAsync();
-                var ipInfo = JsonConvert.DeserializeObject<IpApiResponse>(content);
+                var ipInfo = JsonConvert.DeserializeObject<IPAPIServiceResponse>(content);
                 
                 if (ipInfo != null &&
                     ipInfo.Status == "success")

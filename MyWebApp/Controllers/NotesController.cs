@@ -19,6 +19,7 @@ namespace MyWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var notes = await _notesRepository.GetNotesList();
+
             return View(notes);
         }
 
@@ -27,6 +28,7 @@ namespace MyWebApp.Controllers
         public async Task<IActionResult> Details(string noteId)
         {
             var noteDetails = await _notesRepository.GetNoteDetails(noteId);
+
             return View(noteDetails);
         }
 
@@ -34,7 +36,7 @@ namespace MyWebApp.Controllers
         [Route("Notes/Create")]
         public async Task<IActionResult> Create()
         {
-            var availableThreads = await _notesRepository.GetAvailableThreads();
+            var availableThreads = await _notesRepository.GetAvailableNoteThreads();
             var selectedListItems = availableThreads.Select(x => new SelectListItem()
             {
                 Value = x.Thread,
@@ -64,6 +66,7 @@ namespace MyWebApp.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError(string.Empty, "Failed to create a new note");
+
                 return View("Create", createNoteVM);
             }
 
@@ -73,6 +76,7 @@ namespace MyWebApp.Controllers
             }
           
             ModelState.AddModelError(string.Empty, "You are not logged in!");
+
             return View("Create", createNoteVM);
         }
 
@@ -86,7 +90,7 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            var availableThreads = await _notesRepository.GetAvailableThreads();
+            var availableThreads = await _notesRepository.GetAvailableNoteThreads();
             var selectedListItems = availableThreads.Select(x => new SelectListItem()
             {
                 Value = x.Thread,
@@ -172,6 +176,7 @@ namespace MyWebApp.Controllers
             }
 
             await _notesRepository.Delete(deleteNoteVM);
+
             return RedirectToAction("Index");
         }
     }

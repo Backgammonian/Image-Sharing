@@ -1,7 +1,7 @@
 ﻿namespace MyWebApp.ViewModels
 {
-    public sealed class NotesListViewModel
+    public sealed class NoteSummariesListViewModel
     {
-        public IEnumerable<NoteDetailsViewModel> NotesDetails { get; set; } = Enumerable.Empty<NoteDetailsViewModel>();
+        public IEnumerable<NoteSummaryViewModel> NotesSummaries { get; set; } = Enumerable.Empty<NoteSummaryViewModel>();
     }
 }

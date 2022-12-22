@@ -25,12 +25,5 @@ namespace MyWebApp.Controllers
         {
             return View(await _usersRepository.GetUserNotes(userId));
         }
-
-        [HttpGet]
-        [Route("Users/Ratings/{userId}")]
-        public async Task<IActionResult> Ratings(string userId)
-        {
-            return View(await _usersRepository.GetUserRatings(userId));
-        }
     }
 }

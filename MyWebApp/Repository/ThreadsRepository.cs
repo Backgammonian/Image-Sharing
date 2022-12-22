@@ -17,9 +17,9 @@ namespace MyWebApp.Repository
             _notesRepository = notesRepository;
         }
 
-        public async Task<IEnumerable<ThreadOfNoteModel>> GetNotesFromThread(string thread)
+        public async Task<IEnumerable<NoteThreadModel>> GetNotesFromThread(string thread)
         {
-            return await _dbContext.ThreadsOfNotes.Where(x => x.Thread == thread).ToListAsync();
+            return await _dbContext.NoteThreads.Where(x => x.Thread == thread).ToListAsync();
         }
 
         public async Task<NotesFromThreadViewModel> GetByThread(string thread)

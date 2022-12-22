@@ -1,5 +1,4 @@
 ﻿using MyWebApp.ViewModels;
-using MyWebApp.Extensions;
 using MyWebApp.Models;
 using MyWebApp.Data;
 
@@ -7,19 +6,19 @@ namespace MyWebApp.Repository
 {
     public sealed class DashboardRepository
     {
-        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly CredentialsRepository _credentialsRepository;
         private readonly NotesRepository _notesRepository;
         private readonly UsersRepository _usersRepository;
         private readonly PicturesLoader _picturesLoader;
         private readonly ApplicationDbContext _dbContext;
 
-        public DashboardRepository(IHttpContextAccessor contextAccessor,
+        public DashboardRepository(CredentialsRepository credentialsRepository,
             NotesRepository notesRepository,
             UsersRepository usersRepository,
             PicturesLoader picturesLoader,
             ApplicationDbContext dbContext)
         {
-            _contextAccessor = contextAccessor;
+            _credentialsRepository = credentialsRepository;
             _notesRepository = notesRepository;
             _usersRepository = usersRepository;
             _picturesLoader = picturesLoader;
@@ -28,14 +27,14 @@ namespace MyWebApp.Repository
 
         public async Task<DashboardViewModel?> GetDashboard()
         {
-            var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
-            if (currentUserId == null ||
-                currentUserId.IsEmpty())
+            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var currentUser = credentials.User;
+            if (currentUser == null)
             {
                 return null;
             }
 
-            var userNotes = await _usersRepository.GetNotesOfUser(currentUserId);
+            var userNotes = await _usersRepository.GetNotesOfUser(currentUser.Id);
             var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var userNote in userNotes)
             {
@@ -45,33 +44,8 @@ namespace MyWebApp.Repository
 
             return new DashboardViewModel()
             {
-                UserNotes = notesDetails,
-                UserRatings = await _usersRepository.GetUserRatings(currentUserId)
+                UserNotes = notesDetails
             };
-        }
-
-        public async Task<UserModel?> GetCurrentUserNoTracking()
-        {
-            var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
-            if (currentUserId == null ||
-                currentUserId.IsEmpty())
-            {
-                return null;
-            }
-
-            return await _usersRepository.GetUserNoTracking(currentUserId);
-        }
-
-        public async Task<UserModel?> GetCurrentUser()
-        {
-            var currentUserId = _contextAccessor.HttpContext?.User.GetUserId();
-            if (currentUserId == null ||
-                currentUserId.IsEmpty())
-            {
-                return null;
-            }
-
-            return await _usersRepository.GetUser(currentUserId);
         }
 
         public async Task<bool> Update(UserModel user, EditUserProfileViewModel editUserProfileVM)
@@ -80,9 +54,7 @@ namespace MyWebApp.Repository
             {
                 return false;
             }
-
-            user.Status = editUserProfileVM.Status;
-
+            
             var newProfileImage = editUserProfileVM.ProfileImage;
             if (newProfileImage != null)
             {
@@ -90,6 +62,7 @@ namespace MyWebApp.Repository
                 await _dbContext.ProfileImages.AddAsync(userImage);
             }
 
+            user.Status = editUserProfileVM.Status;
             _dbContext.Users.Update(user);
 
             return await Save();

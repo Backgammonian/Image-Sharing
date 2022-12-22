@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Data;
 using MyWebApp.ViewModels;
 using System.Diagnostics;
 
@@ -7,13 +6,6 @@ namespace MyWebApp.Controllers
 {
     public sealed class HomeController : Controller
     {
-        private readonly MyUrlHelper _urlHelper;
-
-        public HomeController(MyUrlHelper urlHelper)
-        {
-            _urlHelper = urlHelper;
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -21,10 +13,7 @@ namespace MyWebApp.Controllers
 
         public IActionResult Privacy()
         {
-            return View(new PrivacyViewModel()
-            {
-                Url = _urlHelper.GetCurrentUrl()
-            });
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

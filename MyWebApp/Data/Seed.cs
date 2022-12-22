@@ -149,49 +149,43 @@ namespace MyWebApp.Data
             var noteImages = picturesLoader.LoadDemoNoteImages(notes.ToArray());
             var userImages = picturesLoader.LoadDemoProfileImages(users);
 
-            var ratings = new List<RatingModel>()
+            var ratings = new List<StarModel>()
             {
-                new RatingModel()
+                new StarModel()
                 {
-                    RatingId = "1",
+                    StarId = "1",
                     UserId = users[0].Id,
-                    NoteId = notes[0].NoteId,
-                    Score = 1
+                    NoteId = notes[0].NoteId
                 },
-                new RatingModel()
+                new StarModel()
                 {
-                    RatingId = "2",
+                    StarId = "2",
                     UserId = users[1].Id,
                     NoteId = notes[0].NoteId,
-                    Score = -1
                 },
-                new RatingModel()
+                new StarModel()
                 {
-                    RatingId = "3",
+                    StarId = "3",
                     UserId = users[0].Id,
-                    NoteId = notes[1].NoteId,
-                    Score = 1
+                    NoteId = notes[1].NoteId
                 },
-                new RatingModel()
+                new StarModel()
                 {
-                    RatingId = "4",
+                    StarId = "4",
                     UserId = users[1].Id,
-                    NoteId = notes[1].NoteId,
-                    Score = 1
+                    NoteId = notes[1].NoteId
                 },
-                new RatingModel()
+                new StarModel()
                 {
-                    RatingId = "5",
+                    StarId = "5",
                     UserId = users[0].Id,
-                    NoteId = notes[2].NoteId,
-                    Score = 1
+                    NoteId = notes[2].NoteId
                 },
-                new RatingModel()
+                new StarModel()
                 {
-                    RatingId = "6",
+                    StarId = "6",
                     UserId = users[2].Id,
-                    NoteId = notes[3].NoteId,
-                    Score = 1
+                    NoteId = notes[3].NoteId
                 },
             };
 
@@ -215,33 +209,33 @@ namespace MyWebApp.Data
                 },
             };
 
-            var threadsOfNotes = new List<ThreadOfNoteModel>()
+            var threadsOfNotes = new List<NoteThreadModel>()
             {
-                new ThreadOfNoteModel()
+                new NoteThreadModel()
                 {
                     Id = "1",
                     Thread = tags[0].Thread,
                     NoteId = notes[0].NoteId
                 },
-                new ThreadOfNoteModel()
+                new NoteThreadModel()
                 {
                     Id = "2",
                     Thread = tags[1].Thread,
                     NoteId = notes[1].NoteId
                 },
-                new ThreadOfNoteModel()
+                new NoteThreadModel()
                 {
                     Id = "3",
                     Thread = tags[2].Thread,
                     NoteId = notes[2].NoteId
                 },
-                new ThreadOfNoteModel()
+                new NoteThreadModel()
                 {
                     Id = "4",
                     Thread = tags[0].Thread,
                     NoteId = notes[3].NoteId
                 },
-                new ThreadOfNoteModel()
+                new NoteThreadModel()
                 {
                     Id = "5",
                     Thread = tags[1].Thread,

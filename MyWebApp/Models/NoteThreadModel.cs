@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp.Models
 {
-    public sealed class ThreadOfNoteModel
+    public sealed class NoteThreadModel
     {
         [Key]
         public string Id { get; set; } = string.Empty;

@@ -52,16 +52,6 @@ namespace MyWebApp.Repository
             return await _dbContext.Notes.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
         }
 
-        public async Task<IEnumerable<RatingModel>> GetUserRatings(UserModel? user)
-        {
-            if (user == null)
-            {
-                return Enumerable.Empty<RatingModel>();
-            }
-
-            return await _dbContext.Ratings.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
-        }
-
         public async Task<UserDetailsViewModel> GetUserDetails(string userId)
         {
             var user = await GetUserNoTracking(userId);
@@ -93,35 +83,6 @@ namespace MyWebApp.Repository
                 User = user,
                 ProfilePicture = await GetUsersCurrentProfilePicture(user),
                 Notes = notesDetails
-            };
-        }
-
-        public async Task<UserRatingsViewModel> GetUserRatings(string userId)
-        {
-            var user = await GetUserNoTracking(userId);
-            var ratings = await GetUserRatings(user);
-
-            var noteRatings = new List<NoteRatingViewModel>();
-            foreach (var rating in ratings)
-            {
-                var note = await _notesRepository.GetNoteNoTracking(rating.NoteId);
-                if (note == null)
-                {
-                    continue;
-                }
-
-                noteRatings.Add(new NoteRatingViewModel()
-                {
-                    Rating = rating,
-                    NoteDetails = await _notesRepository.GetNoteDetails(note.NoteId)
-                });
-            }
-
-            return new UserRatingsViewModel()
-            {
-                User = user,
-                ProfilePicture = await GetUsersCurrentProfilePicture(user),
-                UserRatingsOfNotes = noteRatings
             };
         }
     }

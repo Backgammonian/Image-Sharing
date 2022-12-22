@@ -15,8 +15,7 @@ namespace MyWebApp.Data
         public DbSet<PreviousNoteModel> PreviousNotes { get; set; }
         public DbSet<NoteImageModel> NoteImages { get; set; }
         public DbSet<PreviousNoteImageModel> PreviousNoteImages { get; set; }
-        public DbSet<RatingModel> Ratings { get; set; }
         public DbSet<ThreadModel> Threads { get; set; }
-        public DbSet<ThreadOfNoteModel> ThreadsOfNotes { get; set; }
+        public DbSet<NoteThreadModel> NoteThreads { get; set; }
     }
 }

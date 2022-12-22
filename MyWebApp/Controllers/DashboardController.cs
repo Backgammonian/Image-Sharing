@@ -6,10 +6,13 @@ namespace MyWebApp.Controllers
 {
     public sealed class DashboardController : Controller
     {
+        private readonly CredentialsRepository _credentialsRepository;
         private readonly DashboardRepository _dashboardRepository;
 
-        public DashboardController(DashboardRepository dashboardRepository)
+        public DashboardController(CredentialsRepository credentialsRepository,
+            DashboardRepository dashboardRepository)
         {
+            _credentialsRepository = credentialsRepository;
             _dashboardRepository = dashboardRepository;
         }
 
@@ -24,7 +27,9 @@ namespace MyWebApp.Controllers
         [Route("Dashboard/EditUserProfile")]
         public async Task<IActionResult> EditUserProfile()
         {
-            var currentUser = await _dashboardRepository.GetCurrentUserNoTracking();
+            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var currentUser = credentials.User;
+
             if (currentUser == null)
             {
                 return View("Error");
@@ -45,10 +50,13 @@ namespace MyWebApp.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError(string.Empty, "Failed to edit the profile.");
+
                 return View("EditUserProfile", editUserProfileVM);
             }
 
-            var currentUser = await _dashboardRepository.GetCurrentUser();
+            var credentials = await _credentialsRepository.GetLoggedInUser(false);
+            var currentUser = credentials.User;
+
             if (currentUser == null)
             {
                 return View("Error");
@@ -60,6 +68,7 @@ namespace MyWebApp.Controllers
             }
             
             ModelState.AddModelError(string.Empty, "You have no permission to edit this profile.");
+
             return View("Edit", editUserProfileVM);
         }
     }

@@ -3,28 +3,29 @@ using MyWebApp.Data;
 using MyWebApp.Extensions;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
+using System.Diagnostics;
 
 namespace MyWebApp.Repository
 {
     public sealed class NotesRepository
     {
-        private readonly IHttpContextAccessor _contextAccessor;
         private readonly ApplicationDbContext _dbContext;
         private readonly PicturesLoader _picturesLoader;
         private readonly RandomGenerator _randomGenerator;
+        private readonly CredentialsRepository _credentialsRepository;
 
-        public NotesRepository(IHttpContextAccessor contextAccessor,
-            ApplicationDbContext dbContext,
+        public NotesRepository(ApplicationDbContext dbContext,
             PicturesLoader picturesLoader,
-            RandomGenerator randomGenerator)
+            RandomGenerator randomGenerator,
+            CredentialsRepository credentialsRepository)
         {
-            _contextAccessor = contextAccessor;
             _dbContext = dbContext;
             _picturesLoader = picturesLoader;
             _randomGenerator = randomGenerator;
+            _credentialsRepository = credentialsRepository;
         }
 
-        public async Task<IEnumerable<ThreadModel>> GetAvailableThreads()
+        public async Task<IEnumerable<ThreadModel>> GetAvailableNoteThreads()
         {
             return await _dbContext.Threads.AsNoTracking().ToListAsync();
         }
@@ -54,25 +55,14 @@ namespace MyWebApp.Repository
             return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == note.UserId);
         }
 
-        public async Task<int> GetNoteScore(string noteId)
+        public async Task<NoteThreadModel?> GetNoteThread(string noteId)
         {
-            return await _dbContext.Ratings.AsNoTracking().Where(x => x.NoteId == noteId).SumAsync(x => x.Score);
+            return await _dbContext.NoteThreads.AsNoTracking().Where(x => x.NoteId == noteId).FirstOrDefaultAsync();
         }
 
-        public async Task<ThreadOfNoteModel?> GetNoteThread(string noteId)
+        public async Task<NoteImageModel?> GetNoteFirstImage(string noteId)
         {
-            return await _dbContext.ThreadsOfNotes.AsNoTracking().Where(x => x.NoteId == noteId).FirstOrDefaultAsync();
-        }
-
-        public async Task<NoteImageModel> GetNoteFirstImage(string noteId)
-        {
-            var firstNoteImage = await _dbContext.NoteImages.AsNoTracking().OrderBy(x => x.UploadTime).FirstOrDefaultAsync(x => x.NoteId == noteId);
-            if (firstNoteImage == null)
-            {
-                return _picturesLoader.GetDefaultNoteImage();
-            }
-            
-            return firstNoteImage;
+            return await _dbContext.NoteImages.AsNoTracking().OrderBy(x => x.UploadTime).FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
         public async Task<IEnumerable<NoteImageModel>> GetNoteImages(string noteId)
@@ -85,34 +75,30 @@ namespace MyWebApp.Repository
             return await _dbContext.NoteImages.AsNoTracking().Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
         }
 
-        public async Task<NotesListViewModel> GetNotesList()
+        public async Task<NoteSummariesListViewModel> GetNotesList()
         {
             var allNotes = await GetAllNotes();
 
-            var noteDetails = new List<NoteDetailsViewModel>();
+            var noteSummaries = new List<NoteSummaryViewModel>();
             foreach (var note in allNotes)
             {
                 var author = await GetNoteAuthor(note);
                 var noteId = note.NoteId;
-                var noteSummary = new NoteDetailsViewModel()
+                var noteSummary = new NoteSummaryViewModel()
                 {
                     Note = note,
-                    Score = await GetNoteScore(noteId),
                     Thread = await GetNoteThread(noteId),
-                    Images = new List<NoteImageModel>()
-                    {
-                        await GetNoteFirstImage(noteId)
-                    },
+                    FirstImage = await GetNoteFirstImage(noteId),
                     Author = author,
                     ProfilePicture = await _picturesLoader.GetUserCurrentProfilePicture(author)
                 };
 
-                noteDetails.Add(noteSummary);
+                noteSummaries.Add(noteSummary);
             }
 
-            return new NotesListViewModel()
+            return new NoteSummariesListViewModel()
             {
-                NotesDetails = noteDetails
+                NotesSummaries = noteSummaries
             };
         }
 
@@ -124,24 +110,21 @@ namespace MyWebApp.Repository
             return new NoteDetailsViewModel()
             {
                 Note = note,
-                Score = await GetNoteScore(noteId),
                 Thread = await GetNoteThread(noteId),
                 Images = await GetNoteImagesNoTracking(noteId),
                 Author = author,
-                ProfilePicture = await _picturesLoader.GetUserCurrentProfilePicture(author)
+                ProfilePicture = await _picturesLoader.GetUserCurrentProfilePicture(author),
             };
         }
 
         public async Task<bool> Create(CreateNoteViewModel createNoteVM)
         {
-            var currentUser = _contextAccessor.HttpContext?.User;
-            if (currentUser == null)
-            {
-                return false;
-            }
+            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var currentUser = credentials.User;
+            var claims = credentials.ClaimsPrincipal;
 
-            var currentUserId = currentUser.GetUserId();
-            if (currentUserId == string.Empty)
+            if (currentUser == null ||
+                claims == null)
             {
                 return false;
             }
@@ -149,10 +132,11 @@ namespace MyWebApp.Repository
             var note = new NoteModel()
             {
                 NoteId = _randomGenerator.GetRandomId(),
-                UserId = currentUserId,
+                UserId = currentUser.Id,
                 Title = createNoteVM.Title,
                 Description = createNoteVM.Description,
             };
+
             await _dbContext.Notes.AddAsync(note);
 
             foreach (var image in createNoteVM.Images)
@@ -164,15 +148,19 @@ namespace MyWebApp.Repository
             var selectedThread = createNoteVM.SelectedThread;
             if (selectedThread != string.Empty)
             {
-                var availableThreads = await GetAvailableThreads();
+                var availableThreads = await GetAvailableNoteThreads();
                 if (availableThreads.Any(x => x.Thread == selectedThread))
                 {
-                    await _dbContext.ThreadsOfNotes.AddAsync(new ThreadOfNoteModel()
+                    await _dbContext.NoteThreads.AddAsync(new NoteThreadModel()
                     {
                         Id = _randomGenerator.GetRandomId(),
                         Thread = selectedThread,
                         NoteId = note.NoteId
                     });
+                }
+                else
+                {
+                    Debug.WriteLine($"(NotesRepository_Create) thread {selectedThread} doesn't exist");
                 }
             }
 
@@ -181,26 +169,20 @@ namespace MyWebApp.Repository
 
         public async Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM)
         {
-            var currentUser = _contextAccessor.HttpContext?.User;
-            if (currentUser == null)
-            {
-                return false;
-            }
+            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var currentUser = credentials.User;
+            var claims = credentials.ClaimsPrincipal;
 
-            var currentUserId = currentUser.GetUserId();
-            if (currentUserId == string.Empty)
-            {
-                return false;
-            }
-
-            if (!currentUser.IsOwner(note) &&
-                !currentUser.IsAdmin())
+            if (currentUser == null ||
+                claims == null ||
+                !claims.IsOwner(note) &&
+                !claims.IsAdmin())
             {
                 return false;
             }
 
             var newImages = editNoteVM.Images;
-            if (newImages.Count() != 0)
+            if (newImages.Any())
             {
                 var oldImages = await GetNoteImages(note.NoteId);
                 foreach (var oldImage in oldImages)
@@ -227,10 +209,10 @@ namespace MyWebApp.Repository
             var selectedThread = editNoteVM.SelectedThread;
             if (selectedThread != string.Empty)
             {
-                var availableThreads = await GetAvailableThreads();
+                var availableThreads = await GetAvailableNoteThreads();
                 if (availableThreads.Any(x => x.Thread == selectedThread))
                 {
-                    await _dbContext.ThreadsOfNotes.AddAsync(new ThreadOfNoteModel()
+                    await _dbContext.NoteThreads.AddAsync(new NoteThreadModel()
                     {
                         Id = _randomGenerator.GetRandomId(),
                         Thread = selectedThread,
@@ -240,7 +222,7 @@ namespace MyWebApp.Repository
                     var oldThreadOfNote = await GetNoteThread(note.NoteId);
                     if (oldThreadOfNote != null)
                     {
-                        _dbContext.ThreadsOfNotes.Remove(oldThreadOfNote);
+                        _dbContext.NoteThreads.Remove(oldThreadOfNote);
                     }
                 }
             }
@@ -248,7 +230,7 @@ namespace MyWebApp.Repository
             var updatedNote = new NoteModel()
             {
                 NoteId = note.NoteId,
-                UserId = currentUserId,
+                UserId = currentUser.Id,
                 Title = editNoteVM.Title,
                 Description = editNoteVM.Description
             };
@@ -260,28 +242,22 @@ namespace MyWebApp.Repository
 
         public async Task<bool> Delete(DeleteNoteViewModel deleteNoteVM)
         {
-            var currentUser = _contextAccessor.HttpContext?.User;
-            if (currentUser == null)
-            {
-                return false;
-            }
-
-            var currentUserId = currentUser.GetUserId();
-            if (currentUserId == string.Empty)
-            {
-                return false;
-            }
-
             if (deleteNoteVM.NoteDetails == null ||
-                deleteNoteVM.NoteDetails.Note == null)
+                deleteNoteVM.NoteDetails.Note == null) 
             {
                 return false;
             }
 
             var note = deleteNoteVM.NoteDetails.Note;
 
-            if (!currentUser.IsOwner(note) &&
-                !currentUser.IsAdmin())
+            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var currentUser = credentials.User;
+            var claims = credentials.ClaimsPrincipal;
+
+            if (currentUser == null ||
+                claims == null ||
+                !claims.IsOwner(note) &&
+                !claims.IsAdmin())
             {
                 return false;
             }
@@ -290,7 +266,7 @@ namespace MyWebApp.Repository
             {
                 Id = _randomGenerator.GetRandomId(),
                 FormerId = deleteNoteVM.NoteId,
-                UserId = currentUserId,
+                UserId = currentUser.Id,
                 Title = note.Title,
                 Description = note.Description
             };

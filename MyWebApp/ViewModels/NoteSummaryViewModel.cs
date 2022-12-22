@@ -2,11 +2,11 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class NoteDetailsViewModel
+    public sealed class NoteSummaryViewModel
     {
         public NoteModel? Note { get; set; }
         public NoteThreadModel? Thread { get; set; }
-        public IEnumerable<NoteImageModel> Images { get; set; } = Enumerable.Empty<NoteImageModel>();
+        public NoteImageModel? FirstImage { get; set; }
         public UserModel? Author { get; set; }
         public UserImageModel ProfilePicture { get; set; } = new UserImageModel();
     }

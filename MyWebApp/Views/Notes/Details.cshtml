@@ -2,6 +2,10 @@
     Details of selected note
 *@
 
+@{
+    ViewData["Title"] = "Note details";
+}
+
 @model NoteDetailsViewModel
 
 @{
@@ -13,7 +17,8 @@
         return;
     }
 
-    var score = Model.Score;
+    ViewData["Title"] = $"{note.Title.Minify()}";
+
     var thread = Model.Thread;
     var images = Model.Images;
     var author = Model.Author;
@@ -41,17 +46,8 @@
             <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
         }
 
-        <h3>Rating: @score</h3>
         <h4>Thread:</h4>
         <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
-
-        <div>
-            if (User.IsAuthenticated())
-            {
-                <a asp-controller="Ratings" asp-action="Upvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👍</a>
-                <a asp-controller="Ratings" asp-action="Downvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👎</a>
-            }
-        </div>
 
         <div>
             @if (User.IsAdmin() ||

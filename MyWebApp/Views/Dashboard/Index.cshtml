@@ -2,10 +2,14 @@
     Dashboard page
 *@
 
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
 @model DashboardViewModel
 
-@if (!User.IsAuthenticated() ||
-    Model == null)
+@if (Model == null ||
+    !User.IsAuthenticated())
 {
     <div class="row">
         <span>
@@ -16,122 +20,61 @@
 else
 {
     var notesDetails = Model.UserNotes;
-    var ratingsModel = Model.UserRatings;
-    var ratings = ratingsModel.UserRatingsOfNotes;
-    var user = ratingsModel.User;
-    var profilePicture = ratingsModel.ProfilePicture;
+    var user = Model.User;
+    var profilePicture = Model.ProfilePicture;
 
-    if (user == null)
+    <h2>Your dashboard: <b>@user.UserName</b></h2>
+    <div>
+        <img width="100" height="100" src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true"/>
+        <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
+        <h4>@user.Status</h4>
+    </div>
+
+    <div>
+        <a asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-sm btn-outline-secondary">Edit Profile</a>
+    </div>
+
+    var notesCount = notesDetails.Count();
+    if (notesCount == 0)
     {
-        <h2>This dashboard doesn't exist.</h2>
+        <h3>You don't have any notes.</h3>
     }
     else
     {
-        <h2>Your dashboard: <b>@user.UserName</b></h2>
-        <div>
-            <img width="100" height="100" src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true"/>
-            <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
-            <h4>@user.Status</h4>
-        </div>
+        <h3>Notes (@notesCount)</h3>
 
-        <div>
-            <a asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-sm btn-outline-secondary">Edit Profile</a>
-        </div>
-
-        var notesCount = notesDetails.Count();
-        if (notesCount == 0)
+        @foreach (var noteDetail in notesDetails)
         {
-            <h3>You don't have any notes.</h3>
-        }
-        else
-        {
-            <h3>Notes (@notesCount)</h3>
-
-            @foreach (var noteDetail in notesDetails)
+            var note = noteDetail.Note;
+            if (note == null)
             {
-                var note = noteDetail.Note;
-                if (note == null)
-                {
-                    continue;
-                }
-
-                var images = noteDetail.Images;
-                var score = noteDetail.Score;
-                var thread = noteDetail.Thread;
-
-                <h3>@note.Title</h3>
-                <h4>@note.Description</h4>
-
-                @foreach (var image in images)
-                {
-                    <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
-                }
-
-                <h3>Rating: @score</h3>
-                <h4>Thread:</h4>
-                <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
-
-                <div>
-                    @if (User.IsAdmin() ||
-                        User.IsOwner(note))
-                    {
-                        <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                        <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
-                    }
-
-                    <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
-                </div>
+                continue;
             }
-        }
 
-        var ratingsCount = @ratings.Count();
-        if (ratingsCount == 0)
-        {
-            <h3>You don't have any ratings.</h3>
-        }
-        else
-        {
-            <h3>Ratings (@ratingsCount)</h3>
+            <h3>@note.Title</h3>
+            <h4>@note.Description</h4>
 
-            foreach (var userRatingOfNote in ratings)
+            var images = noteDetail.Images;
+            var thread = noteDetail.Thread;
+
+            @foreach (var image in images)
             {
-                var noteDetail = userRatingOfNote.NoteDetails;
-                var rating = userRatingOfNote.Rating;
-
-                var note = noteDetail.Note;
-                if (note == null)
-                {
-                    continue;
-                }
-
-                var images = noteDetail.Images;
-                var score = noteDetail.Score;
-                var thread = noteDetail.Thread;
-
-                <h3>@note.Title</h3>
-                <h4>@note.Description</h4>
-
-                @foreach (var image in images)
-                {
-                    <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
-                }
-
-                <h3>Rating: @score</h3>
-                <h3>Rating from @user.UserName: @rating.Score</h3>
-                <h4>Thread:</h4>
-                <a asp-controller="Threads" asp-action="GetByThreads" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
-
-                <div>
-                    @if (User.IsAdmin() ||
-                        User.IsOwner(note))
-                    {
-                        <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                        <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
-                    }
-
-                    <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
-                </div>
+                <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
             }
+
+            <h4>Thread:</h4>
+            <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
+
+            <div>
+                @if (User.IsAdmin() ||
+                    User.IsOwner(note))
+                {
+                    <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+                }
+
+                <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+            </div>
         }
     }
 }

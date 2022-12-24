@@ -149,46 +149,6 @@ namespace MyWebApp.Data
             var noteImages = picturesLoader.LoadDemoNoteImages(notes.ToArray());
             var userImages = picturesLoader.LoadDemoProfileImages(users);
 
-            var ratings = new List<StarModel>()
-            {
-                new StarModel()
-                {
-                    StarId = "1",
-                    UserId = users[0].Id,
-                    NoteId = notes[0].NoteId
-                },
-                new StarModel()
-                {
-                    StarId = "2",
-                    UserId = users[1].Id,
-                    NoteId = notes[0].NoteId,
-                },
-                new StarModel()
-                {
-                    StarId = "3",
-                    UserId = users[0].Id,
-                    NoteId = notes[1].NoteId
-                },
-                new StarModel()
-                {
-                    StarId = "4",
-                    UserId = users[1].Id,
-                    NoteId = notes[1].NoteId
-                },
-                new StarModel()
-                {
-                    StarId = "5",
-                    UserId = users[0].Id,
-                    NoteId = notes[2].NoteId
-                },
-                new StarModel()
-                {
-                    StarId = "6",
-                    UserId = users[2].Id,
-                    NoteId = notes[3].NoteId
-                },
-            };
-
             var tags = new List<ThreadModel>()
             {
                 new ThreadModel()
@@ -265,22 +225,16 @@ namespace MyWebApp.Data
                 await dbContext.NoteImages.AddRangeAsync(noteImages);
             }
 
-            if (dbContext.Ratings != null &&
-                !dbContext.Ratings.Any())
-            {
-                await dbContext.Ratings.AddRangeAsync(ratings);
-            }
-
             if (dbContext.Threads != null &&
                 !dbContext.Threads.Any())
             {
                 await dbContext.Threads.AddRangeAsync(tags);
             }
 
-            if (dbContext.ThreadsOfNotes != null &&
-                !dbContext.ThreadsOfNotes.Any())
+            if (dbContext.NoteThreads != null &&
+                !dbContext.NoteThreads.Any())
             {
-                await dbContext.ThreadsOfNotes.AddRangeAsync(threadsOfNotes);
+                await dbContext.NoteThreads.AddRangeAsync(threadsOfNotes);
             }
 
             await dbContext.SaveChangesAsync();

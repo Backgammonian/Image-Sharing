@@ -44,7 +44,9 @@ namespace MyWebApp.Repository
 
             return new DashboardViewModel()
             {
-                UserNotes = notesDetails
+                UserNotes = notesDetails,
+                User = currentUser,
+                ProfilePicture = await _usersRepository.GetUsersCurrentProfilePicture(currentUser)
             };
         }
 

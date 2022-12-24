@@ -146,6 +146,9 @@ namespace MyWebApp.Repository
             }
 
             var selectedThread = createNoteVM.SelectedThread;
+
+            Debug.WriteLine($"(NotesRepository_Create) thread: {selectedThread}");
+
             if (selectedThread != string.Empty)
             {
                 var availableThreads = await GetAvailableNoteThreads();
@@ -157,10 +160,6 @@ namespace MyWebApp.Repository
                         Thread = selectedThread,
                         NoteId = note.NoteId
                     });
-                }
-                else
-                {
-                    Debug.WriteLine($"(NotesRepository_Create) thread {selectedThread} doesn't exist");
                 }
             }
 

@@ -16,7 +16,7 @@ namespace MyWebApp.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<CredentialsViewModel> GetLoggedInUser(bool asNoTracking)
+        public async Task<CredentialsViewModel> GetLoggedInUser(bool asNoTracking = true)
         {
             var credentials = new CredentialsViewModel();
 

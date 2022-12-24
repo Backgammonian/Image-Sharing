@@ -57,8 +57,11 @@
             <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
         }
 
-        <h4>Thread:</h4>
-        <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
+        @if (thread != null)
+        {
+            <h4>Thread:</h4>
+            <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary">@thread.Thread</a>
+        }
     </div>
 
     <form method="post" asp-action="Delete">

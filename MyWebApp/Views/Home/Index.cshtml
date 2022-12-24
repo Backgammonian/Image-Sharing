@@ -3,7 +3,7 @@
 *@
 
 @{
-    ViewData["Title"] = "Main Page";
+    ViewData["Title"] = "Main page";
 }
 
 <div class="text-center">
@@ -11,17 +11,27 @@
     <p>Simple sharing platform and web storage for images.</p>
     <p>Built using <a href="https://docs.microsoft.com/aspnet/core">ASP.NET Core</a> MVC.</p>
 
-    @if (User.IsAuthenticated())
-    {
-        <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">Create a new note</a>
-    }
-    else
-    {
+    <div>
         <p>
-            <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-outline-secondary">Create account</a>
-            or
-            <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-secondary">Sign in</a>
-            to create a new note.
+            Let's see the
+            <a asp-controller="Notes" asp-action="Index" class="btn btn-sm btn-outline-secondary">Creations</a>
+            of other people!
         </p>
-    }
+    </div>
+
+    <div>
+        @if (User.IsAuthenticated())
+        {
+            <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">Create a new note</a>
+        }
+        else
+        {
+            <p>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-outline-secondary">Create account</a>
+                or
+                <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-secondary">Sign in</a>
+                to create a new note.
+            </p>
+        }
+    </div>
 </div>

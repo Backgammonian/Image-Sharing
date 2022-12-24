@@ -2,6 +2,10 @@
     List of notes marked with the certain thread
 *@
 
+@{
+    ViewData["Title"] = "Thread";
+}
+
 @model NotesFromThreadViewModel
 
 @{
@@ -9,7 +13,7 @@
     var threadNotesDetails = Model.NotesDetails;
 
     if (selectedThread == string.Empty ||
-        threadNotesDetails.Count() == 0)
+        !threadNotesDetails.Any())
     {
         <div class="row">
             <span>
@@ -19,7 +23,9 @@
     }
     else
     {
-        <h1>Notes from thread: @selectedThread</h1>
+        ViewData["Title"] = $"Thread: {selectedThread}";
+
+        <h1>Notes from thread: <b>@selectedThread</b></h1>
 
         @foreach (var threadNoteDetail in threadNotesDetails)
         {
@@ -29,7 +35,6 @@
                 continue;
             }
 
-            var score = threadNoteDetail.Score;
             var thread = threadNoteDetail.Thread;
             var images = threadNoteDetail.Images;
             var author = threadNoteDetail.Author;
@@ -57,17 +62,8 @@
                     <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
                 }
 
-                <h3>Rating: @score</h3>
                 <h4>Thread:</h4>
                 <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
-
-                <div>
-                    if (User.IsAuthenticated())
-                    {
-                        <a asp-controller="Ratings" asp-action="Upvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👍</a>
-                        <a asp-controller="Ratings" asp-action="Downvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👎</a>
-                    }
-                </div>
 
                 <div>
                     @if (User.IsAdmin() ||

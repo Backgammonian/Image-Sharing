@@ -1,6 +1,10 @@
 ﻿@*
-    User profile
+    User's profile
 *@
+
+@{
+    ViewData["Title"] = "User's profile";
+}
 
 @model UserDetailsViewModel
 
@@ -14,12 +18,13 @@
     }
     else
     {
+        ViewData["Title"] = $"{user.UserName}'s profile";
+
         <div>
             <img width="100" height="100" src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true"/>
             <h2>@user.UserName</h2>
             <h4>@user.Status</h4>
             <a asp-controller="Users" asp-action="Notes" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">View Notes</a>
-            <a asp-controller="Users" asp-action="Ratings" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">View Ratings</a>
         </div>
     }
 }

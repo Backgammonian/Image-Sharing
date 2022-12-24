@@ -2,34 +2,37 @@
     List of available notes
 *@
 
-@model NotesListViewModel
+@{
+    ViewData["Title"] = "Notes";
+}
 
-@if (Model.NotesDetails.Count() == 0)
+@model NoteSummariesListViewModel
+
+@if (!Model.NotesSummaries.Any())
 {
     <h2>There are no notes yet.</h2>
 }
 else
 {
-    var notesDetails = Model.NotesDetails;
+    var notesSummaries = Model.NotesSummaries;
 
-    <h1>Notes</h1>  
-    foreach (var noteDetail in notesDetails)
+    <h1>Notes</h1>
+    foreach (var noteSummary in notesSummaries)
     {
-        var note = noteDetail.Note;
+        var note = noteSummary.Note;
         if (note == null)
         {
             continue;
         }
 
-        var score = noteDetail.Score;
-        var thread = noteDetail.Thread;
-        var firstImage = noteDetail.Images.FirstOrDefault();
-        var author = noteDetail.Author;
-        var authorProfilePicture = noteDetail.ProfilePicture;
+        var thread = noteSummary.Thread;
+        var firstImage = noteSummary.FirstImage;
+        var author = noteSummary.Author;
+        var authorProfilePicture = noteSummary.ProfilePicture;
 
         <div>
             <div>
-                if (author != null)
+                if (@author != null)
                 {
                     <img width="100" height="100" src="@ImagePathHelper.GetPath(@authorProfilePicture.ImageFileName)" asp-append-version="true"/>
                     <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
@@ -48,20 +51,11 @@ else
                 <img src="@ImagePathHelper.GetPath(firstImage.ImageFileName)" asp-append-version="true"/>
             }
 
-            <h4>Rating: @score</h4>
             <h4>Thread:</h4>
             <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread" class="btn btn-sm btn-outline-secondary">@thread</a>
 
             <div>
-                if (User.IsAuthenticated())
-                {
-                    <a asp-controller="Ratings" asp-action="Upvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👍</a>
-                    <a asp-controller="Ratings" asp-action="Downvote" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">👎</a>
-                }
-            </div>
-
-            <div>
-                if (User.IsAdmin() ||
+                @if (User.IsAdmin() ||
                     User.IsOwner(note))
                 {
                     <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>

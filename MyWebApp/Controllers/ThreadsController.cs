@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Repository;
+using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
 {
@@ -10,6 +11,16 @@ namespace MyWebApp.Controllers
         public ThreadsController(ThreadsRepository threadsRepository)
         {
             _threadsRepository = threadsRepository;
+        }
+
+        [HttpGet]
+        [Route("Threads")]
+        public async Task<IActionResult> Index()
+        {
+            return View(new AvailableThreadsViewModel()
+            {
+                Threads = await _threadsRepository.GetAllThreads()
+            });
         }
 
         [HttpGet]

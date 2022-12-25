@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MyWebApp.ViewModels
 {
     public sealed class DeleteThreadViewModel
     {
-        [Required]
-        public string ThreadName { get; set; } = string.Empty;
+        public string SelectedThreadName { get; set; } = string.Empty;
+        public IEnumerable<SelectListItem> AvailableThreads { get; set; } = Enumerable.Empty<SelectListItem>();
     }
 }

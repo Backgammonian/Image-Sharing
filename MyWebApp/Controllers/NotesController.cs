@@ -43,17 +43,11 @@ namespace MyWebApp.Controllers
                 Text = x.Thread,
             });
 
-            var selectedThread = string.Empty;
             var firstThread = selectedListItems.First();
-            if (firstThread != null)
-            {
-                selectedThread = firstThread.Value;
-            }
-
             var createNoteViewModel = new CreateNoteViewModel()
             {
                 AvailableThreads = selectedListItems,
-                SelectedThread = selectedThread
+                SelectedThread = firstThread != null ? firstThread.Value : string.Empty
             };
 
             return View(createNoteViewModel);
@@ -128,6 +122,7 @@ namespace MyWebApp.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError(string.Empty, "Failed to edit the note");
+
                 return View("Edit", editNoteVM);
             }
 
@@ -143,6 +138,7 @@ namespace MyWebApp.Controllers
             }
           
             ModelState.AddModelError(string.Empty, "You have no permission to edit this note.");
+
             return View("Edit", editNoteVM);
         }
 
@@ -175,9 +171,14 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            await _notesRepository.Delete(deleteNoteVM);
+            if (await _notesRepository.Delete(deleteNoteVM))
+            {
+                return RedirectToAction("Index");
+            }
 
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, "You have no permission to delete this note.");
+
+            return View("Delete", deleteNoteVM);
         }
     }
 }

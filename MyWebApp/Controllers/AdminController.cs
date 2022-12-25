@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWebApp.Extensions;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
@@ -15,6 +16,13 @@ namespace MyWebApp.Controllers
         {
             _threadsRepository = threadsRepository;
             _credentialsRepository = credentialsRepository;
+        }
+
+        [HttpGet]
+        [Route("Admin")]
+        public async Task<IActionResult> Index()
+        {
+            return View(await _credentialsRepository.GetLoggedInUser());
         }
 
         [HttpGet]
@@ -45,16 +53,16 @@ namespace MyWebApp.Controllers
             var claims = credentials.ClaimsPrincipal;
             if (!claims.IsAdmin())
             {
-                ModelState.AddModelError(string.Empty, "You don't have the permission to create a new thread");
+                ModelState.AddModelError(string.Empty, "You don't have the permission to create a new thread.");
 
-                return View("Create", createThreadVM);
+                return View("CreateThread", createThreadVM);
             }
 
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Can't create a new thread");
+                ModelState.AddModelError(string.Empty, "Can't create a new thread.");
 
-                return View("Create", createThreadVM);
+                return View("CreateThread", createThreadVM);
             }
 
             if (await _threadsRepository.Create(createThreadVM))
@@ -62,25 +70,60 @@ namespace MyWebApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ModelState.AddModelError(string.Empty, $"Thread {createThreadVM.NewThreadName} already exists");
+            ModelState.AddModelError(string.Empty, $"Thread {createThreadVM.NewThreadName} already exists or something else went wrong.");
 
-            return View("Create", createThreadVM);
+            return View("CreateThread", createThreadVM);
         }
 
         [HttpGet]
         [Route("Admin/DeleteThread")]
         public async Task<IActionResult> DeleteThread()
         {
+            var credentials = await _credentialsRepository.GetLoggedInUser();
+            var claims = credentials.ClaimsPrincipal;
+            if (!claims.IsAdmin())
+            {
+                return View(null);
+            }
 
-            return View();
+            var availableThreads = await _threadsRepository.GetAllThreads();
+            var selectableListItems = availableThreads.Select(x => new SelectListItem()
+            {
+                Value = x.Thread,
+                Text = x.Thread,
+            });
+
+            var firstSelectableThread = selectableListItems.First();
+            var deleteThreadVM = new DeleteThreadViewModel()
+            {
+                SelectedThreadName = firstSelectableThread != null ? firstSelectableThread.Value : string.Empty,
+                AvailableThreads = selectableListItems
+            };
+
+            return View(deleteThreadVM);
         }
 
         [HttpPost]
         [Route("Admin/DeleteThread")]
         public async Task<IActionResult> DeleteThread(DeleteThreadViewModel deleteThreadVM)
         {
+            var credentials = await _credentialsRepository.GetLoggedInUser();
+            var claims = credentials.ClaimsPrincipal;
+            if (!claims.IsAdmin())
+            {
+                ModelState.AddModelError(string.Empty, "You don't have the permission to delete any thread");
 
-            return View();
+                return View("DeleteThread", deleteThreadVM);
+            }
+
+            if (await _threadsRepository.Delete(deleteThreadVM))
+            {
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError(string.Empty, $"Can't delete thread: {deleteThreadVM.SelectedThreadName}");
+
+            return View("DeleteThread", deleteThreadVM);
         }
     }
 }

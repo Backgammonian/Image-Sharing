@@ -34,14 +34,13 @@ else
         <a asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-sm btn-outline-secondary">Edit Profile</a>
     </div>
 
-    var notesCount = notesDetails.Count();
-    if (notesCount == 0)
+    if (!notesDetails.Any())
     {
         <h3>You don't have any notes.</h3>
     }
     else
     {
-        <h3>Notes (@notesCount)</h3>
+        <h3>Notes (@notesDetails.Count())</h3>
 
         @foreach (var noteDetail in notesDetails)
         {

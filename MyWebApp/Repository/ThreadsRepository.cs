@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
-using MyWebApp.Extensions;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
 
@@ -20,38 +19,38 @@ namespace MyWebApp.Repository
 
         public async Task<IEnumerable<NoteThreadModel>> GetNotesFromThread(string thread)
         {
-            return await _dbContext.NoteThreads.Where(x => x.Thread == thread).ToListAsync();
+            return await _dbContext.NoteThreads.AsNoTracking().Where(x => x.Thread == thread).ToListAsync();
         }
 
         public async Task<IEnumerable<ThreadModel>> GetAllThreads()
         {
-            return await _dbContext.Threads.ToListAsync();
+            return await _dbContext.Threads.AsNoTracking().ToListAsync();
         }
 
         public async Task<NotesFromThreadViewModel> GetByThread(string thread)
         {
-            var threadNotes = await GetNotesFromThread(thread);
+            var notesFromThread = await GetNotesFromThread(thread);
 
             var notes = new List<NoteModel>();
-            foreach (var threadNote in threadNotes)
+            foreach (var noteFromThread in notesFromThread)
             {
-                var note = await _notesRepository.GetNoteNoTracking(threadNote.NoteId);
+                var note = await _notesRepository.GetNoteNoTracking(noteFromThread.NoteId);
                 if (note != null)
                 {
                     notes.Add(note);
                 }
             }
 
-            var threadNotesDetails = new List<NoteDetailsViewModel>();
-            foreach (var threadNote in threadNotes)
+            var threadNotesDetailsList = new List<NoteDetailsViewModel>();
+            foreach (var noteFromThread in notesFromThread)
             {
-                var note = await _notesRepository.GetNoteNoTracking(threadNote.NoteId);
+                var note = await _notesRepository.GetNoteNoTracking(noteFromThread.NoteId);
                 if (note != null)
                 {
                     var noteDetails = await _notesRepository.GetNoteDetails(note.NoteId);
                     if (noteDetails != null)
                     {
-                        threadNotesDetails.Add(noteDetails);
+                        threadNotesDetailsList.Add(noteDetails);
                     }
                 }
             }
@@ -59,7 +58,7 @@ namespace MyWebApp.Repository
             return new NotesFromThreadViewModel()
             {
                 Thread = thread,
-                NotesDetails = threadNotesDetails
+                NotesDetails = threadNotesDetailsList
             };
         }
 
@@ -82,7 +81,7 @@ namespace MyWebApp.Repository
 
         public async Task<bool> Delete(DeleteThreadViewModel deleteThreadVM)
         {
-            var threadName = deleteThreadVM.ThreadName.ToLower();
+            var threadName = deleteThreadVM.SelectedThreadName.ToLower();
             var allThreads = await GetAllThreads();
             if (!allThreads.Any(x => x.Thread == threadName))
             {
@@ -93,6 +92,12 @@ namespace MyWebApp.Repository
             {
                 Thread = threadName
             });
+
+            var noteThreads = await _dbContext.NoteThreads.AsNoTracking().Where(x => x.Thread == threadName).ToListAsync();
+            foreach (var noteThread in noteThreads)
+            {
+                _dbContext.NoteThreads.Remove(noteThread);
+            }
 
             return await Save();
         }

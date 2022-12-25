@@ -2,12 +2,44 @@
     Thread creating page for admin
 *@
 
-@model CreateThreadViewModel
-
 @{
     ViewData["Title"] = "Create a thread";
 }
 
+@model CreateThreadViewModel
 
+@if (Model != null &&
+    User.IsAdmin())
+{
+    if (Model.ExistingThreadNames.Any())
+    {
+        <h3>Existing thread names:</h3>
+        var i = 0;
+        foreach (var existingThreadName in Model.ExistingThreadNames)
+        {
+            i += 1;
+            <h4>@i) @existingThreadName</h4>
+        }
+    }
+
+    <h3>Enter the name of a new thread:</h3>
+
+    <form method="post" asp-action="CreateThread" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="NewThreadName">New thread name</label>
+            <input asp-for="NewThreadName" class="form-control" placeholder="New thread name" />
+            <span asp-validation-for="NewThreadName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+}
+else
+{
+    <div class="row">
+        <span>
+            You have no permission to create a new thread!
+        </span>
+    </div>
+}
 
 

@@ -2,13 +2,36 @@
     Thread deleting page for admin
 *@
 
-@model DeleteThreadViewModel
-
 @{
     ViewData["Title"] = "Delete the thread";
 }
 
+@model DeleteThreadViewModel
 
+@if (Model != null &&
+    User.IsAdmin())
+{
+    <h3>Select the thread you want to delete:</h3>
+
+    <form method="post" asp-action="DeleteThread" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="SelectedThreadName">Thread</label>
+            <select asp-for="SelectedThreadName" asp-items="@Model.AvailableThreads" class="form-control form-control-lg">
+                <option>--Select a thread to delete--</option>
+            </select>
+            <span asp-validation-for="SelectedThreadName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+}
+else
+{
+    <div class="row">
+        <span>
+            You have no permission to delete any threads!
+        </span>
+    </div>
+}
 
 
 

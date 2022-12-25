@@ -1,0 +1,34 @@
+﻿@*
+    Admin panel
+*@
+
+@{
+    ViewData["Title"] = "Admin panel";
+}
+
+@model CredentialsViewModel
+
+@{
+    var claims = Model.ClaimsPrincipal;
+    var user = Model.User;
+    if (user == null ||
+        claims == null ||
+        !claims.IsAdmin())
+    {
+        <div class="row">
+            <span>
+                <b>You have no permission to access this page.</b>
+            </span>
+        </div>
+    }
+    else
+    {
+        <h3>Hello, admin <b>@user.UserName</b>!</h3>
+        <div>
+            <a asp-controller="Admin" asp-action="CreateThread" class="btn btn-sm btn-outline-secondary">Create a new thread</a>
+        </div>
+        <div>
+            <a asp-controller="Admin" asp-action="DeleteThread" class="btn btn-sm btn-outline-secondary">Select the thread to delete</a>
+        </div>
+    }
+}

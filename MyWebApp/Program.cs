@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Models;
+using System.Diagnostics;
 
 namespace MyWebApp
 {
@@ -25,7 +26,16 @@ namespace MyWebApp
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            builder.Services.AddIdentity<UserModel, IdentityRole>()
+            builder.Services.AddIdentity<UserModel, IdentityRole>(opt =>
+            {
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+()=";
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredUniqueChars = 0;
+                opt.Password.RequiredLength = 8;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireDigit = false;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddMemoryCache();
             builder.Services.AddSession();
@@ -36,23 +46,46 @@ namespace MyWebApp
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             if (args.Length > 0 &&
-                args[0].ToLower() == "seed")
+                args[0].ToLower() == "seeddata")
             {
+                Debug.WriteLine("(Main) Seeding the database");
+
                 var result = await Seed.SeedUsersAndRolesAsync(app);
                 var admin = result.Item1;
                 var users = result.Item2;
                 await Seed.SeedData(app, admin, users);
             }
 
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error/500");
+            }
+            app.UseHsts();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.Use(async (ctx, next) =>
+            {
+                await next();
+
+                if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                {
+                    // Re-execute the request so the user gets the error page
+                    var originalPath = ctx.Request.Path.Value;
+                    if (originalPath != null)
+                    {
+                        ctx.Items["originalPath"] = originalPath;
+                    }
+                    ctx.Request.Path = "/Error/404";
+
+                    await next();
+                }
+            });
 
             app.UseRouting();
             app.UseAuthentication();

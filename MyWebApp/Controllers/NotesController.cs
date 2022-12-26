@@ -109,7 +109,8 @@ namespace MyWebApp.Controllers
                 Title = note.Title,
                 Description = note.Description,
                 AvailableThreads = selectedListItems,
-                SelectedThread = threadOfNote == null ? string.Empty : threadOfNote.Thread
+                SelectedThread = threadOfNote == null ? string.Empty : threadOfNote.Thread,
+                ExistingImages = await _notesRepository.GetNoteImagesNoTracking(note.NoteId)
             };
 
             return View(editNoteVM);

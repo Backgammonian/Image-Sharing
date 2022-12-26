@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyWebApp.Models;
-using System.Diagnostics;
 
 namespace MyWebApp.Data
 {
@@ -24,8 +23,6 @@ namespace MyWebApp.Data
             var randomGenetator = serviceScope.ServiceProvider.GetService<RandomGenerator>();
             if (randomGenetator == null)
             {
-                Debug.WriteLine("(SeedUsersAndRolesAsync) Random generator is not available!");
-
                 return (new UserModel(), Array.Empty<UserModel>());
             }
 
@@ -37,12 +34,13 @@ namespace MyWebApp.Data
                 var newAdminUser = new UserModel()
                 {
                     Id = "notadmin",
-                    UserName = "totallynotadmin",
+                    UserName = "TotallyNotAdmin",
                     Email = adminUserEmail,
                     EmailConfirmed = true,
                     Status = "Totally not in charge!"
                 };
-                await userManager.CreateAsync(newAdminUser, "qwerty");
+                var result = await userManager.CreateAsync(newAdminUser, "Qwerty123?");
+
                 await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
 
                 adminUser = newAdminUser;
@@ -50,9 +48,9 @@ namespace MyWebApp.Data
 
             var users = new List<UserModel>();
             var usersCredentials = new[] { 
-                ("blue@gmail.com", "Mr. Blue", "12345678", "Just chillin'"),
-                ("green@gmail.com", "Mr. Green", "12345678", "Just morbin'"),
-                ("red@gmail.com", "Mr. Red", "12345678", "Just mindlessly scrolling the Internet pages until the end of the world. =)") };
+                ("blue@gmail.com", "Mr.Blue", "Qq12345678?", "Just chillin'"),
+                ("green@gmail.com", "Mr.Green", "Qq12345678?", "Just morbin'"),
+                ("red@gmail.com", "Mr.Red", "Qq12345678?", "Just mindlessly scrolling the Internet pages until the end of the world. =)") };
 
             foreach (var userInfo in usersCredentials)
             {
@@ -88,16 +86,12 @@ namespace MyWebApp.Data
             var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
             if (dbContext == null)
             {
-                Debug.WriteLine("(SeedData) Database context is not available!");
-
                 return;
             }
 
             var picturesLoader = serviceScope.ServiceProvider.GetService<PicturesLoader>();
             if (picturesLoader == null)
             {
-                Debug.WriteLine("(SeedData) Picture loader is not available!");
-
                 return;
             }
 

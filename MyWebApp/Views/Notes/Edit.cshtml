@@ -10,6 +10,8 @@
 
 @if (User.IsAuthenticated())
 {
+    var images = Model.ExistingImages;
+
     <form method="post" asp-action="Edit" enctype="multipart/form-data">
         <input type="hidden" value="NoteId" id="NoteId"/>
         <div class="form-group">
@@ -30,7 +32,11 @@
             <span asp-validation-for="SelectedThread" class="text-danger"></span>
         </div>
         <div class="form-group">
-            Don't select new images if you want to keep the old ones.
+            <label>Don't select new images if you want to keep the old ones.</label>
+            @foreach (var image in images)
+            {
+                <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
+            }
         </div>
         <div class="form-group">
             <label asp-for="Images">Images</label>

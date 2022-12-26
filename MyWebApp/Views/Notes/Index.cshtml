@@ -15,6 +15,7 @@
 else
 {
     var notesSummaries = Model.NotesSummaries;
+    var pagingVM = Model.PagingViewModel;
 
     <h1>Notes</h1>
     foreach (var noteSummary in notesSummaries)
@@ -69,4 +70,19 @@ else
             </div>
         </div>
     }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            @if (pagingVM.IsValidPage)
+            {
+                <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-action="Index" asp-route-page="@(pagingVM.Page - 1)">
+                    Prev
+                </a>
+                <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-action="Index" asp-route-page="@(pagingVM.Page + 1)">
+                    Next
+                </a>
+                <span class="text-muted text-small">Results @pagingVM.ResultStart - @pagingVM.ResultEnd of @pagingVM.TotalItems</span>
+            }
+        </div>
+    </div>
 }

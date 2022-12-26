@@ -25,7 +25,19 @@ namespace MyWebApp.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<DashboardViewModel?> GetDashboard()
+        public async Task<int> GetNotesCount()
+        {
+            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var currentUser = credentials.User;
+            if (currentUser == null)
+            {
+                return 0;
+            }
+
+            return await _usersRepository.GetCountOfUserNotes(currentUser.Id);
+        }
+
+        public async Task<DashboardViewModel?> GetDashboard(int offset, int size)
         {
             var credentials = await _credentialsRepository.GetLoggedInUser(true);
             var currentUser = credentials.User;
@@ -34,7 +46,7 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var userNotes = await _usersRepository.GetNotesOfUser(currentUser.Id);
+            var userNotes = await _usersRepository.GetNotesOfUser(currentUser.Id, offset, size);
             var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var userNote in userNotes)
             {

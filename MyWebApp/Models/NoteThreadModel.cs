@@ -7,8 +7,10 @@ namespace MyWebApp.Models
     {
         [Key]
         public string Id { get; set; } = string.Empty;
+
         [ForeignKey(nameof(ThreadModel))]
         public string Thread { get; set; } = string.Empty;
+
         [ForeignKey(nameof(NoteModel))]
         public string NoteId { get; set; } = string.Empty;
     }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace MyWebApp.Controllers
 {
@@ -18,9 +20,30 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Dashboard")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
         {
-            return View(await _dashboardRepository.GetDashboard());
+            if (page < 1 ||
+                pageSize < 1)
+            {
+                return NotFound();
+            }
+
+            var dashboardVM = await _dashboardRepository.GetDashboard((page - 1) * pageSize, pageSize);
+            if (dashboardVM != null)
+            {
+                var count = await _dashboardRepository.GetNotesCount();
+                dashboardVM.PagingViewModel = new PagingViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalItems = count,
+                    TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                };
+
+                return View(dashboardVM);
+            }
+
+            return View(dashboardVM);
         }
 
         [HttpGet]

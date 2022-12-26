@@ -11,6 +11,7 @@
 @{
     var selectedThread = Model.Thread;
     var threadNotesDetails = Model.NotesDetails;
+    var pagingVM = Model.PagingViewModel;
 
     if (selectedThread == string.Empty ||
         !threadNotesDetails.Any())
@@ -80,5 +81,20 @@
                 </div>
             </div>
         }
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                @if (pagingVM.IsValidPage)
+                {
+                    <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-action="GetByThread" asp-route-page="@(pagingVM.Page - 1)">
+                        Prev
+                    </a>
+                    <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-action="GetByThread" asp-route-page="@(pagingVM.Page + 1)">
+                        Next
+                    </a>
+                    <span class="text-muted text-small">Results @pagingVM.ResultStart - @pagingVM.ResultEnd of @pagingVM.TotalItems</span>
+                }
+            </div>
+        </div>
     }
 }

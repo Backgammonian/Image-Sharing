@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Models;
-using System.Diagnostics;
 
 namespace MyWebApp
 {
@@ -48,7 +47,7 @@ namespace MyWebApp
             if (args.Length > 0 &&
                 args[0].ToLower() == "seeddata")
             {
-                Debug.WriteLine("(Main) Seeding the database");
+                Console.WriteLine("(Main) Seeding the database");
 
                 var result = await Seed.SeedUsersAndRolesAsync(app);
                 var admin = result.Item1;
@@ -62,9 +61,9 @@ namespace MyWebApp
             }
             else
             {
+                app.UseHsts();
                 app.UseExceptionHandler("/Error/500");
             }
-            app.UseHsts();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -73,7 +72,8 @@ namespace MyWebApp
             {
                 await next();
 
-                if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                if (ctx.Response.StatusCode == 404 &&
+                    !ctx.Response.HasStarted)
                 {
                     // Re-execute the request so the user gets the error page
                     var originalPath = ctx.Request.Path.Value;

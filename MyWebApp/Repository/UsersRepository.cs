@@ -2,6 +2,7 @@
 using MyWebApp.Data;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace MyWebApp.Repository
 {
@@ -41,7 +42,7 @@ namespace MyWebApp.Repository
             return profilePicture ?? _picturesLoader.GetDefaultProfileImage();
         }
 
-        public async Task<IEnumerable<NoteModel>> GetNotesOfUser(string userId)
+        public async Task<IEnumerable<NoteModel>> GetNotesOfUser(string userId, int offset, int size)
         {
             var user = await GetUserNoTracking(userId);
             if (user == null)
@@ -49,7 +50,12 @@ namespace MyWebApp.Repository
                 return Enumerable.Empty<NoteModel>();
             }
 
-            return await _dbContext.Notes.AsNoTracking().Where(x => x.UserId == user.Id).ToListAsync();
+            return await _dbContext.Notes.AsNoTracking().Where(x => x.UserId == user.Id).Skip(offset).Take(size).ToListAsync();
+        }
+
+        public async Task<int> GetCountOfUserNotes(string userId)
+        {
+            return await _dbContext.Notes.CountAsync(x => x.UserId == userId);
         }
 
         public async Task<UserDetailsViewModel> GetUserDetails(string userId)
@@ -63,7 +69,7 @@ namespace MyWebApp.Repository
             };
         }
 
-        public async Task<UserNotesViewModel?> GetUserNotes(string userId)
+        public async Task<UserNotesViewModel?> GetUserNotes(string userId, int offset, int size)
         {
             var user = await GetUserNoTracking(userId);
             if (user == null)
@@ -71,7 +77,7 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            var notes = await GetNotesOfUser(user.Id);
+            var notes = await GetNotesOfUser(user.Id, offset, size);
             var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var note in notes)
             {

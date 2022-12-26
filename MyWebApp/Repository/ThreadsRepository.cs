@@ -2,6 +2,7 @@
 using MyWebApp.Data;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
+using System.Drawing;
 
 namespace MyWebApp.Repository
 {
@@ -17,9 +18,14 @@ namespace MyWebApp.Repository
             _notesRepository = notesRepository;
         }
 
-        public async Task<IEnumerable<NoteThreadModel>> GetNotesFromThread(string thread)
+        public async Task<IEnumerable<NoteThreadModel>> GetNotesFromThread(string thread, int offset, int size)
         {
-            return await _dbContext.NoteThreads.AsNoTracking().Where(x => x.Thread == thread).ToListAsync();
+            return await _dbContext.NoteThreads.AsNoTracking().Where(x => x.Thread == thread).Skip(offset).Take(size).ToListAsync();
+        }
+
+        public async Task<int> GetCountOfNotesFromThread(string thread)
+        {
+            return await _dbContext.NoteThreads.CountAsync(x => x.Thread == thread);
         }
 
         public async Task<IEnumerable<ThreadModel>> GetAllThreads()
@@ -27,19 +33,9 @@ namespace MyWebApp.Repository
             return await _dbContext.Threads.AsNoTracking().ToListAsync();
         }
 
-        public async Task<NotesFromThreadViewModel> GetByThread(string thread)
+        public async Task<NotesFromThreadViewModel> GetByThread(string thread, int offset, int size)
         {
-            var notesFromThread = await GetNotesFromThread(thread);
-
-            var notes = new List<NoteModel>();
-            foreach (var noteFromThread in notesFromThread)
-            {
-                var note = await _notesRepository.GetNoteNoTracking(noteFromThread.NoteId);
-                if (note != null)
-                {
-                    notes.Add(note);
-                }
-            }
+            var notesFromThread = await GetNotesFromThread(thread, offset, size);
 
             var threadNotesDetailsList = new List<NoteDetailsViewModel>();
             foreach (var noteFromThread in notesFromThread)

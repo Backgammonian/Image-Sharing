@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Repository;
+using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
 {
@@ -21,9 +22,30 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Users/Notes/{userId}")]
-        public async Task<IActionResult> Notes(string userId)
+        public async Task<IActionResult> Notes(string userId, int page = 1, int pageSize = 6)
         {
-            return View(await _usersRepository.GetUserNotes(userId));
+            if (page < 1 ||
+                pageSize < 1)
+            {
+                return NotFound();
+            }
+
+            var userNotes = await _usersRepository.GetUserNotes(userId, (page - 1) * pageSize, pageSize);
+            if (userNotes != null)
+            {
+                var count = await _usersRepository.GetCountOfUserNotes(userId);
+                userNotes.PagingViewModel = new PagingViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalItems = count,
+                    TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                };
+
+                return View(userNotes);
+            }
+
+            return NotFound();
         }
     }
 }

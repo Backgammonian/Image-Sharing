@@ -16,11 +16,28 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Notes")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
         {
-            var notes = await _notesRepository.GetNotesList();
+            if (page < 1 ||
+                pageSize < 1)
+            {
+                return NotFound();
+            }
 
-            return View(notes);
+            var notes = await _notesRepository.GetNotesSummaries((page - 1) * pageSize, pageSize);
+            var count = await _notesRepository.GetCount();
+
+            return View(new NoteSummariesListViewModel()
+            {
+                NotesSummaries = notes,
+                PagingViewModel = new PagingViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalItems = count,
+                    TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                }
+            });
         }
 
         [HttpGet]

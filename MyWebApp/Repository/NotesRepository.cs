@@ -4,6 +4,7 @@ using MyWebApp.Extensions;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace MyWebApp.Repository
 {
@@ -30,9 +31,14 @@ namespace MyWebApp.Repository
             return await _dbContext.Threads.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<NoteModel>> GetAllNotes()
+        public async Task<IEnumerable<NoteModel>> GetNotesSlice(int offset, int size)
         {
-            return await _dbContext.Notes.AsNoTracking().ToListAsync();
+            return await _dbContext.Notes.AsNoTracking().Skip(offset).Take(size).ToListAsync();
+        }
+
+        public async Task<int> GetCount()
+        {
+            return await _dbContext.Notes.CountAsync();
         }
 
         public async Task<NoteModel?> GetNote(string noteId)
@@ -75,12 +81,12 @@ namespace MyWebApp.Repository
             return await _dbContext.NoteImages.AsNoTracking().Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
         }
 
-        public async Task<NoteSummariesListViewModel> GetNotesList()
+        public async Task<IEnumerable<NoteSummaryViewModel>> GetNotesSummaries(int offset, int size)
         {
-            var allNotes = await GetAllNotes();
+            var notes = await GetNotesSlice(offset, size);
 
             var noteSummaries = new List<NoteSummaryViewModel>();
-            foreach (var note in allNotes)
+            foreach (var note in notes)
             {
                 var author = await GetNoteAuthor(note);
                 var noteId = note.NoteId;
@@ -96,10 +102,7 @@ namespace MyWebApp.Repository
                 noteSummaries.Add(noteSummary);
             }
 
-            return new NoteSummariesListViewModel()
-            {
-                NotesSummaries = noteSummaries
-            };
+            return noteSummaries;
         }
 
         public async Task<NoteDetailsViewModel> GetNoteDetails(string noteId)

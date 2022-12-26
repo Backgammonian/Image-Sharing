@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
 
@@ -25,9 +26,25 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Threads/GetByThread/{thread}")]
-        public async Task<IActionResult> GetByThread(string thread)
+        public async Task<IActionResult> GetByThread(string thread, int page = 1, int pageSize = 6)
         {
-            return View(await _threadsRepository.GetByThread(thread));
+            if (page < 1 ||
+                pageSize < 1)
+            {
+                return NotFound();
+            }
+
+            var notesFromThread = await _threadsRepository.GetByThread(thread, (page - 1) * pageSize, pageSize);
+            var count = await _threadsRepository.GetCountOfNotesFromThread(thread);
+            notesFromThread.PagingViewModel = new PagingViewModel()
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = count,
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+            };
+
+            return View(notesFromThread);
         }
     }
 }

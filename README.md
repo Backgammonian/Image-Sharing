@@ -10,5 +10,7 @@ Simple Web platform for image sharing built using ASP.NET Core MVC.
 * Notes can be assigned to a certain thread
 * IP geolocation (kind of)
 * Pagination of the notes
+* Image galleries (using [fancyBox](https://github.com/fancyapps/fancybox))
+* Administrator panel
 ## Demonstation
 * WIP

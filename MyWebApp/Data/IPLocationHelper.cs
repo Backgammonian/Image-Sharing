@@ -12,6 +12,7 @@ namespace MyWebApp.Data
             try
             {
                 var remoteIpAddress = context.Connection.RemoteIpAddress;
+
                 Debug.WriteLine($"(IPLocationHelper_GetLocation_remoteIpAddress) {remoteIpAddress}");
 
                 var url = $"http://ip-api.com/json/{remoteIpAddress}?fields=66846719";
@@ -31,6 +32,7 @@ namespace MyWebApp.Data
             catch (Exception ex)
             {
                 Debug.WriteLine($"(IPLocationHelper_GetLocation) {ex}");
+
                 return _unknownIP;
             }
         }

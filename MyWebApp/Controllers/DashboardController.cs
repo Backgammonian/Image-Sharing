@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace MyWebApp.Controllers
 {
@@ -60,6 +58,7 @@ namespace MyWebApp.Controllers
 
             var editUserProfileViewModel = new EditUserProfileViewModel()
             {
+                ProfilePicture = await _dashboardRepository.GetCurrentUserProfilePicture(),
                 Status = currentUser.Status
             };
 

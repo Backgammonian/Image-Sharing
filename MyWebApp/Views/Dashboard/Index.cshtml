@@ -26,14 +26,20 @@ else
 
     <h2>Your dashboard: <b>@user.UserName</b></h2>
     <div>
-        <img width="100" height="100" src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true"/>
+        <div class="thumb">
+            <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(profilePicture.ImageFileName)">
+                <img src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true">
+            </a>
+        </div>
         <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">@user.UserName</a>
-        <h4>@user.Status</h4>
+        <h3>@user.Status</h3>
     </div>
 
     <div>
         <a asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-sm btn-outline-secondary">Edit Profile</a>
     </div>
+
+    var noteNumber = 0;
 
     if (!notesDetails.Any())
     {
@@ -57,10 +63,19 @@ else
             var images = noteDetail.Images;
             var thread = noteDetail.Thread;
 
-            @foreach (var image in images)
-            {
-                <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
-            }
+            <div class="gallery-column">
+                @foreach (var image in images)
+                {
+                    var imagePath = ImagePathHelper.GetPath(image.ImageFileName);
+                    var href = ImagePathHelper.GetHref(image.ImageFileName);
+
+                    <div class="thumb">
+                        <a class="fancybox-frame" data-fancybox="gallery-@noteNumber" href="@href">
+                            <img src="@imagePath" asp-append-version="true">
+                        </a>
+                    </div>
+                }
+            </div>
 
             @if (thread != null)
             {
@@ -78,6 +93,8 @@ else
 
                 <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
             </div>
+
+            noteNumber += 1;
         }
 
         <div class="d-flex justify-content-between align-items-center mb-4">

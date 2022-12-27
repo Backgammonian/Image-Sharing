@@ -25,6 +25,14 @@ namespace MyWebApp.Repository
             _dbContext = dbContext;
         }
 
+        public async Task<UserImageModel> GetCurrentUserProfilePicture()
+        {
+            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var currentUser = credentials.User;
+
+            return await _usersRepository.GetUsersCurrentProfilePicture(currentUser);
+        }
+
         public async Task<int> GetNotesCount()
         {
             var credentials = await _credentialsRepository.GetLoggedInUser(true);
@@ -69,7 +77,7 @@ namespace MyWebApp.Repository
                 return false;
             }
             
-            var newProfileImage = editUserProfileVM.ProfileImage;
+            var newProfileImage = editUserProfileVM.NewProfilePicture;
             if (newProfileImage != null)
             {
                 var userImage = await _picturesLoader.LoadProfileImage(newProfileImage, user);

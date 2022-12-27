@@ -33,10 +33,19 @@
         </div>
         <div class="form-group">
             <label>Don't select new images if you want to keep the old ones.</label>
-            @foreach (var image in images)
-            {
-                <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
-            }
+            <div class="gallery-column">
+                @foreach (var image in images)
+                {
+                    var imagePath = ImagePathHelper.GetPath(image.ImageFileName);
+                    var href = ImagePathHelper.GetHref(image.ImageFileName);
+
+                    <div class="thumb">
+                        <a class="fancybox-frame" data-fancybox="gallery" href="@href">
+                            <img src="@imagePath" asp-append-version="true">
+                        </a>
+                    </div>
+                }
+            </div>
         </div>
         <div class="form-group">
             <label asp-for="Images">Images</label>

@@ -12,5 +12,14 @@
             return $"~/images/{PicturesLoader.DefaultImageName}";
         }
 
+        public static string GetHref(string imageFileName)
+        {
+            return $"/images/{imageFileName}";
+        }
+
+        public static string GetDefaultImageHref()
+        {
+            return $"/images/{PicturesLoader.DefaultImageName}";
+        }
     }
 }

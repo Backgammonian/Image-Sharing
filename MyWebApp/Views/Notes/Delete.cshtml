@@ -29,14 +29,29 @@
     <h2>Are you sure you want to delete this note?</h2>
 
     <div>
+        @if (authorProfilePicture != null)
+        {
+            <div class="thumb">
+                <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(authorProfilePicture.ImageFileName)">
+                    <img src="@ImagePathHelper.GetPath(authorProfilePicture.ImageFileName)" asp-append-version="true">
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="thumb">
+                <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetDefaultImageHref()">
+                    <img src="@ImagePathHelper.GetDefaultImagePath()" asp-append-version="true">
+                </a>
+             </div>
+        }
+
         @if (author != null)
         {
-            <img width="100" height="100" src="@ImagePathHelper.GetPath(authorProfilePicture.ImageFileName)" asp-append-version="true"/>
             <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
         }
         else
         {
-            <img width="100" height="100" src="@ImagePathHelper.GetDefaultImagePath()" asp-append-version="true"/>
             <a class="btn btn-sm btn-outline-secondary">Unknown author</a>
         }
     </div>
@@ -52,10 +67,19 @@
             <input asp-for="@note.Description" class="form-control" readonly/>
         </div>
 
-        @foreach (var image in images)
-        {
-            <img src="@ImagePathHelper.GetPath(image.ImageFileName)" asp-append-version="true"/>
-        }
+        <div class="gallery-column">
+            @foreach (var image in images)
+            {
+                var imagePath = ImagePathHelper.GetPath(image.ImageFileName);
+                var href = ImagePathHelper.GetHref(image.ImageFileName);
+
+                <div class="thumb">
+                    <a class="fancybox-frame" data-fancybox="gallery" href="@href">
+                        <img src="@imagePath" asp-append-version="true">
+                    </a>
+                </div>
+            }
+        </div>
 
         @if (thread != null)
         {

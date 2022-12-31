@@ -3,8 +3,6 @@ using MyWebApp.Data;
 using MyWebApp.Extensions;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
-using System.Diagnostics;
-using System.Drawing;
 
 namespace MyWebApp.Repository
 {
@@ -149,9 +147,6 @@ namespace MyWebApp.Repository
             }
 
             var selectedThread = createNoteVM.SelectedThread;
-
-            Debug.WriteLine($"(NotesRepository_Create) thread: {selectedThread}");
-
             if (selectedThread != string.Empty)
             {
                 var availableThreads = await GetAvailableNoteThreads();

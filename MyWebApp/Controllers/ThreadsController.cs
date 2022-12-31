@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
 
@@ -31,7 +30,11 @@ namespace MyWebApp.Controllers
             if (page < 1 ||
                 pageSize < 1)
             {
-                return NotFound();
+                return RedirectToAction("ErrorWrongPage", "Error", new WrongPageViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize
+                });
             }
 
             var notesFromThread = await _threadsRepository.GetByThread(thread, (page - 1) * pageSize, pageSize);

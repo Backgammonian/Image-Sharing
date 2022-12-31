@@ -55,16 +55,12 @@ namespace MyWebApp
                 await Seed.SeedData(app, admin, users);
             }
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-            else
+            if (!app.Environment.IsDevelopment())
             {
                 app.UseHsts();
-                app.UseExceptionHandler("/Error/500");
             }
 
+            app.UseExceptionHandler("/Error/Error500");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -81,7 +77,7 @@ namespace MyWebApp
                     {
                         ctx.Items["originalPath"] = originalPath;
                     }
-                    ctx.Request.Path = "/Error/404";
+                    ctx.Request.Path = "/Error/Error404";
 
                     await next();
                 }

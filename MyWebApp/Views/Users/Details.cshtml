@@ -14,7 +14,7 @@
 
     @if (user == null)
     {
-        <h2>This user doesn't exist.</h2>
+        <h3>This user doesn't exist.</h3>
     }
     else
     {
@@ -30,7 +30,7 @@
             <h3>@user.UserName</h3>
             <h4>@user.Status</h4>
 
-            <a asp-controller="Users" asp-action="Notes" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">View Notes</a>
+            <a asp-controller="Users" asp-action="Notes" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">View @user.UserName's notes</a>
         </div>
     }
 }

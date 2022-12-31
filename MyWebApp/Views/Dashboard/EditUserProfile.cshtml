@@ -17,7 +17,7 @@
             <span asp-validation-for="Status" class="text-danger"></span>
         </div>
         <div class="form-group">
-            Don't select new profile image if you want to keep the old one.
+            Don't select a new profile image if you want to keep the old one.
         </div>
         <div class="thumb">
             <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(Model.ProfilePicture.ImageFileName)">
@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             <label asp-for="NewProfilePicture">New profile picture</label>
-            <input asp-for="NewProfilePicture" class="form-control" placeholder="Select new profile picture" accept="image/*" />
+            <input asp-for="NewProfilePicture" class="form-control" placeholder="Select new profile picture" accept="image/*"/>
             <span asp-validation-for="NewProfilePicture" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
@@ -34,9 +34,5 @@
 }
 else
 {
-    <div class="row">
-        <span>
-            You are not logged in!
-        </span>
-    </div>
+    <h3>You are not logged in!</h3>
 }

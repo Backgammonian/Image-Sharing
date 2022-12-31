@@ -8,7 +8,12 @@
 
 @model UserNotesViewModel
 
-@{
+@if (Model == null)
+{
+    <h3>This user does't exist.</h3>
+}
+else
+{
     var user = Model.User;
     var profilePicture = Model.ProfilePicture;
     var notesDetails = Model.Notes;
@@ -16,7 +21,7 @@
 
     @if (user == null)
     {
-        <h2>This user doesn't exist.</h2>
+        <h3>This user doesn't exist.</h3>
     }
     else
     {

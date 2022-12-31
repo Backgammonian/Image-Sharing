@@ -22,7 +22,9 @@ namespace MyWebApp.Controllers
         [Route("Admin")]
         public async Task<IActionResult> Index()
         {
-            return View(await _credentialsRepository.GetLoggedInUser());
+            var credentials = await _credentialsRepository.GetLoggedInUser();
+
+            return View(credentials);
         }
 
         [HttpGet]
@@ -39,6 +41,7 @@ namespace MyWebApp.Controllers
             var allThreads = await _threadsRepository.GetAllThreads();
             var createThreadVM = new CreateThreadViewModel()
             {
+                NewThreadName = string.Empty,
                 ExistingThreadNames = allThreads.Select(x => x.Thread)
             };
 
@@ -55,14 +58,14 @@ namespace MyWebApp.Controllers
             {
                 ModelState.AddModelError(string.Empty, "You don't have the permission to create a new thread.");
 
-                return View("CreateThread", createThreadVM);
+                return View(createThreadVM);
             }
 
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError(string.Empty, "Can't create a new thread.");
 
-                return View("CreateThread", createThreadVM);
+                return View(createThreadVM);
             }
 
             if (await _threadsRepository.Create(createThreadVM))
@@ -70,9 +73,9 @@ namespace MyWebApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ModelState.AddModelError(string.Empty, $"Thread {createThreadVM.NewThreadName} already exists or something else went wrong.");
+            ModelState.AddModelError(string.Empty, $"The thread '{createThreadVM.NewThreadName}' already exists or something else went wrong.");
 
-            return View("CreateThread", createThreadVM);
+            return View(createThreadVM);
         }
 
         [HttpGet]
@@ -96,7 +99,9 @@ namespace MyWebApp.Controllers
             var firstSelectableThread = selectableListItems.First();
             var deleteThreadVM = new DeleteThreadViewModel()
             {
-                SelectedThreadName = firstSelectableThread != null ? firstSelectableThread.Value : string.Empty,
+                SelectedThreadName = firstSelectableThread != null ? 
+                    firstSelectableThread.Value :
+                    string.Empty,
                 AvailableThreads = selectableListItems
             };
 
@@ -113,7 +118,7 @@ namespace MyWebApp.Controllers
             {
                 ModelState.AddModelError(string.Empty, "You don't have the permission to delete any thread");
 
-                return View("DeleteThread", deleteThreadVM);
+                return View(deleteThreadVM);
             }
 
             if (await _threadsRepository.Delete(deleteThreadVM))
@@ -121,9 +126,9 @@ namespace MyWebApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ModelState.AddModelError(string.Empty, $"Can't delete thread: {deleteThreadVM.SelectedThreadName}");
+            ModelState.AddModelError(string.Empty, $"Can't delete thread: '{deleteThreadVM.SelectedThreadName}'");
 
-            return View("DeleteThread", deleteThreadVM);
+            return View(deleteThreadVM);
         }
     }
 }

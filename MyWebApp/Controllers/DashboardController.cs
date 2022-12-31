@@ -23,7 +23,11 @@ namespace MyWebApp.Controllers
             if (page < 1 ||
                 pageSize < 1)
             {
-                return NotFound();
+                return RedirectToAction("ErrorWrongPage", "Error", new WrongPageViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize
+                });
             }
 
             var dashboardVM = await _dashboardRepository.GetDashboard((page - 1) * pageSize, pageSize);
@@ -41,7 +45,7 @@ namespace MyWebApp.Controllers
                 return View(dashboardVM);
             }
 
-            return View(dashboardVM);
+            return View(null);
         }
 
         [HttpGet]
@@ -73,7 +77,7 @@ namespace MyWebApp.Controllers
             {
                 ModelState.AddModelError(string.Empty, "Failed to edit the profile.");
 
-                return View("EditUserProfile", editUserProfileVM);
+                return View(editUserProfileVM);
             }
 
             var credentials = await _credentialsRepository.GetLoggedInUser(false);
@@ -91,7 +95,7 @@ namespace MyWebApp.Controllers
             
             ModelState.AddModelError(string.Empty, "You have no permission to edit this profile.");
 
-            return View("Edit", editUserProfileVM);
+            return View(editUserProfileVM);
         }
     }
 }

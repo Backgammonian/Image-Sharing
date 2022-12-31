@@ -21,7 +21,11 @@ namespace MyWebApp.Controllers
             if (page < 1 ||
                 pageSize < 1)
             {
-                return NotFound();
+                return RedirectToAction("ErrorWrongPage", "Error", new WrongPageViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize
+                });
             }
 
             var notes = await _notesRepository.GetNotesSummaries((page - 1) * pageSize, pageSize);
@@ -78,7 +82,7 @@ namespace MyWebApp.Controllers
             {
                 ModelState.AddModelError(string.Empty, "Failed to create a new note");
 
-                return View("Create", createNoteVM);
+                return View(createNoteVM);
             }
 
             if (await _notesRepository.Create(createNoteVM))
@@ -88,7 +92,7 @@ namespace MyWebApp.Controllers
           
             ModelState.AddModelError(string.Empty, "You are not logged in!");
 
-            return View("Create", createNoteVM);
+            return View(createNoteVM);
         }
 
         [HttpGet]
@@ -141,7 +145,7 @@ namespace MyWebApp.Controllers
             {
                 ModelState.AddModelError(string.Empty, "Failed to edit the note");
 
-                return View("Edit", editNoteVM);
+                return View(editNoteVM);
             }
 
             var originalNote = await _notesRepository.GetNoteNoTracking(noteId);
@@ -157,7 +161,7 @@ namespace MyWebApp.Controllers
           
             ModelState.AddModelError(string.Empty, "You have no permission to edit this note.");
 
-            return View("Edit", editNoteVM);
+            return View(editNoteVM);
         }
 
         [HttpGet]
@@ -196,7 +200,7 @@ namespace MyWebApp.Controllers
 
             ModelState.AddModelError(string.Empty, "You have no permission to delete this note.");
 
-            return View("Delete", deleteNoteVM);
+            return View(deleteNoteVM);
         }
     }
 }

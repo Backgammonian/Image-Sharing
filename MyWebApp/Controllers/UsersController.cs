@@ -17,7 +17,9 @@ namespace MyWebApp.Controllers
         [Route("Users/Details/{userId}")]
         public async Task<IActionResult> Details(string userId)
         {
-            return View(await _usersRepository.GetUserDetails(userId));
+            var userDetails = await _usersRepository.GetUserDetails(userId);
+
+            return View(userDetails);
         }
 
         [HttpGet]
@@ -27,7 +29,11 @@ namespace MyWebApp.Controllers
             if (page < 1 ||
                 pageSize < 1)
             {
-                return NotFound();
+                return RedirectToAction("ErrorWrongPage", "Error", new WrongPageViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize
+                });
             }
 
             var userNotes = await _usersRepository.GetUserNotes(userId, (page - 1) * pageSize, pageSize);
@@ -45,7 +51,7 @@ namespace MyWebApp.Controllers
                 return View(userNotes);
             }
 
-            return NotFound();
+            return View(null);
         }
     }
 }

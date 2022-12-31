@@ -26,6 +26,7 @@ namespace MyWebApp.Controllers
         public IActionResult Login()
         {
             var response = new LoginViewModel();
+
             return View(response);
         }
 
@@ -36,6 +37,7 @@ namespace MyWebApp.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Input is not valid";
+
                 return View(loginVM);
             }
 
@@ -54,6 +56,7 @@ namespace MyWebApp.Controllers
             }
 
             TempData["Error"] = "Wrong credentials, please try again";
+
             return View(loginVM);
         }
 
@@ -62,6 +65,7 @@ namespace MyWebApp.Controllers
         public IActionResult Register()
         {
             var response = new RegisterViewModel();
+
             return View(response);
         }
 
@@ -72,6 +76,7 @@ namespace MyWebApp.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Input is not valid";
+
                 return View(registerVM);
             }
 
@@ -101,11 +106,13 @@ namespace MyWebApp.Controllers
                 else
                 {
                     TempData["Error"] = "Can't login into created account!";
+
                     return View(registerVM);
                 }
             }
 
             TempData["Error"] = "Registration failed";
+
             return View(registerVM);
         }
 
@@ -114,6 +121,7 @@ namespace MyWebApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+
             return RedirectToAction("Index", "Home");
         }
     }

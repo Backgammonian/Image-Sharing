@@ -2,7 +2,6 @@
 using MyWebApp.Data;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace MyWebApp.Repository
 {

@@ -7,10 +7,13 @@ namespace MyWebApp.Controllers
 {
     public sealed class NotesController : Controller
     {
+        private readonly ILogger<NotesController> _logger;
         private readonly NotesRepository _notesRepository;
 
-        public NotesController(NotesRepository notesRepository)
+        public NotesController(ILogger<NotesController> logger,
+            NotesRepository notesRepository)
         {
+            _logger = logger;
             _notesRepository = notesRepository;
         }
 
@@ -87,7 +90,13 @@ namespace MyWebApp.Controllers
 
             if (await _notesRepository.Create(createNoteVM))
             {
+                _logger.LogInformation($"(Notes/Create) Note '{createNoteVM.Title}' has been created");
+
                 return RedirectToAction("Index");
+            }
+            else
+            {
+                _logger.LogInformation($"(Notes/Create) Can't create a note '{createNoteVM.Title}'");
             }
           
             ModelState.AddModelError(string.Empty, "You are not logged in!");
@@ -156,7 +165,13 @@ namespace MyWebApp.Controllers
 
             if (await _notesRepository.Update(originalNote, editNoteVM))
             {
+                _logger.LogInformation($"(Notes/Create) The note '{editNoteVM.Title}' ({originalNote.NoteId}) has been edited");
+
                 return RedirectToAction("Index");
+            }
+            else
+            {
+                _logger.LogInformation($"(Notes/Create) Can't edit the note '{editNoteVM.Title}' ({originalNote.NoteId})");
             }
           
             ModelState.AddModelError(string.Empty, "You have no permission to edit this note.");
@@ -195,7 +210,13 @@ namespace MyWebApp.Controllers
 
             if (await _notesRepository.Delete(deleteNoteVM))
             {
+                _logger.LogInformation($"(Notes/Delete) The note '{deleteNoteVM.NoteDetails.Note.Title}' ({noteId}) has been deleted");
+
                 return RedirectToAction("Index");
+            }
+            else
+            {
+                _logger.LogInformation($"(Notes/Delete) Can't delete the note '{deleteNoteVM.NoteDetails.Note.Title}' ({noteId})");
             }
 
             ModelState.AddModelError(string.Empty, "You have no permission to delete this note.");

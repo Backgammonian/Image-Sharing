@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace MyWebApp.Data
 {
-    public static class IPLocationHelper
+    public static class IpLocationHelper
     {
         private const string _unknownIP = "Unknown IP";
 
@@ -11,15 +10,13 @@ namespace MyWebApp.Data
         {
             try
             {
-                var remoteIpAddress = context.Connection.RemoteIpAddress;
+                var clientIpAddress = context.Connection.RemoteIpAddress;
 
-                Debug.WriteLine($"(IPLocationHelper_GetLocation_remoteIpAddress) {remoteIpAddress}");
-
-                var url = $"http://ip-api.com/json/{remoteIpAddress}?fields=66846719";
+                var url = $"http://ip-api.com/json/{clientIpAddress}?fields=66846719";
                 using var client = new HttpClient();
                 var response = await client.GetAsync(url);
                 var content = await response.Content.ReadAsStringAsync();
-                var ipInfo = JsonConvert.DeserializeObject<IPAPIServiceResponse>(content);
+                var ipInfo = JsonConvert.DeserializeObject<IpApiServiceResponse>(content);
                 
                 if (ipInfo != null &&
                     ipInfo.Status == "success")
@@ -27,12 +24,10 @@ namespace MyWebApp.Data
                     return $"{ipInfo.Country}, {ipInfo.City}";
                 }
 
-                return $"{_unknownIP} ({remoteIpAddress})";
+                return $"{_unknownIP} ({clientIpAddress})";
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"(IPLocationHelper_GetLocation) {ex}");
-
                 return _unknownIP;
             }
         }

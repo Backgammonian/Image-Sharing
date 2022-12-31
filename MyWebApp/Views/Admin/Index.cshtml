@@ -11,6 +11,7 @@
 @{
     var claims = Model.ClaimsPrincipal;
     var user = Model.User;
+
     if (user == null ||
         claims == null ||
         !claims.IsAdmin())

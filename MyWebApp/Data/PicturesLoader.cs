@@ -54,6 +54,7 @@ namespace MyWebApp.Data
         {
             var name = _randomGenerator.GetRandomString(60);
             var extension = Path.GetExtension(filePath);
+
             return $"{name}{extension}";
         }
 

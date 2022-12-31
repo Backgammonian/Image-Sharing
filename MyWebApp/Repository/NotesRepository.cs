@@ -71,7 +71,7 @@ namespace MyWebApp.Repository
 
         public async Task<IEnumerable<NoteImageModel>> GetNoteImages(string noteId)
         {
-            return await _dbContext.NoteImages.Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
+            return await _dbContext.NoteImages.AsNoTracking().Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
         }
 
         public async Task<IEnumerable<NoteImageModel>> GetNoteImagesNoTracking(string noteId)
@@ -120,7 +120,7 @@ namespace MyWebApp.Repository
 
         public async Task<bool> Create(CreateNoteViewModel createNoteVM)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
             var claims = credentials.ClaimsPrincipal;
 
@@ -166,7 +166,7 @@ namespace MyWebApp.Repository
 
         public async Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
             var claims = credentials.ClaimsPrincipal;
 

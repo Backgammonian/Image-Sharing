@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Models;
+using MyWebApp.Extensions;
 
 namespace MyWebApp
 {
@@ -12,6 +13,13 @@ namespace MyWebApp
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddLogging(configure =>
+            {
+                configure.AddFile($"log file {DateTime.Now.GetMyTimeFormat()}.txt");
+                configure.AddConsole();
+                configure.AddDebug();
+            });
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<RandomGenerator>();
@@ -49,10 +57,8 @@ namespace MyWebApp
             {
                 Console.WriteLine("(Main) Seeding the database");
 
-                var result = await Seed.SeedUsersAndRolesAsync(app);
-                var admin = result.Item1;
-                var users = result.Item2;
-                await Seed.SeedData(app, admin, users);
+                var seedUsersModel = await Seed.SeedUsersAndRolesAsync(app);
+                await Seed.SeedData(app, seedUsersModel.Admin, seedUsersModel.Users);
             }
 
             if (!app.Environment.IsDevelopment())

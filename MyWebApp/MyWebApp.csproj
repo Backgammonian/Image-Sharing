@@ -22,6 +22,7 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.json" Version="13.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
+    <PackageReference Include="NReco.Logging.File" Version="1.1.5" />
   </ItemGroup>
 
 </Project>

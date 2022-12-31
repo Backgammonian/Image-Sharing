@@ -10,13 +10,13 @@
 
 @if (!Model.Threads.Any())
 {
-    <h2>There are no threads yet.</h2>
+    <h3>There are no threads yet.</h3>
 }
 else
 {
-    var threads = Model.Threads;
-
     <h1>All threads</h1>
+
+    var threads = Model.Threads;
     foreach (var thread in threads)
     {
         <div style="margin: 5px;">

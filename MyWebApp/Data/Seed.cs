@@ -5,7 +5,7 @@ namespace MyWebApp.Data
 {
     public static class Seed
     {
-        public static async Task<(UserModel, UserModel[])> SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        public static async Task<SeedUsersModel> SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -23,7 +23,11 @@ namespace MyWebApp.Data
             var randomGenetator = serviceScope.ServiceProvider.GetService<RandomGenerator>();
             if (randomGenetator == null)
             {
-                return (new UserModel(), Array.Empty<UserModel>());
+                return new SeedUsersModel()
+                {
+                    Admin = new UserModel(),
+                    Users = Array.Empty<UserModel>()
+                };
             }
 
             var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
@@ -77,7 +81,11 @@ namespace MyWebApp.Data
                 }
             }
 
-            return (adminUser, users.ToArray());
+            return new SeedUsersModel()
+            {
+                Admin = adminUser,
+                Users = users.ToArray()
+            };
         }
 
         public static async Task SeedData(IApplicationBuilder applicationBuilder, UserModel admin, UserModel[] users)

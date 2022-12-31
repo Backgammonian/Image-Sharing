@@ -27,7 +27,7 @@ namespace MyWebApp.Repository
 
         public async Task<UserImageModel> GetCurrentUserProfilePicture()
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
 
             return await _usersRepository.GetUsersCurrentProfilePicture(currentUser);
@@ -35,7 +35,7 @@ namespace MyWebApp.Repository
 
         public async Task<int> GetNotesCount()
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
             if (currentUser == null)
             {
@@ -47,7 +47,7 @@ namespace MyWebApp.Repository
 
         public async Task<DashboardViewModel?> GetDashboard(int offset, int size)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
             if (currentUser == null)
             {

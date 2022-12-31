@@ -17,7 +17,7 @@
         return;
     }
 
-    ViewData["Title"] = $"{note.Title.Minify()}";
+    ViewData["Title"] = $"Note details: {note.Title.Minify()}";
 
     var thread = Model.Thread;
     var images = Model.Images;

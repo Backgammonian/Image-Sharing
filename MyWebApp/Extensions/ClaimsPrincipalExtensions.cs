@@ -41,7 +41,8 @@ namespace MyWebApp.Extensions
         {
             return user != null &&
                 user.IsAuthenticated() &&
-                user.IsInRole(UserRoles.User) &&
+                (user.IsInRole(UserRoles.User) ||
+                    user.IsInRole(UserRoles.Admin)) &&
                 note.UserId == user.GetUserId();
         }
     }

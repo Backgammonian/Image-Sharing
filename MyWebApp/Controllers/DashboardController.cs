@@ -6,12 +6,15 @@ namespace MyWebApp.Controllers
 {
     public sealed class DashboardController : Controller
     {
+        private readonly ILogger<DashboardController> _logger;
         private readonly CredentialsRepository _credentialsRepository;
         private readonly DashboardRepository _dashboardRepository;
 
-        public DashboardController(CredentialsRepository credentialsRepository,
+        public DashboardController(ILogger<DashboardController> logger,
+            CredentialsRepository credentialsRepository,
             DashboardRepository dashboardRepository)
         {
+            _logger = logger;
             _credentialsRepository = credentialsRepository;
             _dashboardRepository = dashboardRepository;
         }
@@ -90,7 +93,13 @@ namespace MyWebApp.Controllers
 
             if (await _dashboardRepository.Update(currentUser, editUserProfileVM))
             {
+                _logger.LogInformation($"(Dashboard/EditUserProfile) User {currentUser.UserName} ({currentUser.Id}) updated his profile");
+
                 return RedirectToAction("Index");
+            }
+            else
+            {
+                _logger.LogInformation($"(Dashboard/EditUserProfile) User {currentUser.UserName} ({currentUser.Id}) ⚠️ failed to updated his profile");
             }
             
             ModelState.AddModelError(string.Empty, "You have no permission to edit this profile.");

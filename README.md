@@ -11,7 +11,8 @@ Simple Web platform for image sharing built using ASP.NET Core MVC.
 * IP geolocation (kind of)
 * Pagination of the notes
 * Image galleries (using [fancyBox](https://github.com/fancyapps/fancybox))
-* Administrative panel
+* Administrative panel (kind of)
 * Logging in console & file (using [NReco.Logging.File](https://github.com/nreco/logging))
+* Localization (🇺🇸 & 🇷🇺)
 ## Demonstation
 * WIP

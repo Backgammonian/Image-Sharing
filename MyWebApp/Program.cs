@@ -1,10 +1,15 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Models;
 using MyWebApp.Extensions;
+using MyWebApp.Localization;
+using System.Globalization;
+using System.Reflection;
 
 namespace MyWebApp
 {
@@ -22,6 +27,36 @@ namespace MyWebApp
             });
 
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddSingleton<LanguageService>();
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+            builder.Services.AddMvc()
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization(options =>
+                {
+                    options.DataAnnotationLocalizerProvider = (type, factory) =>
+                    {
+                        var assemblyName = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName);
+                        return factory.Create("ShareResource", assemblyName.Name);
+                    };
+                });
+
+            builder.Services.Configure<RequestLocalizationOptions>(
+                options =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                        {
+                            new CultureInfo("en-US"),
+                            new CultureInfo("ru-RU")
+                        };
+
+                    options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+                    options.SupportedCultures = supportedCultures;
+                    options.SupportedUICultures = supportedCultures;
+
+                    options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
+                });
+
             builder.Services.AddScoped<RandomGenerator>();
             builder.Services.AddScoped<PicturesLoader>();
             builder.Services.AddScoped<CredentialsRepository>();
@@ -67,6 +102,10 @@ namespace MyWebApp
             }
 
             app.UseExceptionHandler("/Error/Error500");
+
+            var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(localizationOptions.Value);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

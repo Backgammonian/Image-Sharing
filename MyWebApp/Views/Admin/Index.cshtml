@@ -2,8 +2,10 @@
     Admin panel
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Admin panel";
+    ViewData["Title"] = LanguageService.GetKey("AdminPanel_Title");
 }
 
 @model CredentialsViewModel
@@ -16,16 +18,16 @@
         claims == null ||
         !claims.IsAdmin())
     {
-        <h3>You have no permission to access this page.</h3>
+        <h3>@LanguageService.GetKey("AdminPanel_NoPermission")</h3>
     }
     else
     {
-        <h3>Hello, admin <b>@user.UserName</b>!</h3>
+        <h3>@LanguageService.GetKey("AdminPanel_HelloAdmin") <b>@user.UserName</b>!</h3>
         <div>
-            <a asp-controller="Admin" asp-action="CreateThread" class="btn btn-sm btn-outline-secondary">Create a new thread</a>
+            <a asp-controller="Admin" asp-action="CreateThread" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("AdminPanel_CreateThread")</a>
         </div>
         <div>
-            <a asp-controller="Admin" asp-action="DeleteThread" class="btn btn-sm btn-outline-secondary">Select the thread to delete</a>
+            <a asp-controller="Admin" asp-action="DeleteThread" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("AdminPanel_DeleteThread")</a>
         </div>
     }
 }

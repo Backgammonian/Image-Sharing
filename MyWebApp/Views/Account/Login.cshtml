@@ -2,8 +2,10 @@
     Login page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = LanguageService.GetKey("Login_Title");
 }
 
 @model LoginViewModel
@@ -12,40 +14,40 @@
     <div class="col-md-6 offset-3">
         @if (User.IsAuthenticated())
         {
-            <h3>You are already logged in!</h3>
+            <h3>@LanguageService.GetKey("AlreadyLoggedIn")</h3>
         }
         else
         {
             <p>
-                <h4>Sing in to your account</h4>
+                <h4>@LanguageService.GetKey("SingInToYourAccount")</h4>
             </p>
 
             @if (TempData["Error"] != null)
             {
                 <div class="col-md-12 alert alert-danger">
                     <span>
-                        <b>Sorry! Error occured</b> - @TempData["Error"]
+                        <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
                     </span>
                 </div>
             }
 
             <div class="row">
                 <div class="col-md-8 offset-2">
-                    <form asp-action="Login">
+                    <form method="post" asp-action="Login">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control"/>
+                            <label asp-for="Email" class="control-label">@LanguageService.GetKey("Login_Email")</label>
+                            <input asp-for="Email" class="form-control" placeholder="@LanguageService.GetKey("Login_EmailPlaceholder")" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Password" class="control-label"></label>
-                            <input asp-for="Password" class="form-control"/>
+                            <label asp-for="Password" class="control-label">@LanguageService.GetKey("Login_Password")</label>
+                            <input asp-for="Password" class="form-control" placeholder="@LanguageService.GetKey("Login_PasswordPlaceholder")" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input class="btn btn-outline-success float right" type="submit" value="Log in"/>
-                            <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Cancel</a>
+                            <input class="btn btn-outline-success float right" type="submit" value="@LanguageService.GetKey("Login_Submit")"/>
+                            <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
                         </div>
                     </form>
                 </div>

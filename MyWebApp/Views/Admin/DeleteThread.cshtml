@@ -2,32 +2,41 @@
     Thread deleting page for admin
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Delete the thread";
+    ViewData["Title"] = LanguageService.GetKey("DeleteThread_Title");
 }
 
 @model DeleteThreadViewModel
 
+
 @if (Model != null &&
     User.IsAdmin())
 {
-    <h3>Select the thread you want to delete:</h3>
+    @if (TempData["Error"] != null)
+    {
+        <div class="col-md-12 alert alert-danger">
+            <span>
+                <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+            </span>
+        </div>
+    }
+
+    <h3>@LanguageService.GetKey("DeleteThread_Select"):</h3>
 
     <form method="post" asp-action="DeleteThread" enctype="multipart/form-data">
         <div class="form-group">
-            <label asp-for="SelectedThreadName">Thread</label>
+            <label asp-for="SelectedThreadName">@LanguageService.GetKey("DeleteThread_Subtitle")</label>
             <select asp-for="SelectedThreadName" asp-items="@Model.AvailableThreads" class="form-control form-control-lg">
-                <option>--Select a thread to delete--</option>
+                <option>--@LanguageService.GetKey("DeleteThread_FirstSelectionElement")--</option>
             </select>
             <span asp-validation-for="SelectedThreadName" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">@LanguageService.GetKey("DeleteThread_Submit")</button>
     </form>
 }
 else
 {
-    <h3>You have no permission to delete any threads!</h3>
+    <h3>@LanguageService.GetKey("DeleteThread_NoPermission")</h3>
 }
-
-
-

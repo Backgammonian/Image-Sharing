@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyWebApp.Localization;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
 
@@ -9,12 +10,15 @@ namespace MyWebApp.Controllers
     {
         private readonly ILogger<NotesController> _logger;
         private readonly NotesRepository _notesRepository;
+        private readonly LanguageService _languageService;
 
         public NotesController(ILogger<NotesController> logger,
-            NotesRepository notesRepository)
+            NotesRepository notesRepository,
+            LanguageService languageService)
         {
             _logger = logger;
             _notesRepository = notesRepository;
+            _languageService = languageService;
         }
 
         [HttpGet]
@@ -83,7 +87,7 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Failed to create a new note");
+                TempData["Error"] = _languageService.GetKey("NoteCreate_WrongInput");
 
                 return View(createNoteVM);
             }
@@ -98,8 +102,8 @@ namespace MyWebApp.Controllers
             {
                 _logger.LogInformation($"(Notes/Create) Can't create a note '{createNoteVM.Title}'");
             }
-          
-            ModelState.AddModelError(string.Empty, "You are not logged in!");
+
+            TempData["Error"] = _languageService.GetKey("NoteCreate_NotLoggedIn");
 
             return View(createNoteVM);
         }
@@ -152,7 +156,7 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Failed to edit the note");
+                TempData["Error"] = _languageService.GetKey("EditNote_WrongInput");
 
                 return View(editNoteVM);
             }
@@ -173,8 +177,8 @@ namespace MyWebApp.Controllers
             {
                 _logger.LogInformation($"(Notes/Create) Can't edit the note '{editNoteVM.Title}' ({originalNote.NoteId})");
             }
-          
-            ModelState.AddModelError(string.Empty, "You have no permission to edit this note.");
+
+            TempData["Error"] = _languageService.GetKey("EditNote_NoEditPermission");
 
             return View(editNoteVM);
         }
@@ -210,16 +214,16 @@ namespace MyWebApp.Controllers
 
             if (await _notesRepository.Delete(deleteNoteVM))
             {
-                _logger.LogInformation($"(Notes/Delete) The note '{deleteNoteVM.NoteDetails.Note.Title}' ({noteId}) has been deleted");
+                _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({noteId}) has been deleted");
 
                 return RedirectToAction("Index");
             }
             else
             {
-                _logger.LogInformation($"(Notes/Delete) Can't delete the note '{deleteNoteVM.NoteDetails.Note.Title}' ({noteId})");
+                _logger.LogInformation($"(Notes/Delete) Can't delete the note '{note.Title}' ({noteId})");
             }
 
-            ModelState.AddModelError(string.Empty, "You have no permission to delete this note.");
+            TempData["Error"] = _languageService.GetKey("DeleteNote_NoDeletePermission");
 
             return View(deleteNoteVM);
         }

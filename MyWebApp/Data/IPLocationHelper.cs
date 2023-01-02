@@ -26,7 +26,7 @@ namespace MyWebApp.Data
 
                 return $"{_unknownIP} ({clientIpAddress})";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return _unknownIP;
             }

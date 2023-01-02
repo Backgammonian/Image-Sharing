@@ -2,9 +2,11 @@
     Error page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = LanguageService.GetKey("ErrorPage_Title");
 }
 
-<h1>Error.</h1>
-<h2>An error occurred while processing your request.</h2>
+<h1>@ViewData["Title"].</h1>
+<p>@LanguageService.GetKey("ErrorPage_Text")</p>

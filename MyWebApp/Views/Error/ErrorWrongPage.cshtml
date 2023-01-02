@@ -2,11 +2,13 @@
     Wrong page error
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Wrong page error";
+    ViewData["Title"] = LanguageService.GetKey("ErrorWrongPage_Title");
 }
 
 @model WrongPageViewModel
 
-<h1>404 - Page not found</h1>
-<h2>Error: can't get @Model.PageSize notes from page @Model.Page</h2>
+<h2>@LanguageService.GetKey("ErrorWrongPage_Text1")</h2>
+<h3>@LanguageService.GetKey("ErrorWrongPage_Text2") @Model.PageSize @LanguageService.GetKey("ErrorWrongPage_Text3") @Model.Page</h3>

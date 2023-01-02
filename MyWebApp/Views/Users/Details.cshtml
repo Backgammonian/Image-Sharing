@@ -2,8 +2,10 @@
     User's profile
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "User's profile";
+    ViewData["Title"] = LanguageService.GetKey("UserDetails_Title");
 }
 
 @model UserDetailsViewModel
@@ -14,11 +16,11 @@
 
     @if (user == null)
     {
-        <h3>This user doesn't exist.</h3>
+        <h3>@LanguageService.GetKey("UserDetails_Nothing")</h3>
     }
     else
     {
-        ViewData["Title"] = $"{user.UserName}'s profile";
+        ViewData["Title"] = $"{LanguageService.GetKey("UserDetails_ProfileOf")} {user.UserName}";
 
         <div>
             <div class="thumb">
@@ -30,7 +32,7 @@
             <h3>@user.UserName</h3>
             <h4>@user.Status</h4>
 
-            <a asp-controller="Users" asp-action="Notes" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">View @user.UserName's notes</a>
+            <a asp-controller="Users" asp-action="Notes" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("UserDetails_NotesButton") @user.UserName</a>
         </div>
     }
 }

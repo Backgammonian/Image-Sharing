@@ -1,0 +1,609 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminPanel" xml:space="preserve">
+    <value>Admin panel</value>
+  </data>
+  <data name="AdminPanel_CreateThread" xml:space="preserve">
+    <value>Create a new thread</value>
+  </data>
+  <data name="AdminPanel_DeleteThread" xml:space="preserve">
+    <value>Select the thread to delete</value>
+  </data>
+  <data name="AdminPanel_HelloAdmin" xml:space="preserve">
+    <value>Hello, admin</value>
+  </data>
+  <data name="AdminPanel_NoPermission" xml:space="preserve">
+    <value>You have no permission to access this page.</value>
+  </data>
+  <data name="AdminPanel_Title" xml:space="preserve">
+    <value>Administrative panel</value>
+  </data>
+  <data name="AlreadyLoggedIn" xml:space="preserve">
+    <value>You are already logged in!</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CantLoginIntoCreatedAccount" xml:space="preserve">
+    <value>Can't log in into created account! Try to log in by yourself.</value>
+  </data>
+  <data name="ChangeLanguage" xml:space="preserve">
+    <value>Change the language</value>
+  </data>
+  <data name="CreateNote_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="CreateNote_DescriptionPlaceholder" xml:space="preserve">
+    <value>New note description</value>
+  </data>
+  <data name="CreateNote_Images" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="CreateNote_ImagesPlaceholder" xml:space="preserve">
+    <value>Select image(s) for a new note</value>
+  </data>
+  <data name="CreateNote_NoPermission" xml:space="preserve">
+    <value>You are not logged in!</value>
+  </data>
+  <data name="CreateNote_PageTitle" xml:space="preserve">
+    <value>Create a new note</value>
+  </data>
+  <data name="CreateNote_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="CreateNote_Thread" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="CreateNote_ThreadSelection" xml:space="preserve">
+    <value>Select a thread</value>
+  </data>
+  <data name="CreateNote_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="CreateNote_TitlePlaceholder" xml:space="preserve">
+    <value>New note title</value>
+  </data>
+  <data name="CreateThread_CantCreate" xml:space="preserve">
+    <value>Can't create a new thread.</value>
+  </data>
+  <data name="CreateThread_EnterNameForThread" xml:space="preserve">
+    <value>Enter the name of a new thread</value>
+  </data>
+  <data name="CreateThread_ExistingThreadNames" xml:space="preserve">
+    <value>Existing thread names</value>
+  </data>
+  <data name="CreateThread_NewThreadName" xml:space="preserve">
+    <value>New thread name (will be converted to lower case)</value>
+  </data>
+  <data name="CreateThread_NewThreadNamePlaceholder" xml:space="preserve">
+    <value>New thread name</value>
+  </data>
+  <data name="CreateThread_NoPermission" xml:space="preserve">
+    <value>You have no permission to create a new thread!</value>
+  </data>
+  <data name="CreateThread_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="CreateThread_ThreadAlreadyExists" xml:space="preserve">
+    <value>Thread with such name already exists! (or something else went wrong)</value>
+  </data>
+  <data name="CreateThread_Title" xml:space="preserve">
+    <value>Create a thread</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Dashboard_NoNotes" xml:space="preserve">
+    <value>You don't have any notes.</value>
+  </data>
+  <data name="Dashboard_NotFound" xml:space="preserve">
+    <value>This dashboard doesn't exist.</value>
+  </data>
+  <data name="Dashboard_Title" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteNote_AreYouSure" xml:space="preserve">
+    <value>Are you sure you want to delete this note?</value>
+  </data>
+  <data name="DeleteNote_Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="DeleteNote_DeleteButton" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteNote_NoDeletePermission" xml:space="preserve">
+    <value>You have no permission to delete this note.</value>
+  </data>
+  <data name="DeleteNote_NoPermission" xml:space="preserve">
+    <value>You are not logged in!</value>
+  </data>
+  <data name="DeleteNote_NoteDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DeleteNote_NoteTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="DeleteNote_Nothing" xml:space="preserve">
+    <value>There is nothing to delete.</value>
+  </data>
+  <data name="DeleteNote_Submit" xml:space="preserve">
+    <value>Delete the note</value>
+  </data>
+  <data name="DeleteNote_Thread" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="DeleteNote_Title" xml:space="preserve">
+    <value>Delete the note</value>
+  </data>
+  <data name="DeleteNote_UnknownAuthor" xml:space="preserve">
+    <value>Unknown author</value>
+  </data>
+  <data name="DeleteThread_CantDelete" xml:space="preserve">
+    <value>Can't delete the thread</value>
+  </data>
+  <data name="DeleteThread_FirstSelectionElement" xml:space="preserve">
+    <value>Select a thread to delete</value>
+  </data>
+  <data name="DeleteThread_NoPermission" xml:space="preserve">
+    <value>You have no permission to delete any threads!</value>
+  </data>
+  <data name="DeleteThread_Select" xml:space="preserve">
+    <value>Select the thread you want to delete</value>
+  </data>
+  <data name="DeleteThread_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="DeleteThread_Subtitle" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="DeleteThread_Title" xml:space="preserve">
+    <value>Delete the thread</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditNote_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="EditNote_DescriptionPlaceholder" xml:space="preserve">
+    <value>Description of the note</value>
+  </data>
+  <data name="EditNote_ImageReminder" xml:space="preserve">
+    <value>Don't select new images if you want to keep the old ones.</value>
+  </data>
+  <data name="EditNote_Images" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="EditNote_ImagesPlaceholder" xml:space="preserve">
+    <value>Note images</value>
+  </data>
+  <data name="EditNote_NoEditPermission" xml:space="preserve">
+    <value>You have no permission to edit this note.</value>
+  </data>
+  <data name="EditNote_NoPermission" xml:space="preserve">
+    <value>You are not logged in!</value>
+  </data>
+  <data name="EditNote_NoteTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="EditNote_NoteTitlePlaceholder" xml:space="preserve">
+    <value>Title of the note</value>
+  </data>
+  <data name="EditNote_SelectedThread" xml:space="preserve">
+    <value>Selected thread</value>
+  </data>
+  <data name="EditNote_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="EditNote_ThreadSelection" xml:space="preserve">
+    <value>Select a thread</value>
+  </data>
+  <data name="EditNote_Title" xml:space="preserve">
+    <value>Edit the note</value>
+  </data>
+  <data name="EditNote_WrongInput" xml:space="preserve">
+    <value>Failed to edit the note: invalid input.</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Edit profile</value>
+  </data>
+  <data name="EditUserProfile_NoEditPermission" xml:space="preserve">
+    <value>You have no permission to edit this profile.</value>
+  </data>
+  <data name="EditUserProfile_NoPermission" xml:space="preserve">
+    <value>You are not logged in!</value>
+  </data>
+  <data name="EditUserProfile_PictureReminder" xml:space="preserve">
+    <value>Don't select a new profile image if you want to keep the old one.</value>
+  </data>
+  <data name="EditUserProfile_ProfilePicturePlaceholder" xml:space="preserve">
+    <value>Select new profile picture</value>
+  </data>
+  <data name="EditUserProfile_ProfilePictureTitle" xml:space="preserve">
+    <value>New profile picture</value>
+  </data>
+  <data name="EditUserProfile_StatusPlaceholder" xml:space="preserve">
+    <value>Your status</value>
+  </data>
+  <data name="EditUserProfile_StatusTitle" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="EditUserProfile_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="EditUserProfile_Title" xml:space="preserve">
+    <value>Edit profile</value>
+  </data>
+  <data name="EditUserProfile_WrongInput" xml:space="preserve">
+    <value>Failed to edit the profile: invalid input.</value>
+  </data>
+  <data name="EmailAlreadyInUse" xml:space="preserve">
+    <value>This e-mail address is already in use</value>
+  </data>
+  <data name="Error404_Text1" xml:space="preserve">
+    <value>404 - Page not found</value>
+  </data>
+  <data name="Error404_Text2" xml:space="preserve">
+    <value>Sorry, requested item doesn't exist.</value>
+  </data>
+  <data name="Error404_Title" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="Error500_Text1" xml:space="preserve">
+    <value>500 - We have a problem</value>
+  </data>
+  <data name="Error500_Text2" xml:space="preserve">
+    <value>Sorry, an internal error occurred while executing your request.</value>
+  </data>
+  <data name="Error500_Title" xml:space="preserve">
+    <value>Internal error</value>
+  </data>
+  <data name="ErrorPage_Text" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="ErrorPage_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorWrongPage_Text1" xml:space="preserve">
+    <value>404 - Page not found</value>
+  </data>
+  <data name="ErrorWrongPage_Text2" xml:space="preserve">
+    <value>Error: can't get</value>
+  </data>
+  <data name="ErrorWrongPage_Text3" xml:space="preserve">
+    <value>notes from page</value>
+  </data>
+  <data name="ErrorWrongPage_Title" xml:space="preserve">
+    <value>Wrong page error</value>
+  </data>
+  <data name="GetByThread_NotesFromThread" xml:space="preserve">
+    <value>Notes from thread</value>
+  </data>
+  <data name="GetByThread_Nothing" xml:space="preserve">
+    <value>There aren't any notes.</value>
+  </data>
+  <data name="GetByThread_Title" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Home_Begin1" xml:space="preserve">
+    <value>Let's see the</value>
+  </data>
+  <data name="Home_Begin2" xml:space="preserve">
+    <value>Creations</value>
+  </data>
+  <data name="Home_Begin3" xml:space="preserve">
+    <value>of other people!</value>
+  </data>
+  <data name="Home_CreateAccount" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="Home_CreateNewNote" xml:space="preserve">
+    <value>Create a new note</value>
+  </data>
+  <data name="Home_Or" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="Home_SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Home_SignIn_cont" xml:space="preserve">
+    <value>to create a new note.</value>
+  </data>
+  <data name="Home_Subtitle" xml:space="preserve">
+    <value>Simple sharing platform and web storage for images.</value>
+  </data>
+  <data name="Home_Subtitle_cont" xml:space="preserve">
+    <value>Built using</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Main page</value>
+  </data>
+  <data name="Home_YouCanAlso" xml:space="preserve">
+    <value>You can also</value>
+  </data>
+  <data name="InputIsNotValid" xml:space="preserve">
+    <value>The input is not valid</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Login_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Login_EmailPlaceholder" xml:space="preserve">
+    <value>Enter your e-mail address</value>
+  </data>
+  <data name="Login_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Login_PasswordPlaceholder" xml:space="preserve">
+    <value>Enter your password</value>
+  </data>
+  <data name="Login_Submit" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Login_Title" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="LogoutBeforehand" xml:space="preserve">
+    <value>If you want to register a new account please sign out first.</value>
+  </data>
+  <data name="NoteCreate_NotLoggedIn" xml:space="preserve">
+    <value>Log in first in order to create a new note!</value>
+  </data>
+  <data name="NoteCreate_WrongInput" xml:space="preserve">
+    <value>Failed to create a new note: invalid input.</value>
+  </data>
+  <data name="NoteDetails_DoesntExist" xml:space="preserve">
+    <value>This note doesn't exist.</value>
+  </data>
+  <data name="NoteDetails_PageTitle" xml:space="preserve">
+    <value>Note details</value>
+  </data>
+  <data name="NoteDetails_PageTitleMinified" xml:space="preserve">
+    <value>Note details</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="NotesList_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="NotesList_Nothing" xml:space="preserve">
+    <value>There are no notes yet.</value>
+  </data>
+  <data name="NotesList_Title" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="PaginationResults" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="PaginationResults_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="PaginationResults_of" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="PaginationResults_Prev" xml:space="preserve">
+    <value>Prev</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Privacy_Text" xml:space="preserve">
+    <value>All of your data and images are belong to us. Sus ඞ</value>
+  </data>
+  <data name="Privacy_Title" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Register_ConfirmPassword" xml:space="preserve">
+    <value>Confirm the password</value>
+  </data>
+  <data name="Register_ConfirmPasswordPlaceholder" xml:space="preserve">
+    <value>Enter the password again</value>
+  </data>
+  <data name="Register_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Register_EmailPlaceholder" xml:space="preserve">
+    <value>Enter e-mail address for a new account</value>
+  </data>
+  <data name="Register_Password" xml:space="preserve">
+    <value>Password must be at least 8 characters long!</value>
+  </data>
+  <data name="Register_PasswordPlaceholder" xml:space="preserve">
+    <value>Enter a safe password for a new account</value>
+  </data>
+  <data name="Register_Submit" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
+  <data name="Register_Title" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>Registration failed</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Select the language</value>
+  </data>
+  <data name="SignUpForNewAccount" xml:space="preserve">
+    <value>Sign up for a new account</value>
+  </data>
+  <data name="SingInToYourAccount" xml:space="preserve">
+    <value>Sing in to your account</value>
+  </data>
+  <data name="SorryErrorOccured" xml:space="preserve">
+    <value>Sorry! Error occured</value>
+  </data>
+  <data name="Thread" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="Threads" xml:space="preserve">
+    <value>Threads</value>
+  </data>
+  <data name="Threads_Nothing" xml:space="preserve">
+    <value>There are no threads yet.</value>
+  </data>
+  <data name="Threads_Title" xml:space="preserve">
+    <value>All threads</value>
+  </data>
+  <data name="UserDetails_NotesButton" xml:space="preserve">
+    <value>View the notes of</value>
+  </data>
+  <data name="UserDetails_Nothing" xml:space="preserve">
+    <value>This user doesn't exist.</value>
+  </data>
+  <data name="UserDetails_ProfileOf" xml:space="preserve">
+    <value>Profile of</value>
+  </data>
+  <data name="UserDetails_Title" xml:space="preserve">
+    <value>User's profile</value>
+  </data>
+  <data name="UserNotes_NotesOfUser" xml:space="preserve">
+    <value>Notes of user</value>
+  </data>
+  <data name="UserNotes_Nothing" xml:space="preserve">
+    <value>This user does't exist.</value>
+  </data>
+  <data name="UserNotes_Title" xml:space="preserve">
+    <value>User's notes</value>
+  </data>
+  <data name="WrongCredentials" xml:space="preserve">
+    <value>Wrong credentials, please try again</value>
+  </data>
+  <data name="YourDashboard" xml:space="preserve">
+    <value>Your dashboard</value>
+  </data>
+</root>

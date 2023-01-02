@@ -2,9 +2,11 @@
     Application error page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Internal error";
+    ViewData["Title"] = LanguageService.GetKey("Error500_Title");
 }
 
-<h1>500 - We have a problem</h1>
-<p>Sorry, an error occurred while executing your request.</p>
+<h1>@LanguageService.GetKey("Error500_Text1")</h1>
+<p>@LanguageService.GetKey("Error500_Text2")</p>

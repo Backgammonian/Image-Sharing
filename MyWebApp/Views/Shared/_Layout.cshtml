@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MyWebApp.styles.css" asp-append-version="true" />
 </head>
+
+@inject LanguageService LanguageService
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -21,41 +24,65 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@LanguageService.GetKey("Home")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index">Notes</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index">@LanguageService.GetKey("Notes")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Threads" asp-action="Index">Threads</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Threads" asp-action="Index">@LanguageService.GetKey("Threads")</a>
                         </li>
 
                         @if (User.IsAdmin())
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index"><b>- Admin panel -</b></a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index"><b>-- @LanguageService.GetKey("AdminPanel") --</b></a>
                             </li>
                         }
 
                         @if (User.IsAuthenticated())
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">@LanguageService.GetKey("Dashboard")</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">@LanguageService.GetKey("Logout")</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">@LanguageService.GetKey("Login")</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">@LanguageService.GetKey("Register")</a>
                             </li>
                         }
                     </ul>
+                </div>
+                <div>
+                    <form method="get" action="/Home/ChangeLanguage">
+                        <label for="culture">@LanguageService.GetKey("SelectLanguage"):</label>
+                        <select id="culture" name="culture">
+                            @{
+                                var currentCulture = CultureHelper.GetCulture();
+                                switch (currentCulture)
+                                {
+                                    default:
+                                    case "en-US":
+                                        <option value="en-US" selected="selected">English</option>
+                                        <option value="ru-RU">Русский</option>
+                                        break;
+
+                                    case "ru-RU":
+                                        <option value="en-US">English</option>
+                                        <option value="ru-RU" selected="selected">Русский</option>
+                                        break;
+                                }
+                            }
+                        </select>
+                        <input type="submit" value="@LanguageService.GetKey("ChangeLanguage")">
+                    </form>
                 </div>
             </div>
         </nav>
@@ -70,7 +97,7 @@
         <div class="container">
             @await IpLocationHelper.GetLocation(Context)
             <br>
-            &copy; 2022-2023 - Image Sharing - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022-2023 - Image Sharing - <a asp-area="" asp-controller="Home" asp-action="Privacy">@LanguageService.GetKey("Privacy")</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

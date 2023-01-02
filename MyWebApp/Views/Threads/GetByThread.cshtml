@@ -2,8 +2,10 @@
     List of notes marked with the certain thread
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Thread";
+    ViewData["Title"] = LanguageService.GetKey("GetByThread_Title");
 }
 
 @model NotesFromThreadViewModel
@@ -16,13 +18,13 @@
     if (selectedThread == string.Empty ||
         !threadNotesDetails.Any())
     {
-        <h3>There aren't any notes.</h3>
+        <h3>@LanguageService.GetKey("GetByThread_Nothing")</h3>
     }
     else
     {
-        ViewData["Title"] = $"Thread: {selectedThread}";
+        ViewData["Title"] = $"{LanguageService.GetKey("DeleteNote_Thread")}: {selectedThread}";
 
-        <h2>Notes from thread: <b>@selectedThread</b></h2>
+        <h2>@LanguageService.GetKey("GetByThread_NotesFromThread"): <b>@selectedThread</b></h2>
 
         var noteNumber = 0;
         foreach (var threadNoteDetail in threadNotesDetails)
@@ -59,11 +61,11 @@
 
                     @if (author != null)
                     {
-                        <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
+                        <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_Author"): @author.UserName</a>
                     }
                     else
                     {
-                        <a class="btn btn-sm btn-outline-secondary">Unknown author</a>
+                        <a class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_UnknownAuthor")</a>
                     }
                 </div>
 
@@ -86,7 +88,7 @@
 
                 @if (thread != null)
                 {
-                    <h4>Thread:</h4>
+                    <h4>@LanguageService.GetKey("Thread"):</h4>
                     <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary">@thread.Thread</a>
                 }
 
@@ -94,11 +96,11 @@
                     @if (User.IsAdmin() ||
                         User.IsOwner(note))
                     {
-                        <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                        <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+                        <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Edit")</a>
+                        <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Delete")</a>
                     }
 
-                    <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+                    <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Details")</a>
                 </div>
             </div>
 
@@ -110,12 +112,12 @@
                 @if (pagingVM.IsValidPage)
                 {
                     <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-action="GetByThread" asp-route-page="@(pagingVM.Page - 1)">
-                        Prev
+                        @LanguageService.GetKey("PaginationResults_Prev")
                     </a>
                     <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-action="GetByThread" asp-route-page="@(pagingVM.Page + 1)">
-                        Next
+                        @LanguageService.GetKey("PaginationResults_Next")
                     </a>
-                    <span class="text-muted text-small">Results @pagingVM.ResultStart - @pagingVM.ResultEnd of @pagingVM.TotalItems</span>
+                    <span class="text-muted text-small">@LanguageService.GetKey("PaginationResults") @pagingVM.ResultStart - @pagingVM.ResultEnd @LanguageService.GetKey("PaginationResults_of") @pagingVM.TotalItems</span>
                 }
             </div>
         </div>

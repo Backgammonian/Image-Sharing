@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyWebApp.Localization;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
 
@@ -9,14 +10,17 @@ namespace MyWebApp.Controllers
         private readonly ILogger<DashboardController> _logger;
         private readonly CredentialsRepository _credentialsRepository;
         private readonly DashboardRepository _dashboardRepository;
+        private readonly LanguageService _languageService;
 
         public DashboardController(ILogger<DashboardController> logger,
             CredentialsRepository credentialsRepository,
-            DashboardRepository dashboardRepository)
+            DashboardRepository dashboardRepository,
+            LanguageService languageService)
         {
             _logger = logger;
             _credentialsRepository = credentialsRepository;
             _dashboardRepository = dashboardRepository;
+            _languageService = languageService;
         }
 
         [HttpGet]
@@ -78,7 +82,7 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Failed to edit the profile.");
+                TempData["Error"] = _languageService.GetKey("EditUserProfile_WrongInput");
 
                 return View(editUserProfileVM);
             }
@@ -99,10 +103,10 @@ namespace MyWebApp.Controllers
             }
             else
             {
-                _logger.LogInformation($"(Dashboard/EditUserProfile) User {currentUser.UserName} ({currentUser.Id}) ⚠️ failed to updated his profile");
+                _logger.LogInformation($"(Dashboard/EditUserProfile) ⚠️ User {currentUser.UserName} ({currentUser.Id}) failed to updated his profile");
             }
-            
-            ModelState.AddModelError(string.Empty, "You have no permission to edit this profile.");
+
+            TempData["Error"] = _languageService.GetKey("EditUserProfile_NoEditPermission");
 
             return View(editUserProfileVM);
         }

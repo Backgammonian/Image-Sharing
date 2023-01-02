@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWebApp.Extensions;
+using MyWebApp.Localization;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
 
@@ -11,14 +12,17 @@ namespace MyWebApp.Controllers
         private readonly ILogger<AdminController> _logger;
         private readonly ThreadsRepository _threadsRepository;
         private readonly CredentialsRepository _credentialsRepository;
+        private readonly LanguageService _languageService;
 
         public AdminController(ILogger<AdminController> logger,
             ThreadsRepository threadsRepository,
-            CredentialsRepository credentialsRepository)
+            CredentialsRepository credentialsRepository,
+            LanguageService languageService)
         {
             _logger = logger;
             _threadsRepository = threadsRepository;
             _credentialsRepository = credentialsRepository;
+            _languageService = languageService;
         }
 
         [HttpGet]
@@ -36,7 +40,10 @@ namespace MyWebApp.Controllers
         {
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
-            if (!claims.IsAdmin())
+            var user = credentials.User;
+
+            if (user == null || 
+                !claims.IsAdmin())
             {
                 return View(null);
             }
@@ -57,18 +64,19 @@ namespace MyWebApp.Controllers
         {
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
-            if (!claims.IsAdmin() &&
-                credentials.User != null)
-            {
-                ModelState.AddModelError(string.Empty, "You don't have the permission to create a new thread.");
-                _logger.LogInformation($"(Admin/CreateThread) User {credentials.User.UserName} ({credentials.User.Id}) is trying to use the admin panel");
+            var user = credentials.User;
 
-                return View(createThreadVM);
+            if (user == null ||
+                !claims.IsAdmin())
+            {
+                return View(null);
             }
+
+            _logger.LogInformation($"(Admin/CreateThread) User {user.UserName} ({user.Id}) is using the admin panel to create a new thread called '{createThreadVM.NewThreadName}'");
 
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Can't create a new thread.");
+                TempData["Error"] = _languageService.GetKey("CreateThread_CantCreate");
 
                 return View(createThreadVM);
             }
@@ -84,7 +92,7 @@ namespace MyWebApp.Controllers
                 _logger.LogInformation($"(Admin/CreateThread) Can't create a new thread: '{createThreadVM.NewThreadName}'");
             }
 
-            ModelState.AddModelError(string.Empty, $"The thread '{createThreadVM.NewThreadName}' already exists (or something else went wrong).");
+            TempData["Error"] = _languageService.GetKey("CreateThread_ThreadAlreadyExists");
 
             return View(createThreadVM);
         }
@@ -95,7 +103,10 @@ namespace MyWebApp.Controllers
         {
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
-            if (!claims.IsAdmin())
+            var user = credentials.User;
+
+            if (user == null ||
+                !claims.IsAdmin())
             {
                 return View(null);
             }
@@ -125,14 +136,15 @@ namespace MyWebApp.Controllers
         {
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
-            if (!claims.IsAdmin() &&
-                credentials.User != null)
-            {
-                ModelState.AddModelError(string.Empty, "You don't have the permission to delete any thread");
-                _logger.LogInformation($"(Admin/DeleteThread) User {credentials.User.UserName} ({credentials.User.Id}) is trying to use the admin panel");
+            var user = credentials.User;
 
-                return View(deleteThreadVM);
+            if (user == null ||
+                !claims.IsAdmin())
+            {
+                return View(null);
             }
+
+            _logger.LogInformation($"(Admin/DeleteThread) User {user.UserName} ({user.Id}) is using the admin panel to delete the thread '{deleteThreadVM.SelectedThreadName}'");
 
             if (await _threadsRepository.Delete(deleteThreadVM))
             {
@@ -145,7 +157,7 @@ namespace MyWebApp.Controllers
                 _logger.LogInformation($"(Admin/DeleteThread) Can't delete the thread: '{deleteThreadVM.SelectedThreadName}'");
             }
 
-            ModelState.AddModelError(string.Empty, $"Can't delete thread: '{deleteThreadVM.SelectedThreadName}'");
+            TempData["Error"] = _languageService.GetKey("DeleteThread_CantDelete");
 
             return View(deleteThreadVM);
         }

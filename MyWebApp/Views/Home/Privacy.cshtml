@@ -2,9 +2,11 @@
     Privacy page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Privacy policy";
+    ViewData["Title"] = LanguageService.GetKey("Privacy_Title");
 }
 
 <h1>@ViewData["Title"]</h1>
-<p>All of your data and images are belong to us. Sus ඞ</p>
+<p>@LanguageService.GetKey("Privacy_Text")</p>

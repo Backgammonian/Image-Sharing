@@ -2,22 +2,33 @@
     Profile edit page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Edit profile";
+    ViewData["Title"] = LanguageService.GetKey("EditUserProfile_Title");
 }
 
 @model EditUserProfileViewModel
 
 @if (User.IsAuthenticated())
 {
+    @if (TempData["Error"] != null)
+    {
+        <div class="col-md-12 alert alert-danger">
+            <span>
+                <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+            </span>
+        </div>
+    }
+
     <form method="post" asp-action="EditUserProfile" enctype="multipart/form-data">
         <div class="form-group">
-            <label asp-for="Status">Status</label>
-            <input asp-for="Status" class="form-control" placeholder="Your status"/>
+            <label asp-for="Status">@LanguageService.GetKey("EditUserProfile_StatusTitle")</label>
+            <input asp-for="Status" class="form-control" placeholder="@LanguageService.GetKey("EditUserProfile_StatusPlaceholder")" />
             <span asp-validation-for="Status" class="text-danger"></span>
         </div>
         <div class="form-group">
-            Don't select a new profile image if you want to keep the old one.
+            @LanguageService.GetKey("EditUserProfile_PictureReminder")
         </div>
         <div class="thumb">
             <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(Model.ProfilePicture.ImageFileName)">
@@ -25,14 +36,14 @@
             </a>
         </div>
         <div class="form-group">
-            <label asp-for="NewProfilePicture">New profile picture</label>
-            <input asp-for="NewProfilePicture" class="form-control" placeholder="Select new profile picture" accept="image/*"/>
+            <label asp-for="NewProfilePicture">@LanguageService.GetKey("EditUserProfile_ProfilePictureTitle")</label>
+            <input asp-for="NewProfilePicture" class="form-control" placeholder="@LanguageService.GetKey("EditUserProfile_ProfilePicturePlaceholder")" accept="image/*" />
             <span asp-validation-for="NewProfilePicture" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">@LanguageService.GetKey("EditUserProfile_Submit")</button>
     </form>
 }
 else
 {
-    <h3>You are not logged in!</h3>
+    <h3>@LanguageService.GetKey("EditUserProfile_NoPermission")</h3>
 }

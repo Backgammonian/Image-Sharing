@@ -2,8 +2,10 @@
     Delete note page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Delete the note";
+    ViewData["Title"] = LanguageService.GetKey("DeleteNote_Title");
 }
 
 @model DeleteNoteViewModel
@@ -15,7 +17,7 @@
     if (noteDetails == null ||
         noteDetails.Note == null)
     {
-        <h3>There is nothing to delete.</h3>
+        <h3>@LanguageService.GetKey("DeleteNote_Nothing")</h3>
 
         return;
     }
@@ -26,7 +28,16 @@
     var author = noteDetails.Author;
     var authorProfilePicture = noteDetails.ProfilePicture;
 
-    <h1>Are you sure you want to delete this note?</h1>
+    @if (TempData["Error"] != null)
+    {
+        <div class="col-md-12 alert alert-danger">
+            <span>
+                <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+            </span>
+        </div>
+    }
+
+    <h1>@LanguageService.GetKey("DeleteNote_AreYouSure")</h1>
 
     <div>
         @if (authorProfilePicture != null)
@@ -48,22 +59,22 @@
 
         @if (author != null)
         {
-            <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
+            <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_Author"): @author.UserName</a>
         }
         else
         {
-            <a class="btn btn-sm btn-outline-secondary">Unknown author</a>
+            <a class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_UnknownAuthor")</a>
         }
     </div>
 
     <div>
         <input type="hidden" value="NoteId" id="NoteId"/>
         <div class="form-group">
-            <label asp-for="@note.Title">Title</label>
+            <label asp-for="@note.Title">@LanguageService.GetKey("DeleteNote_NoteTitle")</label>
             <input asp-for="@note.Title" class="form-control" readonly/>
         </div>
         <div class="form-group">
-            <label asp-for="@note.Description">Description</label>
+            <label asp-for="@note.Description">@LanguageService.GetKey("DeleteNote_NoteDescription")</label>
             <input asp-for="@note.Description" class="form-control" readonly/>
         </div>
 
@@ -83,16 +94,16 @@
 
         @if (thread != null)
         {
-            <h4>Thread:</h4>
+            <h4>@LanguageService.GetKey("Thread"):</h4>
             <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary">@thread.Thread</a>
         }
     </div>
 
     <form method="post" asp-action="Delete">
-        <button type="submit" class="btn btn-danger float-right mt-3">Delete</button>
+        <button type="submit" class="btn btn-danger float-right mt-3">@LanguageService.GetKey("DeleteNote_Submit")</button>
     </form>
 }
 else
 {
-    <h3>You are not logged in!</h3>
+    <h3>@LanguageService.GetKey("DeleteNote_NoPermission")</h3>
 }

@@ -2,41 +2,52 @@
     View for creating a new note
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Create a new note";
+    ViewData["Title"] = LanguageService.GetKey("CreateNote_PageTitle");
 }
 
 @model CreateNoteViewModel
 
 @if (User.IsAuthenticated())
 {
+    @if (TempData["Error"] != null)
+    {
+        <div class="col-md-12 alert alert-danger">
+            <span>
+                <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+            </span>
+        </div>
+    }
+
     <form method="post" asp-action="Create" enctype="multipart/form-data">
         <div class="form-group">
-            <label asp-for="Title">Title</label>
-            <input asp-for="Title" class="form-control" placeholder="Note title"/>
+            <label asp-for="Title">@LanguageService.GetKey("CreateNote_Title")</label>
+            <input asp-for="Title" class="form-control" placeholder="@LanguageService.GetKey("CreateNote_TitlePlaceholder")" />
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Description">Description</label>
-            <input asp-for="Description" class="form-control" placeholder="Description"/>
+            <label asp-for="Description">@LanguageService.GetKey("CreateNote_Description")</label>
+            <input asp-for="Description" class="form-control" placeholder="@LanguageService.GetKey("CreateNote_DescriptionPlaceholder")" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="SelectedThread">Thread</label>
+            <label asp-for="SelectedThread">@LanguageService.GetKey("CreateNote_Thread")</label>
             <select asp-for="SelectedThread" asp-items="@Model.AvailableThreads" class="form-control form-control-lg">
-                <option>--Select a thread--</option>
+                <option>--@LanguageService.GetKey("CreateNote_ThreadSelection")--</option>
             </select>
             <span asp-validation-for="SelectedThread" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Images">Images</label>
-            <input asp-for="Images" class="form-control" placeholder="Images" accept="image/*"/>
+            <label asp-for="Images">@LanguageService.GetKey("CreateNote_Images")</label>
+            <input asp-for="Images" class="form-control" placeholder="@LanguageService.GetKey("CreateNote_ImagesPlaceholder")" accept="image/*" />
             <span asp-validation-for="Images" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">@LanguageService.GetKey("CreateNote_Submit")</button>
     </form>
 }
 else
 {
-    <h3>You are not logged in!</h3>
+    <h3>@LanguageService.GetKey("CreateNote_NoPermission")</h3>
 }

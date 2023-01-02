@@ -2,8 +2,10 @@
     Thread creating page for admin
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Create a thread";
+    ViewData["Title"] = LanguageService.GetKey("CreateThread_Title");
 }
 
 @model CreateThreadViewModel
@@ -13,7 +15,7 @@
 {
     if (Model.ExistingThreadNames.Any())
     {
-        <h3>Existing thread names:</h3>
+        <h3>@LanguageService.GetKey("CreateThread_ExistingThreadNames"):</h3>
         var i = 0;
         foreach (var existingThreadName in Model.ExistingThreadNames)
         {
@@ -24,20 +26,27 @@
         }
     }
 
-    <h3>Enter the name of a new thread:</h3>
+    @if (TempData["Error"] != null)
+{
+    <div class="col-md-12 alert alert-danger">
+        <span>
+            <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+        </span>
+    </div>
+}
+
+    <h3>@LanguageService.GetKey("CreateThread_EnterNameForThread")</h3>
 
     <form method="post" asp-action="CreateThread" enctype="multipart/form-data">
         <div class="form-group">
-            <label asp-for="NewThreadName">New thread name</label>
-            <input asp-for="NewThreadName" class="form-control" placeholder="New thread name" />
+            <label asp-for="NewThreadName">@LanguageService.GetKey("CreateThread_NewThreadName")</label>
+            <input asp-for="NewThreadName" class="form-control" placeholder="@LanguageService.GetKey("CreateThread_NewThreadNamePlaceholder")" />
             <span asp-validation-for="NewThreadName" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">@LanguageService.GetKey("CreateThread_Submit")</button>
     </form>
 }
 else
 {
-    <h3>You have no permission to create a new thread!</h3>
+    <h3>@LanguageService.GetKey("CreateThread_NoPermission")</h3>
 }
-
-

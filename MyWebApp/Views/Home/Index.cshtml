@@ -2,41 +2,43 @@
     Home page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Main page";
+    ViewData["Title"] = LanguageService.GetKey("Home_Title");
 }
 
 <div class="text-center">
     <h1 class="display-4">Image Sharing</h1>
-    <p>Simple sharing platform and web storage for images.</p>
-    <p>Built using <a href="https://docs.microsoft.com/aspnet/core">ASP.NET Core</a> MVC.</p>
+    <p>@LanguageService.GetKey("Home_Subtitle")</p>
+    <p>@LanguageService.GetKey("Home_Subtitle_cont") <a href="https://docs.microsoft.com/aspnet/core">ASP.NET Core</a> MVC.</p>
 
     <div>
         <p>
-            Let's see the
-            <a asp-controller="Notes" asp-action="Index" class="btn btn-sm btn-outline-secondary">Creations</a>
-            of other people!
+            @LanguageService.GetKey("Home_Begin1")
+            <a asp-controller="Notes" asp-action="Index" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_Begin2")</a>
+            @LanguageService.GetKey("Home_Begin3")
         </p>
     </div>
 
     <div>
         <p>
-            You can also:
+            @LanguageService.GetKey("Home_YouCanAlso"):
         </p>
     </div>
 
     <div>
         @if (User.IsAuthenticated())
         {
-            <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">Create a new note</a>
+            <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_CreateNewNote")</a>
         }
         else
         {
             <p>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-outline-secondary">Create account</a>
-                or
-                <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-secondary">Sign in</a>
-                to create a new note.
+                <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_CreateAccount")</a>
+                @LanguageService.GetKey("Home_Or")
+                <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_SignIn")</a>
+                @LanguageService.GetKey("Home_SignIn_cont")
             </p>
         }
     </div>

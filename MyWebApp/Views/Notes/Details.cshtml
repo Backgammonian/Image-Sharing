@@ -2,8 +2,10 @@
     Details of selected note
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Note details";
+    ViewData["Title"] = LanguageService.GetKey("NoteDetails_PageTitle");
 }
 
 @model NoteDetailsViewModel
@@ -12,12 +14,12 @@
     var note = Model.Note;
     if (note == null)
     {
-        <h3>This note doesn't exist.</h3>
+        <h3>@LanguageService.GetKey("NoteDetails_DoesntExist")</h3>
 
         return;
     }
 
-    ViewData["Title"] = $"Note details: {note.Title.Minify()}";
+    ViewData["Title"] = $"{@LanguageService.GetKey("NoteDetails_PageTitleMinified")}: {note.Title.Minify()}";
 
     var thread = Model.Thread;
     var images = Model.Images;
@@ -45,11 +47,11 @@
 
             @if (author != null)
             {
-                <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">Author: @author.UserName</a>
+                <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_Author"): @author.UserName</a>
             }
             else
             {
-                <a class="btn btn-sm btn-outline-secondary">Unknown author</a>
+                <a class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_UnknownAuthor")</a>
             }
         </div>
 
@@ -72,7 +74,7 @@
 
         @if (thread != null)
         {
-            <h4>Thread:</h4>
+            <h4>@LanguageService.GetKey("Thread")Thread:</h4>
             <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary">@thread.Thread</a>
         }
 
@@ -80,11 +82,11 @@
             @if (User.IsAdmin() ||
                 User.IsOwner(note))
             {
-                <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+                <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Edit")</a>
+                <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Delete")</a>
             }
 
-            <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+            <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Details")</a>
         </div>
     </div>
 }

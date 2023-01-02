@@ -2,9 +2,11 @@
     Not found error page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Not found";
+    ViewData["Title"] = LanguageService.GetKey("Error404_Title");
 }
 
-<h1>404 - Page not found</h1>
-<p>Sorry, requested item doesn't exist.</p>
+<h1>@LanguageService.GetKey("Error404_Text1")</h1>
+<p>@LanguageService.GetKey("Error404_Text2")</p>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Data;
+using MyWebApp.Localization;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
 
@@ -12,16 +13,19 @@ namespace MyWebApp.Controllers
         private readonly UserManager<UserModel> _userManager;
         private readonly SignInManager<UserModel> _signInManager;
         private readonly RandomGenerator _randomGenerator;
+        private readonly LanguageService _languageService;
 
         public AccountController(ILogger<AccountController> logger,
             UserManager<UserModel> userManager,
             SignInManager<UserModel> signInManager,
-            RandomGenerator randomGenerator)
+            RandomGenerator randomGenerator,
+            LanguageService languageService)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
             _randomGenerator = randomGenerator;
+            _languageService = languageService;
         }
 
         [HttpGet]
@@ -39,7 +43,7 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Input is not valid";
+                TempData["Error"] = _languageService.GetKey("InputIsNotValid");
 
                 return View(loginVM);
             }
@@ -68,7 +72,7 @@ namespace MyWebApp.Controllers
                 }
                 else
                 {
-                    _logger.LogInformation($"(Account/Login) User {loginVM.Email}, Attempt to check password failed");
+                    _logger.LogInformation($"(Account/Login) User {loginVM.Email}, Check password failed");
                 }
             }
             else
@@ -76,7 +80,7 @@ namespace MyWebApp.Controllers
                 _logger.LogInformation($"(Account/Login) Fail, User {loginVM.Email} doesn't exist");
             }
 
-            TempData["Error"] = "Wrong credentials, please try again";
+            TempData["Error"] = _languageService.GetKey("WrongCredentials");
 
             return View(loginVM);
         }
@@ -96,7 +100,7 @@ namespace MyWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Input is not valid";
+                TempData["Error"] = _languageService.GetKey("InputIsNotValid");
 
                 return View(registerVM);
             }
@@ -106,8 +110,8 @@ namespace MyWebApp.Controllers
             var user = await _userManager.FindByEmailAsync(registerVM.Email);
             if (user != null)
             {
-                _logger.LogInformation($"(Account/Register) User {registerVM.Email} failed to register. Email already in use");
-                TempData["Error"] = "This e-mail address is already in use";
+                _logger.LogInformation($"(Account/Register) User {registerVM.Email} failed to register. E-mail already in use");
+                TempData["Error"] = _languageService.GetKey("EmailAlreadyInUse");
 
                 return View(registerVM);
             }
@@ -135,7 +139,7 @@ namespace MyWebApp.Controllers
                 else
                 {
                     _logger.LogInformation($"(Account/Register) User {registerVM.Email} can't login into new account");
-                    TempData["Error"] = "Can't login into created account!";
+                    TempData["Error"] = _languageService.GetKey("CantLoginIntoCreatedAccount");
 
                     return View(registerVM);
                 }
@@ -145,7 +149,7 @@ namespace MyWebApp.Controllers
                 _logger.LogInformation($"(Account/Register) User {registerVM.Email} failed to register");
             }
 
-            TempData["Error"] = "Registration failed";
+            TempData["Error"] = _languageService.GetKey("RegistrationFailed");
 
             return View(registerVM);
         }

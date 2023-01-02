@@ -2,15 +2,17 @@
     List of user's notes
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "User's notes";
+    ViewData["Title"] = LanguageService.GetKey("UserNotes_Title");
 }
 
 @model UserNotesViewModel
 
 @if (Model == null)
 {
-    <h3>This user does't exist.</h3>
+    <h3>@LanguageService.GetKey("UserNotes_Nothing")</h3>
 }
 else
 {
@@ -21,11 +23,11 @@ else
 
     @if (user == null)
     {
-        <h3>This user doesn't exist.</h3>
+        <h3>@LanguageService.GetKey("UserNotes_Nothing")</h3>
     }
     else
     {
-        ViewData["Title"] = $"{user.UserName}'s notes";
+        ViewData["Title"] = $"{LanguageService.GetKey("UserNotes_NotesOfUser")} {user.UserName}";
 
         <div>
             <div class="thumb">
@@ -38,7 +40,7 @@ else
             <h4>@user.Status</h4>
         </div>
 
-        <h3>Notes of user <b>@user.UserName</b></h3>
+        <h3>@LanguageService.GetKey("UserNotes_NotesOfUser") <b>@user.UserName</b></h3>
 
         var noteNumber = 0;
 
@@ -72,7 +74,7 @@ else
 
             @if (thread != null)
             {
-                <h4>Thread:</h4>
+                <h4>@LanguageService.GetKey("Thread"):</h4>
                 <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary">@thread.Thread</a>
             }
 
@@ -80,11 +82,11 @@ else
                 @if (User.IsAdmin() ||
                     User.IsOwner(note))
                 {
-                    <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                    <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">Delete</a>
+                    <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Edit")</a>
+                    <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Delete")</a>
                 }
 
-                <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">View</a>
+                <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Details")</a>
             </div>
 
             noteNumber += 1;
@@ -95,12 +97,12 @@ else
                 @if (pagingVM.IsValidPage)
                 {
                     <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-action="Notes" asp-route-page="@(pagingVM.Page - 1)">
-                        Prev
+                        @LanguageService.GetKey("PaginationResults_Prev")
                     </a>
                     <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-action="Notes" asp-route-page="@(pagingVM.Page + 1)">
-                        Next
+                        @LanguageService.GetKey("PaginationResults_Next")
                     </a>
-                    <span class="text-muted text-small">Results @pagingVM.ResultStart - @pagingVM.ResultEnd of @pagingVM.TotalItems</span>
+                    <span class="text-muted text-small">@LanguageService.GetKey("PaginationResults") @pagingVM.ResultStart - @pagingVM.ResultEnd @LanguageService.GetKey("PaginationResults_of") @pagingVM.TotalItems</span>
                 }
             </div>
         </div>

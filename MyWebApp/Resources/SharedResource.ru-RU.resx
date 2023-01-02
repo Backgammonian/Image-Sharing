@@ -1,0 +1,609 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminPanel" xml:space="preserve">
+    <value>Админ панель</value>
+  </data>
+  <data name="AdminPanel_CreateThread" xml:space="preserve">
+    <value>Создать новую тему</value>
+  </data>
+  <data name="AdminPanel_DeleteThread" xml:space="preserve">
+    <value>Выберите тему для удаления</value>
+  </data>
+  <data name="AdminPanel_HelloAdmin" xml:space="preserve">
+    <value>Привет, админ</value>
+  </data>
+  <data name="AdminPanel_NoPermission" xml:space="preserve">
+    <value>У вас нет прав для доступа к этой странице.</value>
+  </data>
+  <data name="AdminPanel_Title" xml:space="preserve">
+    <value>Административная панель</value>
+  </data>
+  <data name="AlreadyLoggedIn" xml:space="preserve">
+    <value>Вы уже выполнили вход!</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="CantLoginIntoCreatedAccount" xml:space="preserve">
+    <value>Не удалось войти в созданный аккаунт! Попробуйте войти самостоятельно.</value>
+  </data>
+  <data name="ChangeLanguage" xml:space="preserve">
+    <value>Поменять язык</value>
+  </data>
+  <data name="CreateNote_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="CreateNote_DescriptionPlaceholder" xml:space="preserve">
+    <value>Описание новой записи</value>
+  </data>
+  <data name="CreateNote_Images" xml:space="preserve">
+    <value>Изображения</value>
+  </data>
+  <data name="CreateNote_ImagesPlaceholder" xml:space="preserve">
+    <value>Выберите изображения для новой записи</value>
+  </data>
+  <data name="CreateNote_NoPermission" xml:space="preserve">
+    <value>Вы не вошли в систему!</value>
+  </data>
+  <data name="CreateNote_PageTitle" xml:space="preserve">
+    <value>Создать новую запись</value>
+  </data>
+  <data name="CreateNote_Submit" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="CreateNote_Thread" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="CreateNote_ThreadSelection" xml:space="preserve">
+    <value>Выберите тему</value>
+  </data>
+  <data name="CreateNote_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="CreateNote_TitlePlaceholder" xml:space="preserve">
+    <value>Заголовок новой записи</value>
+  </data>
+  <data name="CreateThread_CantCreate" xml:space="preserve">
+    <value>Не удалось создать новую тему.</value>
+  </data>
+  <data name="CreateThread_EnterNameForThread" xml:space="preserve">
+    <value>Введите имя новой темы</value>
+  </data>
+  <data name="CreateThread_ExistingThreadNames" xml:space="preserve">
+    <value>Существующие темы</value>
+  </data>
+  <data name="CreateThread_NewThreadName" xml:space="preserve">
+    <value>Название новой темы (будет переведо в строчные буквы)</value>
+  </data>
+  <data name="CreateThread_NewThreadNamePlaceholder" xml:space="preserve">
+    <value>Название новой темы</value>
+  </data>
+  <data name="CreateThread_NoPermission" xml:space="preserve">
+    <value>У вас нет прав создавать новые темы!</value>
+  </data>
+  <data name="CreateThread_Submit" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="CreateThread_ThreadAlreadyExists" xml:space="preserve">
+    <value>Тема с таким именем уже существует! (или что-то другое пошло не так)</value>
+  </data>
+  <data name="CreateThread_Title" xml:space="preserve">
+    <value>Создать новую тему</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Dashboard_NoNotes" xml:space="preserve">
+    <value>У вас нет ни одной записи.</value>
+  </data>
+  <data name="Dashboard_NotFound" xml:space="preserve">
+    <value>Этот профиль не существует.</value>
+  </data>
+  <data name="Dashboard_Title" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="DeleteNote_AreYouSure" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить эту запись?</value>
+  </data>
+  <data name="DeleteNote_Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="DeleteNote_DeleteButton" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="DeleteNote_NoDeletePermission" xml:space="preserve">
+    <value>У вас нет прав для удаления этой записи.</value>
+  </data>
+  <data name="DeleteNote_NoPermission" xml:space="preserve">
+    <value>Вы не выполнили вход!</value>
+  </data>
+  <data name="DeleteNote_NoteDescription" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="DeleteNote_NoteTitle" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="DeleteNote_Nothing" xml:space="preserve">
+    <value>Здесь нечего удалять.</value>
+  </data>
+  <data name="DeleteNote_Submit" xml:space="preserve">
+    <value>Удаление записи</value>
+  </data>
+  <data name="DeleteNote_Thread" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="DeleteNote_Title" xml:space="preserve">
+    <value>Удалить запись</value>
+  </data>
+  <data name="DeleteNote_UnknownAuthor" xml:space="preserve">
+    <value>Неизвестный автор</value>
+  </data>
+  <data name="DeleteThread_CantDelete" xml:space="preserve">
+    <value>Невозможно удалить тему</value>
+  </data>
+  <data name="DeleteThread_FirstSelectionElement" xml:space="preserve">
+    <value>Выберите тему для удаления</value>
+  </data>
+  <data name="DeleteThread_NoPermission" xml:space="preserve">
+    <value>У вас нет прав для удаления тем!</value>
+  </data>
+  <data name="DeleteThread_Select" xml:space="preserve">
+    <value>Выберите тему, которую нужно удалить</value>
+  </data>
+  <data name="DeleteThread_Submit" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="DeleteThread_Subtitle" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="DeleteThread_Title" xml:space="preserve">
+    <value>Удалить тему</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="EditNote_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="EditNote_DescriptionPlaceholder" xml:space="preserve">
+    <value>Описание записи</value>
+  </data>
+  <data name="EditNote_ImageReminder" xml:space="preserve">
+    <value>Не выбирайте новые изображения, если хотите сохранить старые.</value>
+  </data>
+  <data name="EditNote_Images" xml:space="preserve">
+    <value>Изображения</value>
+  </data>
+  <data name="EditNote_ImagesPlaceholder" xml:space="preserve">
+    <value>Прикреплённые изображения</value>
+  </data>
+  <data name="EditNote_NoEditPermission" xml:space="preserve">
+    <value>У вас нет прав для редактирования этой записи.</value>
+  </data>
+  <data name="EditNote_NoPermission" xml:space="preserve">
+    <value>У вас не выполнен вход!</value>
+  </data>
+  <data name="EditNote_NoteTitle" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="EditNote_NoteTitlePlaceholder" xml:space="preserve">
+    <value>Заголовок записи</value>
+  </data>
+  <data name="EditNote_SelectedThread" xml:space="preserve">
+    <value>Выбранная тема</value>
+  </data>
+  <data name="EditNote_Submit" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="EditNote_ThreadSelection" xml:space="preserve">
+    <value>Выбрать тему</value>
+  </data>
+  <data name="EditNote_Title" xml:space="preserve">
+    <value>Редактировать запись</value>
+  </data>
+  <data name="EditNote_WrongInput" xml:space="preserve">
+    <value>Не удалось редактировать запись: недопустимые входные данные.</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Редактировать профиль</value>
+  </data>
+  <data name="EditUserProfile_NoEditPermission" xml:space="preserve">
+    <value>У вас нет прав для редактирования этого профиля.</value>
+  </data>
+  <data name="EditUserProfile_NoPermission" xml:space="preserve">
+    <value>Вы не выполнили вход!</value>
+  </data>
+  <data name="EditUserProfile_PictureReminder" xml:space="preserve">
+    <value>Не выбирайте новое изображение профиля, если хотите сохранить старое.</value>
+  </data>
+  <data name="EditUserProfile_ProfilePicturePlaceholder" xml:space="preserve">
+    <value>Выбрать новое изображение профиля</value>
+  </data>
+  <data name="EditUserProfile_ProfilePictureTitle" xml:space="preserve">
+    <value>Новое изображение профиля</value>
+  </data>
+  <data name="EditUserProfile_StatusPlaceholder" xml:space="preserve">
+    <value>Ваш статус</value>
+  </data>
+  <data name="EditUserProfile_StatusTitle" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="EditUserProfile_Submit" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="EditUserProfile_Title" xml:space="preserve">
+    <value>Редактировать профиль</value>
+  </data>
+  <data name="EditUserProfile_WrongInput" xml:space="preserve">
+    <value>Не удалось отредактировать профиль: недействительные введённые данные.</value>
+  </data>
+  <data name="EmailAlreadyInUse" xml:space="preserve">
+    <value>Этот адрес электронной почты уже используется</value>
+  </data>
+  <data name="Error404_Text1" xml:space="preserve">
+    <value>404 - Не найдено</value>
+  </data>
+  <data name="Error404_Text2" xml:space="preserve">
+    <value>Извините, запрашиваемый элемент не найден.</value>
+  </data>
+  <data name="Error404_Title" xml:space="preserve">
+    <value>Не найдено</value>
+  </data>
+  <data name="Error500_Text1" xml:space="preserve">
+    <value>500 - Внутренняя ошибка</value>
+  </data>
+  <data name="Error500_Text2" xml:space="preserve">
+    <value>Извините, произошла внутренняя ошибка при обработке запроса.</value>
+  </data>
+  <data name="Error500_Title" xml:space="preserve">
+    <value>Внутренняя ошибка</value>
+  </data>
+  <data name="ErrorPage_Text" xml:space="preserve">
+    <value>Произошла ошибка при обработке вашего запроса.</value>
+  </data>
+  <data name="ErrorPage_Title" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="ErrorWrongPage_Text1" xml:space="preserve">
+    <value>404 - Страница не найдена</value>
+  </data>
+  <data name="ErrorWrongPage_Text2" xml:space="preserve">
+    <value>Ошибка: не удалось получить</value>
+  </data>
+  <data name="ErrorWrongPage_Text3" xml:space="preserve">
+    <value>записей из страницы</value>
+  </data>
+  <data name="ErrorWrongPage_Title" xml:space="preserve">
+    <value>Недействительная страница</value>
+  </data>
+  <data name="GetByThread_NotesFromThread" xml:space="preserve">
+    <value>Записи по теме</value>
+  </data>
+  <data name="GetByThread_Nothing" xml:space="preserve">
+    <value>Здесь еще нет записей.</value>
+  </data>
+  <data name="GetByThread_Title" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Главная страница</value>
+  </data>
+  <data name="Home_Begin1" xml:space="preserve">
+    <value>Давайте посмотрим на</value>
+  </data>
+  <data name="Home_Begin2" xml:space="preserve">
+    <value>Творения</value>
+  </data>
+  <data name="Home_Begin3" xml:space="preserve">
+    <value>других людей!</value>
+  </data>
+  <data name="Home_CreateAccount" xml:space="preserve">
+    <value>Создать аккаунт</value>
+  </data>
+  <data name="Home_CreateNewNote" xml:space="preserve">
+    <value>Создать новую запись</value>
+  </data>
+  <data name="Home_Or" xml:space="preserve">
+    <value>или</value>
+  </data>
+  <data name="Home_SignIn" xml:space="preserve">
+    <value>Войдите</value>
+  </data>
+  <data name="Home_SignIn_cont" xml:space="preserve">
+    <value>перед созданием новой записи</value>
+  </data>
+  <data name="Home_Subtitle" xml:space="preserve">
+    <value>Обыкновенная веб-платформа для обмена и хранения изображениями.</value>
+  </data>
+  <data name="Home_Subtitle_cont" xml:space="preserve">
+    <value>Построено с использованием</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Главная страница</value>
+  </data>
+  <data name="Home_YouCanAlso" xml:space="preserve">
+    <value>Вы также можете</value>
+  </data>
+  <data name="InputIsNotValid" xml:space="preserve">
+    <value>Входные данные недействительны</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Login_Email" xml:space="preserve">
+    <value>Электронная почта</value>
+  </data>
+  <data name="Login_EmailPlaceholder" xml:space="preserve">
+    <value>Введите свой адрес электронной почты</value>
+  </data>
+  <data name="Login_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Login_PasswordPlaceholder" xml:space="preserve">
+    <value>Введите пароль</value>
+  </data>
+  <data name="Login_Submit" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Login_Title" xml:space="preserve">
+    <value>Вход в систему</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Выйти из системы</value>
+  </data>
+  <data name="LogoutBeforehand" xml:space="preserve">
+    <value>Если вы хотите создать новый аккаунт, пожалуйста, сперва выйдите из своего.</value>
+  </data>
+  <data name="NoteCreate_NotLoggedIn" xml:space="preserve">
+    <value>Войдите в систему перед созданием новой записи!</value>
+  </data>
+  <data name="NoteCreate_WrongInput" xml:space="preserve">
+    <value>Не удалось создать новую запись: недействительные входные данные.</value>
+  </data>
+  <data name="NoteDetails_DoesntExist" xml:space="preserve">
+    <value>Такой записи не существует.</value>
+  </data>
+  <data name="NoteDetails_PageTitle" xml:space="preserve">
+    <value>Подробности записи</value>
+  </data>
+  <data name="NoteDetails_PageTitleMinified" xml:space="preserve">
+    <value>Подробности записи</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Записи</value>
+  </data>
+  <data name="NotesList_Notes" xml:space="preserve">
+    <value>Список записей</value>
+  </data>
+  <data name="NotesList_Nothing" xml:space="preserve">
+    <value>Здесь нет ни одной записи. Пока что.</value>
+  </data>
+  <data name="NotesList_Title" xml:space="preserve">
+    <value>Список записей</value>
+  </data>
+  <data name="PaginationResults" xml:space="preserve">
+    <value>Результаты</value>
+  </data>
+  <data name="PaginationResults_Next" xml:space="preserve">
+    <value>След.</value>
+  </data>
+  <data name="PaginationResults_of" xml:space="preserve">
+    <value>из</value>
+  </data>
+  <data name="PaginationResults_Prev" xml:space="preserve">
+    <value>Пред.</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Политика конфиденциальности</value>
+  </data>
+  <data name="Privacy_Text" xml:space="preserve">
+    <value>Все ваши данные и изображения принадлежат нам. Sus ඞ</value>
+  </data>
+  <data name="Privacy_Title" xml:space="preserve">
+    <value>Политика конфиденциальности</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Зарегистрироваться</value>
+  </data>
+  <data name="Register_ConfirmPassword" xml:space="preserve">
+    <value>Подтвердите пароль</value>
+  </data>
+  <data name="Register_ConfirmPasswordPlaceholder" xml:space="preserve">
+    <value>Повторите введённый пароль</value>
+  </data>
+  <data name="Register_Email" xml:space="preserve">
+    <value>Электронная почта</value>
+  </data>
+  <data name="Register_EmailPlaceholder" xml:space="preserve">
+    <value>Введите адрес электронной почты для нового аккаунта.</value>
+  </data>
+  <data name="Register_Password" xml:space="preserve">
+    <value>Пароль должен состоять хотя бы из 8 символов!</value>
+  </data>
+  <data name="Register_PasswordPlaceholder" xml:space="preserve">
+    <value>Подберите безопасный пароль для нового аккаунта.</value>
+  </data>
+  <data name="Register_Submit" xml:space="preserve">
+    <value>Зарегистрироваться</value>
+  </data>
+  <data name="Register_Title" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>Регистрация не удалась</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Выберите язык</value>
+  </data>
+  <data name="SignUpForNewAccount" xml:space="preserve">
+    <value>Создайте новый аккаунт</value>
+  </data>
+  <data name="SingInToYourAccount" xml:space="preserve">
+    <value>Войдите в свой аккаунт</value>
+  </data>
+  <data name="SorryErrorOccured" xml:space="preserve">
+    <value>Извините! Произошла ошибка</value>
+  </data>
+  <data name="Thread" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Threads" xml:space="preserve">
+    <value>Темы</value>
+  </data>
+  <data name="Threads_Nothing" xml:space="preserve">
+    <value>Здесь нет тем. Пока что.</value>
+  </data>
+  <data name="Threads_Title" xml:space="preserve">
+    <value>Все темы</value>
+  </data>
+  <data name="UserDetails_NotesButton" xml:space="preserve">
+    <value>Просматривайте записи</value>
+  </data>
+  <data name="UserDetails_Nothing" xml:space="preserve">
+    <value>Этого пользователя не существует.</value>
+  </data>
+  <data name="UserDetails_ProfileOf" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="UserDetails_Title" xml:space="preserve">
+    <value>Профиль пользователя</value>
+  </data>
+  <data name="UserNotes_NotesOfUser" xml:space="preserve">
+    <value>Записи пользователя</value>
+  </data>
+  <data name="UserNotes_Nothing" xml:space="preserve">
+    <value>Этого пользователя не существует.</value>
+  </data>
+  <data name="UserNotes_Title" xml:space="preserve">
+    <value>Записи пользователя</value>
+  </data>
+  <data name="WrongCredentials" xml:space="preserve">
+    <value>У вас нет полномочий, пожалуйста, попробуйте в другой раз</value>
+  </data>
+  <data name="YourDashboard" xml:space="preserve">
+    <value>Ваш профиль</value>
+  </data>
+</root>

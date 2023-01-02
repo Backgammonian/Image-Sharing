@@ -2,8 +2,10 @@
     Register page
 *@
 
+@inject LanguageService LanguageService
+
 @{
-    ViewData["Title"] = "Sign up";
+    ViewData["Title"] = LanguageService.GetKey("Register_Title");
 }
 
 @model RegisterViewModel
@@ -12,45 +14,45 @@
     <div class="col-md-6 offset-3">
         @if (User.IsAuthenticated())
         {
-            <h3>If you want to register a new account please sign out first.</h3>
+            <h3>@LanguageService.GetKey("LogoutBeforehand")</h3>
         }
         else
         {
             <p>
-                <h4>Sign up for a new account</h4>
+                <h4>@LanguageService.GetKey("SignUpForNewAccount")</h4>
             </p>
 
             @if (TempData["Error"] != null)
             {
                 <div class="col-md-12 alert alert-danger">
                     <span>
-                        <b>Sorry! Error occured</b> - @TempData["Error"] 
+                        <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"] 
                     </span>
                 </div>
             }
 
             <div class="row">
                 <div class="col-md-8 offset-2">
-                    <form asp-action="Register">
+                    <form method="post" asp-action="Register">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control"/>
+                            <label asp-for="Email" class="control-label">@LanguageService.GetKey("Register_Email")</label>
+                            <input asp-for="Email" class="form-control" placeholder="@LanguageService.GetKey("Register_EmailPlaceholder")" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Password" class="control-label">Password must be at least 8 characters long!</label>
-                            <input asp-for="Password" class="form-control"/>
+                            <label asp-for="Password" class="control-label">@LanguageService.GetKey("Register_Password")</label>
+                            <input asp-for="Password" class="form-control" placeholder="@LanguageService.GetKey("Register_PasswordPlaceholder")" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="ConfirmPassword" class="control-label"></label>
-                            <input asp-for="ConfirmPassword" class="form-control"/>
+                            <label asp-for="ConfirmPassword" class="control-label">@LanguageService.GetKey("Register_ConfirmPassword")</label>
+                            <input asp-for="ConfirmPassword" class="form-control" placeholder="@LanguageService.GetKey("Register_ConfirmPasswordPlaceholder")" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input class="btn btn-outline-success float-right" type="submit" value="Sign up" />
-                            <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Cancel</a>
+                            <input class="btn btn-outline-success float-right" type="submit" value="@LanguageService.GetKey("Register_Submit")" />
+                            <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
                         </div>
                     </form>
                 </div>

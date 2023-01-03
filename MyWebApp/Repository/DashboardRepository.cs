@@ -1,6 +1,7 @@
 ﻿using MyWebApp.ViewModels;
 using MyWebApp.Models;
 using MyWebApp.Data;
+using MyWebApp.PicturesModule;
 
 namespace MyWebApp.Repository
 {

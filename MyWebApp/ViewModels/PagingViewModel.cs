@@ -12,7 +12,7 @@
         public int ResultStart => ((Page - 1) * PageSize) + 1;
         public int ResultEnd => Math.Min(ResultStart + PageSize - 1, TotalItems);
         public bool IsValidPage => ResultStart <= TotalItems;
-        public string PrevDisabled => !HasPreviousPage ? "disabled" : string.Empty;
-        public string NextDisabled => !HasNextPage ? "disabled" : string.Empty;
+        public string PrevDisabled => !HasPreviousPage ? "pagination-button-hidden" : string.Empty;
+        public string NextDisabled => !HasNextPage ? "pagination-button-hidden" : string.Empty;
     }
 }

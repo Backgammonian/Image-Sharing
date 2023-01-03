@@ -1,23 +1,23 @@
-﻿namespace MyWebApp.Data
+﻿namespace MyWebApp.PicturesModule
 {
-    public static class ImagePathHelper
+    public sealed class ImagePathHelper
     {
-        public static string GetPath(string imageFileName)
+        public string GetPath(string imageFileName)
         {
             return $"~/images/{imageFileName}";
         }
 
-        public static string GetDefaultImagePath()
+        public string GetDefaultImagePath()
         {
             return $"~/images/{PicturesLoader.DefaultImageName}";
         }
 
-        public static string GetHref(string imageFileName)
+        public string GetHref(string imageFileName)
         {
             return $"/images/{imageFileName}";
         }
 
-        public static string GetDefaultImageHref()
+        public string GetDefaultImageHref()
         {
             return $"/images/{PicturesLoader.DefaultImageName}";
         }

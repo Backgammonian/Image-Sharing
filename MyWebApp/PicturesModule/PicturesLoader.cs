@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyWebApp.Data;
 using MyWebApp.Models;
 
-namespace MyWebApp.Data
+namespace MyWebApp.PicturesModule
 {
     public sealed class PicturesLoader
     {

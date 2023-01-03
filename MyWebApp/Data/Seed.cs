@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyWebApp.Models;
+using MyWebApp.PicturesModule;
 
 namespace MyWebApp.Data
 {
@@ -43,8 +44,8 @@ namespace MyWebApp.Data
                     EmailConfirmed = true,
                     Status = "Totally not in charge!"
                 };
-                var result = await userManager.CreateAsync(newAdminUser, "Qwerty123?");
 
+                var result = await userManager.CreateAsync(newAdminUser, "Qwerty123?");
                 await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
 
                 adminUser = newAdminUser;

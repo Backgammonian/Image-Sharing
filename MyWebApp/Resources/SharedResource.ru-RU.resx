@@ -430,13 +430,13 @@
     <value>или</value>
   </data>
   <data name="Home_SignIn" xml:space="preserve">
-    <value>Войдите</value>
+    <value>Войти</value>
   </data>
   <data name="Home_SignIn_cont" xml:space="preserve">
     <value>перед созданием новой записи</value>
   </data>
   <data name="Home_Subtitle" xml:space="preserve">
-    <value>Обыкновенная веб-платформа для обмена и хранения изображениями.</value>
+    <value>Простая веб-платформа для обмена и хранения изображениями.</value>
   </data>
   <data name="Home_Subtitle_cont" xml:space="preserve">
     <value>Построено с использованием</value>
@@ -457,7 +457,7 @@
     <value>Электронная почта</value>
   </data>
   <data name="Login_EmailPlaceholder" xml:space="preserve">
-    <value>Введите свой адрес электронной почты</value>
+    <value>Адрес электронной почты</value>
   </data>
   <data name="Login_Password" xml:space="preserve">
     <value>Пароль</value>
@@ -538,13 +538,13 @@
     <value>Электронная почта</value>
   </data>
   <data name="Register_EmailPlaceholder" xml:space="preserve">
-    <value>Введите адрес электронной почты для нового аккаунта.</value>
+    <value>Адрес электронной почты</value>
   </data>
   <data name="Register_Password" xml:space="preserve">
-    <value>Пароль должен состоять хотя бы из 8 символов!</value>
+    <value>8 символов - минимальная длина пароля!</value>
   </data>
   <data name="Register_PasswordPlaceholder" xml:space="preserve">
-    <value>Подберите безопасный пароль для нового аккаунта.</value>
+    <value>Пароль для нового аккаунта</value>
   </data>
   <data name="Register_Submit" xml:space="preserve">
     <value>Зарегистрироваться</value>
@@ -580,7 +580,7 @@
     <value>Все темы</value>
   </data>
   <data name="UserDetails_NotesButton" xml:space="preserve">
-    <value>Просматривайте записи</value>
+    <value>Смотреть записи</value>
   </data>
   <data name="UserDetails_Nothing" xml:space="preserve">
     <value>Этого пользователя не существует.</value>

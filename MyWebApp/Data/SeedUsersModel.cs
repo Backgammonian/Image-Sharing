@@ -2,7 +2,7 @@
 
 namespace MyWebApp.Data
 {
-    public class SeedUsersModel
+    public sealed class SeedUsersModel
     {
         public UserModel Admin { get; set; }
         public UserModel[] Users { get; set; }

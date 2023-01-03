@@ -2,6 +2,7 @@
 using MyWebApp.Data;
 using MyWebApp.Extensions;
 using MyWebApp.Models;
+using MyWebApp.PicturesModule;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository

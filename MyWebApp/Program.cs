@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
+using System.Globalization;
+using System.Reflection;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Models;
 using MyWebApp.Extensions;
 using MyWebApp.Localization;
-using System.Globalization;
-using System.Reflection;
+using MyWebApp.IpApiService;
+using MyWebApp.PicturesModule;
 
 namespace MyWebApp
 {
@@ -21,7 +23,7 @@ namespace MyWebApp
 
             builder.Services.AddLogging(configure =>
             {
-                configure.AddFile($"log file {DateTime.Now.GetMyTimeFormat()}.txt");
+                configure.AddFile($"Logs\\log file {DateTime.Now.GetMyTimeFormat()}.txt");
                 configure.AddConsole();
                 configure.AddDebug();
             });
@@ -57,6 +59,8 @@ namespace MyWebApp
                     options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
                 });
 
+            builder.Services.AddScoped<ImagePathHelper>();
+            builder.Services.AddScoped<IpLocationHelper>();
             builder.Services.AddScoped<RandomGenerator>();
             builder.Services.AddScoped<PicturesLoader>();
             builder.Services.AddScoped<CredentialsRepository>();

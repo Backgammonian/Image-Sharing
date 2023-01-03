@@ -35,6 +35,8 @@ body {
 
 .thumb {
     padding: 5px;
+    display: flex;
+    align-items: center;
 }
 
 .fancybox-frame {
@@ -49,6 +51,38 @@ body {
 }
 
 .profile-picture {
-    width: 250px;
-    height: 250px;
+    width: 75px;
+    height: 75px;
+}
+
+.note {
+    background: #D3D3D3;
+    margin: 4px;
+    padding: 10px;
+}
+
+.note-author {
+    background: white;
+    margin: 2px;
+    padding: 2px;
+}
+
+.note-controls {
+    background: #E0E0E0;
+    margin: 4px;
+    padding: 4px;
+    border-radius: .4rem;
+    display: inline-block;
+}
+
+.pagination-button-hidden {
+    display: none;
+}
+
+.my-button {
+    color: #080808;
+}
+
+.avatar-button {
+    margin-left: 5px;
 }

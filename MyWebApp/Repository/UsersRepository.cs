@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Models;
+using MyWebApp.PicturesModule;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository

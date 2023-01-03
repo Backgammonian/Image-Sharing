@@ -1,39 +1,39 @@
 ﻿using Newtonsoft.Json;
 
-namespace MyWebApp.Data
+namespace MyWebApp.IpApiService
 {
     public sealed class IpApiServiceResponse
     {
         [JsonProperty("status")]
         public string Status { get; set; } = string.Empty;
-        
+
         [JsonProperty("message")]
         public string Message { get; set; } = string.Empty;
-        
+
         [JsonProperty("continent")]
         public string Continent { get; set; } = string.Empty;
-        
+
         [JsonProperty("continentCode")]
         public string ContinentCode { get; set; } = string.Empty;
-        
+
         [JsonProperty("country")]
         public string Country { get; set; } = string.Empty;
-        
+
         [JsonProperty("countryCode")]
         public string CountryCode { get; set; } = string.Empty;
-        
+
         [JsonProperty("region")]
         public string Region { get; set; } = string.Empty;
-        
+
         [JsonProperty("regionName")]
         public string RegionName { get; set; } = string.Empty;
-        
+
         [JsonProperty("city")]
         public string City { get; set; } = string.Empty;
-        
+
         [JsonProperty("district")]
         public string District { get; set; } = string.Empty;
-        
+
         [JsonProperty("zip")]
         public string Zip { get; set; } = string.Empty;
 

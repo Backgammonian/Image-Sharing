@@ -11,6 +11,7 @@
 </head>
 
 @inject LanguageService LanguageService
+@inject IpLocationHelper IpLocationHelper
 
 <body>
     <header>
@@ -95,9 +96,11 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            @await IpLocationHelper.GetLocation(Context)
-            <br>
-            &copy; 2022-2023 - Image Sharing - <a asp-area="" asp-controller="Home" asp-action="Privacy">@LanguageService.GetKey("Privacy")</a>
+            @{
+                //await IpLocationHelper.GetLocation(Context);
+            }
+            &copy; 2022-2023 - Image Sharing - 
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">@LanguageService.GetKey("Privacy")</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

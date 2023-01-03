@@ -3,6 +3,7 @@
 *@
 
 @inject LanguageService LanguageService
+@inject ImagePathHelper ImagePathHelper
 
 @{
     ViewData["Title"] = LanguageService.GetKey("NotesList_Title");
@@ -100,10 +101,10 @@ else
         <div>
             @if (pagingVM.IsValidPage)
             {
-                <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-action="Index" asp-route-page="@(pagingVM.Page - 1)">
+                <a class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-controller="Notes" asp-action="Index" asp-route-page="@(pagingVM.Page - 1)">
                     @LanguageService.GetKey("PaginationResults_Prev")
                 </a>
-                <a type="button" class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-action="Index" asp-route-page="@(pagingVM.Page + 1)">
+                <a class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-controller="Notes" asp-action="Index" asp-route-page="@(pagingVM.Page + 1)">
                     @LanguageService.GetKey("PaginationResults_Next")
                 </a>
                 <span class="text-muted text-small">@LanguageService.GetKey("PaginationResults") @pagingVM.ResultStart - @pagingVM.ResultEnd @LanguageService.GetKey("PaginationResults_of") @pagingVM.TotalItems</span>

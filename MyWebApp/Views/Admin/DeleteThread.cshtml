@@ -28,7 +28,7 @@
     <form method="post" asp-action="DeleteThread" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="SelectedThreadName">@LanguageService.GetKey("DeleteThread_Subtitle")</label>
-            <select asp-for="SelectedThreadName" asp-items="@Model.AvailableThreads" class="form-control form-control-lg">
+            <select asp-for="SelectedThreadName" asp-items="@Model.AvailableThreads" class="form-control">
                 <option>--@LanguageService.GetKey("DeleteThread_FirstSelectionElement")--</option>
             </select>
             <span asp-validation-for="SelectedThreadName" class="text-danger"></span>

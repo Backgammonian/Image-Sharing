@@ -38,10 +38,11 @@ else
 
                 <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary my-button avatar-button">@user.UserName</a>
             </div>
-            <p>@user.Status</p>
+
+            <p class="title-text">@user.Status</p>
         </div>
 
-        <h3>@LanguageService.GetKey("UserNotes_NotesOfUser") <b>@user.UserName</b></h3>
+        <h3 class="title-text">@LanguageService.GetKey("UserNotes_NotesOfUser") @user.UserName</h3>
 
         var noteNumber = 0;
         @foreach (var noteDetail in notesDetails)
@@ -56,8 +57,8 @@ else
             var thread = noteDetail.Thread;
 
             <div class="note">
-                <h4><b>@note.Title</b></h4>
-                <p>@note.Description</p>
+                <h4 class="title-text"><b>@note.Title</b></h4>
+                <p class="title-text">@note.Description</p>
 
                 @if (thread != null)
                 {
@@ -95,19 +96,17 @@ else
             noteNumber += 1;
         }
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                @if (pagingVM.IsValidPage)
-                {
-                    <a class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-controller="Users" asp-action="Notes" asp-route-page="@(pagingVM.Page - 1)">
-                        @LanguageService.GetKey("PaginationResults_Prev")
-                    </a>
-                    <a class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-controller="Users" asp-action="Notes" asp-route-page="@(pagingVM.Page + 1)">
-                        @LanguageService.GetKey("PaginationResults_Next")
-                    </a>
-                    <span class="text-muted text-small">@LanguageService.GetKey("PaginationResults") @pagingVM.ResultStart - @pagingVM.ResultEnd @LanguageService.GetKey("PaginationResults_of") @pagingVM.TotalItems</span>
-                }
-            </div>
+        <div class="d-flex align-items-center mb-4 paginator-control">
+            @if (pagingVM.IsValidPage)
+            {
+                <a class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-controller="Users" asp-action="Notes" asp-route-page="@(pagingVM.Page - 1)">
+                    @LanguageService.GetKey("PaginationResults_Prev")
+                </a>
+                <a class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-controller="Users" asp-action="Notes" asp-route-page="@(pagingVM.Page + 1)">
+                    @LanguageService.GetKey("PaginationResults_Next")
+                </a>
+                <span class="text-muted text-small">@LanguageService.GetKey("PaginationResults") @pagingVM.ResultStart - @pagingVM.ResultEnd @LanguageService.GetKey("PaginationResults_of") @pagingVM.TotalItems</span>
+            }
         </div>
     }
 }

@@ -23,11 +23,13 @@
     else
     {
         <h3>@LanguageService.GetKey("AdminPanel_HelloAdmin") <b>@user.UserName</b>!</h3>
-        <div>
-            <a asp-controller="Admin" asp-action="CreateThread" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("AdminPanel_CreateThread")</a>
+
+        <div class="admin-button-block">
+            <a asp-controller="Admin" asp-action="CreateThread" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("AdminPanel_CreateThread")</a>
         </div>
-        <div>
-            <a asp-controller="Admin" asp-action="DeleteThread" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("AdminPanel_DeleteThread")</a>
+
+        <div class="admin-button-block">
+            <a asp-controller="Admin" asp-action="DeleteThread" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("AdminPanel_DeleteThread")</a>
         </div>
     }
 }

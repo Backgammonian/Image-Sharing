@@ -1,23 +1,29 @@
-html {
+html 
+{
     font-size: 14px;
 }
 
-@media (min-width: 768px) {
-    html {
+@media (min-width: 768px) 
+{
+    html 
+    {
         font-size: 16px;
     }
 }
 
-html {
+html 
+{
     position: relative;
     min-height: 100%;
 }
 
-body {
+body 
+{
     margin-bottom: 60px;
 }
 
-.thumb img {
+.thumb img
+{
     -webkit-filter: grayscale(0);
     filter: none;
     border-radius: 5px;
@@ -28,61 +34,113 @@ body {
     width: 100%;
 }
 
-.thumb img:hover {
+.thumb img:hover
+{
     -webkit-filter: grayscale(1);
     filter: grayscale(1);
 }
 
-.thumb {
+.thumb 
+{
     padding: 5px;
     display: flex;
     align-items: center;
 }
 
-.fancybox-frame {
+.fancybox-frame 
+{
     display: inline-flex;
 }
 
-.gallery-column {
+.gallery-column
+{
     display: flex;
     width: 50%;
     flex-direction: column;
     justify-content: center;
 }
 
-.profile-picture {
+.profile-picture
+{
     width: 75px;
     height: 75px;
 }
 
-.note {
+.profile-picture-edit {
+    width: 300px;
+    height: 300px;
+}
+
+.note 
+{
     background: #D3D3D3;
     margin: 4px;
     padding: 10px;
+    border-radius: .4rem;
 }
 
-.note-author {
+.note-author 
+{
     background: white;
     margin: 2px;
     padding: 2px;
+    display: inline-block;
+    background: #E8E8E8;
+    border-radius: .2rem;
 }
 
-.note-controls {
-    background: #E0E0E0;
-    margin: 4px;
-    padding: 4px;
+.note-controls
+{
+    background: #F0F0F0;
+    margin: 5px;
+    padding: 5px;
     border-radius: .4rem;
     display: inline-block;
 }
 
-.pagination-button-hidden {
-    display: none;
-}
-
-.my-button {
+.my-button 
+{
     color: #080808;
 }
 
-.avatar-button {
+.avatar-button 
+{
     margin-left: 5px;
+}
+
+.title-text 
+{
+    margin: 10px;
+}
+
+.control-hidden 
+{
+    display: none;
+}
+
+.paginator-control
+{
+    margin: 10px;
+    justify-content: start;
+    gap: 10px;
+}
+
+.thread-button-block
+{
+    margin-bottom: 5px;
+}
+
+.account-buttons
+{
+    margin-top: 5px;
+}
+
+.edit-profile-button
+{
+    font-size: 18px;
+}
+
+.admin-button-block {
+    margin-bottom: 5px;
+    font-size: 18px;
 }

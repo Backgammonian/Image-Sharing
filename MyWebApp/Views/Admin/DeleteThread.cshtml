@@ -23,7 +23,7 @@
         </div>
     }
 
-    <h3>@LanguageService.GetKey("DeleteThread_Select"):</h3>
+    <h4>@LanguageService.GetKey("DeleteThread_Select"):</h4>
 
     <form method="post" asp-action="DeleteThread" enctype="multipart/form-data">
         <div class="form-group">
@@ -33,7 +33,10 @@
             </select>
             <span asp-validation-for="SelectedThreadName" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">@LanguageService.GetKey("DeleteThread_Submit")</button>
+        <div class="form-group account-buttons">
+            <button type="submit" class="btn btn-primary btn-danger float-right my-button">@LanguageService.GetKey("DeleteThread_Submit")</button>
+            <a class="btn btn-outline-secondary my-button" asp-controller="Admin" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
+        </div>
     </form>
 }
 else

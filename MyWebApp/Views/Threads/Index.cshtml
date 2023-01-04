@@ -21,8 +21,8 @@ else
     var threads = Model.Threads;
     foreach (var thread in threads)
     {
-        <div style="margin: 5px;">
-            <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary">@thread.Thread</a>
+        <div class="thread-button-block">
+            <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary my-button">@thread.Thread</a>
         </div>
     }
 }

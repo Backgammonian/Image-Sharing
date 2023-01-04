@@ -32,7 +32,7 @@
             @LanguageService.GetKey("EditUserProfile_PictureReminder")
         </div>
         <div class="thumb">
-            <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(Model.ProfilePicture.ImageFileName)">
+            <a class="fancybox-frame profile-picture-edit" data-fancybox href="@ImagePathHelper.GetHref(Model.ProfilePicture.ImageFileName)">
                 <img src="@ImagePathHelper.GetPath(Model.ProfilePicture.ImageFileName)" asp-append-version="true">
             </a>
         </div>
@@ -41,7 +41,9 @@
             <input asp-for="NewProfilePicture" class="form-control" placeholder="@LanguageService.GetKey("EditUserProfile_ProfilePicturePlaceholder")" accept="image/*" />
             <span asp-validation-for="NewProfilePicture" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">@LanguageService.GetKey("EditUserProfile_Submit")</button>
+        <div class="form-group account-buttons">
+            <button type="submit" class="btn btn-primary">@LanguageService.GetKey("EditUserProfile_Submit")</button>
+        </div>
     </form>
 }
 else

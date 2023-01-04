@@ -304,7 +304,7 @@
     <value>У вас нет прав для редактирования этой записи.</value>
   </data>
   <data name="EditNote_NoPermission" xml:space="preserve">
-    <value>У вас не выполнен вход!</value>
+    <value>Не выполнен вход в систему!</value>
   </data>
   <data name="EditNote_NoteTitle" xml:space="preserve">
     <value>Заголовок</value>
@@ -601,7 +601,7 @@
     <value>Записи пользователя</value>
   </data>
   <data name="WrongCredentials" xml:space="preserve">
-    <value>У вас нет полномочий, пожалуйста, попробуйте в другой раз</value>
+    <value>Неверные данные для входа в аккаунт! Пожалуйста, попробуйте в другой раз.</value>
   </data>
   <data name="YourDashboard" xml:space="preserve">
     <value>Ваш профиль</value>

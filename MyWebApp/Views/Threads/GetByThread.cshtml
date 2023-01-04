@@ -25,7 +25,7 @@
     {
         ViewData["Title"] = $"{LanguageService.GetKey("DeleteNote_Thread")}: {selectedThread}";
 
-        <h2>@LanguageService.GetKey("GetByThread_NotesFromThread"): <b>@selectedThread</b></h2>
+        <h3>@LanguageService.GetKey("GetByThread_NotesFromThread"): <b>@selectedThread</b></h3>
 
         var noteNumber = 0;
         foreach (var threadNoteDetail in threadNotesDetails)
@@ -41,37 +41,33 @@
             var author = threadNoteDetail.Author;
             var authorProfilePicture = threadNoteDetail.ProfilePicture;
 
-            <div>
-                <div>
-                    @if (authorProfilePicture != null)
-                    {
-                        <div class="thumb">
-                            <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(authorProfilePicture.ImageFileName)">
-                                <img src="@ImagePathHelper.GetPath(authorProfilePicture.ImageFileName)" asp-append-version="true">
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="thumb">
-                            <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetDefaultImageHref()">
-                                <img src="@ImagePathHelper.GetDefaultImagePath()" asp-append-version="true">
-                            </a>
-                        </div>
-                    }
+            <div class="note">
+                <div class="note-author">
+                    <div class="thumb">
+                        <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(authorProfilePicture.ImageFileName)">
+                            <img src="@ImagePathHelper.GetPath(authorProfilePicture.ImageFileName)" asp-append-version="true">
+                        </a>
 
-                    @if (author != null)
-                    {
-                        <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_Author"): @author.UserName</a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("DeleteNote_UnknownAuthor")</a>
-                    }
+                        @if (author != null)
+                        {
+                            <a asp-controller="Users" asp-action="Details" asp-route-userId="@author.Id" class="btn btn-sm btn-outline-secondary my-button avatar-button">@author.UserName</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-secondary avatar-button">@LanguageService.GetKey("DeleteNote_UnknownAuthor")</a>
+                        }
+                    </div>
                 </div>
 
-                <h3>@note.Title</h3>
-                <h4>@note.Description</h4>
+                <h4 class="title-text"><b>@note.Title</b></h4>
+                <p class="title-text">@note.Description</p>
+
+                @if (thread != null)
+                {
+                    <div class="note-controls">
+                        <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary my-button">@thread.Thread</a>
+                    </div>
+                }
 
                 <div class="gallery-column">
                     @foreach (var image in images)
@@ -87,40 +83,32 @@
                     }
                 </div>
 
-                @if (thread != null)
-                {
-                    <h4>@LanguageService.GetKey("Thread"):</h4>
-                    <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary">@thread.Thread</a>
-                }
-
-                <div>
+                <div class="note-controls">
                     @if (User.IsAdmin() ||
                         User.IsOwner(note))
                     {
-                        <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Edit")</a>
-                        <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Delete")</a>
+                        <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Edit")</a>
+                        <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Delete")</a>
                     }
 
-                    <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Details")</a>
+                    <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Details")</a>
                 </div>
             </div>
 
             noteNumber += 1;
         }
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                @if (pagingVM.IsValidPage)
-                {
-                    <a class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-controller="Threads" asp-action="GetByThread" asp-route-page="@(pagingVM.Page - 1)">
-                        @LanguageService.GetKey("PaginationResults_Prev")
-                    </a>
-                    <a class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-controller="Threads" asp-action="GetByThread" asp-route-page="@(pagingVM.Page + 1)">
-                        @LanguageService.GetKey("PaginationResults_Next")
-                    </a>
-                    <span class="text-muted text-small">@LanguageService.GetKey("PaginationResults") @pagingVM.ResultStart - @pagingVM.ResultEnd @LanguageService.GetKey("PaginationResults_of") @pagingVM.TotalItems</span>
-                }
-            </div>
+        <div class="d-flex align-items-center mb-4 paginator-control">
+            @if (pagingVM.IsValidPage)
+            {
+                <a class="btn btn-sm btn-outline-primary @pagingVM.PrevDisabled" asp-controller="Threads" asp-action="GetByThread" asp-route-page="@(pagingVM.Page - 1)">
+                    @LanguageService.GetKey("PaginationResults_Prev")
+                </a>
+                <a class="btn btn-sm btn-outline-primary @pagingVM.NextDisabled" asp-controller="Threads" asp-action="GetByThread" asp-route-page="@(pagingVM.Page + 1)">
+                    @LanguageService.GetKey("PaginationResults_Next")
+                </a>
+                <span class="text-muted text-small">@LanguageService.GetKey("PaginationResults") @pagingVM.ResultStart - @pagingVM.ResultEnd @LanguageService.GetKey("PaginationResults_of") @pagingVM.TotalItems</span>
+            }
         </div>
     }
 }

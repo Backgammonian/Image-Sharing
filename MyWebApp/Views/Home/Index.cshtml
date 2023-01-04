@@ -16,7 +16,7 @@
     <div>
         <p>
             @LanguageService.GetKey("Home_Begin1")
-            <a asp-controller="Notes" asp-action="Index" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_Begin2")</a>
+            <a asp-controller="Notes" asp-action="Index" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Home_Begin2")</a>
             @LanguageService.GetKey("Home_Begin3")
         </p>
     </div>
@@ -30,14 +30,14 @@
     <div>
         @if (User.IsAuthenticated())
         {
-            <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_CreateNewNote")</a>
+            <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Home_CreateNewNote")</a>
         }
         else
         {
             <p>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_CreateAccount")</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Home_CreateAccount")</a>
                 @LanguageService.GetKey("Home_Or")
-                <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-secondary">@LanguageService.GetKey("Home_SignIn")</a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Home_SignIn")</a>
                 @LanguageService.GetKey("Home_SignIn_cont")
             </p>
         }

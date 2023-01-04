@@ -15,35 +15,40 @@
 {
     if (Model.ExistingThreadNames.Any())
     {
-        <h3>@LanguageService.GetKey("CreateThread_ExistingThreadNames"):</h3>
+        <h4>@LanguageService.GetKey("CreateThread_ExistingThreadNames"):</h4>
+
         var i = 0;
         foreach (var existingThreadName in Model.ExistingThreadNames)
         {
             i += 1;
-            <div>
-                <p>@i) @existingThreadName</p>
+
+            <div class="thread-button-block">
+                <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@existingThreadName" class="btn btn-sm btn-outline-secondary my-button">@i) @existingThreadName</a>
             </div>
         }
     }
 
     @if (TempData["Error"] != null)
-{
-    <div class="col-md-12 alert alert-danger">
-        <span>
-            <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
-        </span>
-    </div>
-}
-
-    <h3>@LanguageService.GetKey("CreateThread_EnterNameForThread")</h3>
+    {
+        <div class="col-md-12 alert alert-danger">
+            <span>
+                <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+            </span>
+        </div>
+    }
+    
+    <h4>@LanguageService.GetKey("CreateThread_EnterNameForThread")</h4>
 
     <form method="post" asp-action="CreateThread" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="NewThreadName">@LanguageService.GetKey("CreateThread_NewThreadName")</label>
-            <input asp-for="NewThreadName" class="form-control" placeholder="@LanguageService.GetKey("CreateThread_NewThreadNamePlaceholder")" />
+            <input asp-for="NewThreadName" class="form-control my-button" placeholder="@LanguageService.GetKey("CreateThread_NewThreadNamePlaceholder")"/>
             <span asp-validation-for="NewThreadName" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">@LanguageService.GetKey("CreateThread_Submit")</button>
+        <div class="form-group account-buttons">
+            <button type="submit" class="btn btn-primary btn-danger float-right my-button">@LanguageService.GetKey("CreateThread_Submit")</button>
+            <a class="btn btn-outline-secondary my-button" asp-controller="Admin" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
+        </div>
     </form>
 }
 else

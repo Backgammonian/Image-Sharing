@@ -6,7 +6,7 @@
 @inject ImagePathHelper ImagePathHelper
 
 @{
-    ViewData["Title"] = LanguageService.GetKey("Dasboard_Title");
+    ViewData["Title"] = LanguageService.GetKey("Dashboard_Title");
 }
 
 @model DashboardViewModel
@@ -37,8 +37,15 @@ else
         <p class="title-text">@user.Status</p>
     </div>
 
-    <div class="note-controls">
-        <a asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-sm btn-outline-secondary my-button edit-profile-button">@LanguageService.GetKey("EditProfile")</a>
+    <div>
+        <div class="note-controls">
+            <a asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-sm btn-outline-secondary my-button edit-profile-button">@LanguageService.GetKey("EditProfile")</a>
+        </div>
+    </div>
+    <div>
+        <div class="note-controls">
+            <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Dashboard_CreateNewNote")</a>
+        </div>
     </div>
 
     var noteNumber = 0;

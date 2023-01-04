@@ -210,6 +210,9 @@
   <data name="Dashboard" xml:space="preserve">
     <value>Профиль</value>
   </data>
+  <data name="Dashboard_CreateNewNote" xml:space="preserve">
+    <value>Создать новую запись</value>
+  </data>
   <data name="Dashboard_NoNotes" xml:space="preserve">
     <value>У вас нет ни одной записи.</value>
   </data>

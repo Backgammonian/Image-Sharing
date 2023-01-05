@@ -92,11 +92,12 @@ namespace MyWebApp.Controllers
                 return View(createNoteVM);
             }
 
-            if (await _notesRepository.Create(createNoteVM))
+            var createdNoteId = await _notesRepository.Create(createNoteVM);
+            if (createdNoteId != string.Empty)
             {
-                _logger.LogInformation($"(Notes/Create) Note '{createNoteVM.Title}' has been created");
+                _logger.LogInformation($"(Notes/Create) Note '{createNoteVM.Title}' ({createdNoteId}) has been created");
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { noteId = createdNoteId });
             }
             else
             {
@@ -169,13 +170,13 @@ namespace MyWebApp.Controllers
 
             if (await _notesRepository.Update(originalNote, editNoteVM))
             {
-                _logger.LogInformation($"(Notes/Create) The note '{editNoteVM.Title}' ({originalNote.NoteId}) has been edited");
+                _logger.LogInformation($"(Notes/Create) The note '{editNoteVM.Title}' ({noteId}) has been edited");
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { noteId });
             }
             else
             {
-                _logger.LogInformation($"(Notes/Create) Can't edit the note '{editNoteVM.Title}' ({originalNote.NoteId})");
+                _logger.LogInformation($"(Notes/Create) Can't edit the note '{editNoteVM.Title}' ({noteId})");
             }
 
             TempData["Error"] = _languageService.GetKey("EditNote_NoEditPermission");
@@ -199,6 +200,8 @@ namespace MyWebApp.Controllers
                 NoteDetails = await _notesRepository.GetNoteDetails(noteId)
             };
 
+            _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({noteId}) is preparing to be deleted!");
+
             return View(deleteNoteVM);
         }
 
@@ -212,11 +215,11 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            if (await _notesRepository.Delete(deleteNoteVM))
+            if (await _notesRepository.Delete(note))
             {
                 _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({noteId}) has been deleted");
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Dashboard");
             }
             else
             {

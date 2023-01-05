@@ -21,7 +21,7 @@
 @{
     var note = Model.Note;
 
-    ViewData["Title"] = $"{@LanguageService.GetKey("NoteDetails_PageTitleMinified")}: {note.Title.Minify()}";
+    ViewData["Title"] = $"{note.Title}";
 
     var thread = Model.Thread;
     var images = Model.Images;
@@ -70,15 +70,14 @@
             }
         </div>
 
-        <div class="note-controls">
-            @if (User.IsAdmin() ||
-                User.IsOwner(note))
-            {
+
+        @if (User.IsAdmin() ||
+            User.IsOwner(note))
+        {
+            <div class="note-controls">
                 <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Edit")</a>
                 <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Delete")</a>
-            }
-
-            <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Details")</a>
-        </div>
+            </div>
+        }
     </div>
 }

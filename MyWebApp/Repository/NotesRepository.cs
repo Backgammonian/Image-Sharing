@@ -119,7 +119,7 @@ namespace MyWebApp.Repository
             };
         }
 
-        public async Task<bool> Create(CreateNoteViewModel createNoteVM)
+        public async Task<string> Create(CreateNoteViewModel createNoteVM)
         {
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
@@ -128,7 +128,7 @@ namespace MyWebApp.Repository
             if (currentUser == null ||
                 claims == null)
             {
-                return false;
+                return string.Empty;
             }
 
             var note = new NoteModel()
@@ -161,8 +161,9 @@ namespace MyWebApp.Repository
                     });
                 }
             }
+            await Save();
 
-            return await Save();
+            return note.NoteId;
         }
 
         public async Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM)
@@ -238,17 +239,9 @@ namespace MyWebApp.Repository
             return await Save();
         }
 
-        public async Task<bool> Delete(DeleteNoteViewModel deleteNoteVM)
+        public async Task<bool> Delete(NoteModel note)
         {
-            if (deleteNoteVM.NoteDetails == null ||
-                deleteNoteVM.NoteDetails.Note == null) 
-            {
-                return false;
-            }
-
-            var note = deleteNoteVM.NoteDetails.Note;
-
-            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
             var claims = credentials.ClaimsPrincipal;
 
@@ -263,7 +256,7 @@ namespace MyWebApp.Repository
             var noteModelArchiveCopy = new PreviousNoteModel()
             {
                 Id = _randomGenerator.GetRandomId(),
-                FormerId = deleteNoteVM.NoteId,
+                FormerId = note.NoteId,
                 UserId = currentUser.Id,
                 Title = note.Title,
                 Description = note.Description

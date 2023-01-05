@@ -130,9 +130,10 @@ body
     margin-bottom: 5px;
 }
 
-.account-buttons
+.account-buttons 
 {
     margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .edit-profile-button
@@ -140,7 +141,8 @@ body
     font-size: 16px;
 }
 
-.admin-button-block {
+.admin-button-block 
+{
     margin-bottom: 5px;
     font-size: 18px;
 }

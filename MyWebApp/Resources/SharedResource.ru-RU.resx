@@ -594,6 +594,9 @@
   <data name="UserDetails_Title" xml:space="preserve">
     <value>Профиль пользователя</value>
   </data>
+  <data name="UserDetails_YourNotes" xml:space="preserve">
+    <value>Список ваших записей</value>
+  </data>
   <data name="UserNotes_NotesOfUser" xml:space="preserve">
     <value>Записи пользователя</value>
   </data>

@@ -3,6 +3,7 @@
 *@
 
 @inject LanguageService LanguageService
+@inject ThreadsRepository ThreadsRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("CreateNote_PageTitle");
@@ -21,6 +22,16 @@
         </div>
     }
 
+    var allThreads = await ThreadsRepository.GetAllThreads();
+    var availableThreads = allThreads.Select(x => new SelectListItem()
+    {
+        Value = x.Thread,
+        Text = x.Thread,
+    });
+
+    var firstThread = availableThreads.First();
+    Model.SelectedThread = firstThread != null ? firstThread.Value : string.Empty;
+
     <form method="post" asp-action="Create" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="Title">@LanguageService.GetKey("CreateNote_Title")</label>
@@ -29,12 +40,12 @@
         </div>
         <div class="form-group">
             <label asp-for="Description">@LanguageService.GetKey("CreateNote_Description")</label>
-            <input asp-for="Description" class="form-control" placeholder="@LanguageService.GetKey("CreateNote_DescriptionPlaceholder")" />
+            <textarea asp-for="Description" class="form-control note-textarea" placeholder="@LanguageService.GetKey("CreateNote_DescriptionPlaceholder")"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="SelectedThread">@LanguageService.GetKey("CreateNote_Thread")</label>
-            <select asp-for="SelectedThread" asp-items="@Model.AvailableThreads" class="form-control">
+            <select asp-for="SelectedThread" asp-items="@availableThreads" class="form-control">
                 <option>--@LanguageService.GetKey("CreateNote_ThreadSelection")--</option>
             </select>
             <span asp-validation-for="SelectedThread" class="text-danger"></span>

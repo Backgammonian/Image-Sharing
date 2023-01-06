@@ -54,7 +54,10 @@ else
             </div>
 
             <h4 class="title-text"><b>@note.Title</b></h4>
-            <p class="title-text">@note.Description</p>
+            <!--
+                <p class="title-text note-description">@Html.Raw(Html.Encode(note.Description).Replace(Environment.NewLine, "<br />"))</p>
+            -->
+            <p class="title-text note-description">@note.Description</p>
 
             @if (thread != null)
             {
@@ -63,16 +66,16 @@ else
                 </div>
             }
 
-            @if (firstImage != null)
-            {
-                <div class="gallery-column">
+            <div class="gallery-column">
+                @if (firstImage != null)
+                {
                     <div class="thumb">
                         <a class="fancybox-frame" data-fancybox href="@ImagePathHelper.GetHref(firstImage.ImageFileName)">
                             <img src="@ImagePathHelper.GetPath(firstImage.ImageFileName)" asp-append-version="true">
                         </a>
                     </div>
-                </div>
-            }
+                }
+            </div>
 
             <div class="note-controls">
                 @if (User.IsAdmin() ||

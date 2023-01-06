@@ -63,7 +63,7 @@ namespace MyWebApp.Controllers
                     {
                         _logger.LogInformation($"(Account/Login) User {loginVM.Email}, Log in succeeded");
 
-                        return RedirectToAction("Index", "Notes");
+                        return RedirectToAction("Index", "Dashboard");
                     }
                     else
                     {
@@ -134,7 +134,7 @@ namespace MyWebApp.Controllers
                 {
                     _logger.LogInformation($"(Account/Register) User {registerVM.Email} made first log in!");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {

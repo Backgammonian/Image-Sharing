@@ -3,13 +3,13 @@
 *@
 
 @inject LanguageService LanguageService
+@inject ThreadsRepository ThreadsRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("DeleteThread_Title");
 }
 
 @model DeleteThreadViewModel
-
 
 @if (Model != null &&
     User.IsAdmin())
@@ -23,12 +23,22 @@
         </div>
     }
 
+    var allThreads = await ThreadsRepository.GetAllThreads();
+    var availableThreads = allThreads.Select(x => new SelectListItem()
+    {
+        Value = x.Thread,
+        Text = x.Thread,
+    });
+
+    var firstThread = availableThreads.First();
+    Model.SelectedThreadName = firstThread != null ? firstThread.Value : string.Empty;
+
     <h4>@LanguageService.GetKey("DeleteThread_Select"):</h4>
 
     <form method="post" asp-action="DeleteThread" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="SelectedThreadName">@LanguageService.GetKey("DeleteThread_Subtitle")</label>
-            <select asp-for="SelectedThreadName" asp-items="@Model.AvailableThreads" class="form-control">
+            <select asp-for="SelectedThreadName" asp-items="@availableThreads" class="form-control">
                 <option>--@LanguageService.GetKey("DeleteThread_FirstSelectionElement")--</option>
             </select>
             <span asp-validation-for="SelectedThreadName" class="text-danger"></span>

@@ -111,23 +111,7 @@ namespace MyWebApp.Controllers
                 return View(null);
             }
 
-            var availableThreads = await _threadsRepository.GetAllThreads();
-            var selectableListItems = availableThreads.Select(x => new SelectListItem()
-            {
-                Value = x.Thread,
-                Text = x.Thread,
-            });
-
-            var firstSelectableThread = selectableListItems.First();
-            var deleteThreadVM = new DeleteThreadViewModel()
-            {
-                SelectedThreadName = firstSelectableThread != null ? 
-                    firstSelectableThread.Value :
-                    string.Empty,
-                AvailableThreads = selectableListItems
-            };
-
-            return View(deleteThreadVM);
+            return View(new DeleteThreadViewModel());
         }
 
         [HttpPost]

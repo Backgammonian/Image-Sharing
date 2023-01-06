@@ -69,7 +69,6 @@ namespace MyWebApp.Controllers
 
             var editUserProfileViewModel = new EditUserProfileViewModel()
             {
-                ProfilePicture = await _dashboardRepository.GetCurrentUserProfilePicture(),
                 Status = currentUser.Status
             };
 

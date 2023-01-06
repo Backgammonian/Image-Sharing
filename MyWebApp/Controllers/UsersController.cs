@@ -17,9 +17,7 @@ namespace MyWebApp.Controllers
         [Route("Users/Details/{userId}")]
         public async Task<IActionResult> Details(string userId)
         {
-            var userDetails = await _usersRepository.GetUserDetails(userId);
-
-            return View(userDetails);
+            return View(await _usersRepository.GetUserDetails(userId));
         }
 
         [HttpGet]

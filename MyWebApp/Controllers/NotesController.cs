@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWebApp.Localization;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
@@ -62,29 +61,17 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Notes/Create")]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            var availableThreads = await _notesRepository.GetAvailableNoteThreads();
-            var selectedListItems = availableThreads.Select(x => new SelectListItem()
-            {
-                Value = x.Thread,
-                Text = x.Thread,
-            });
-
-            var firstThread = selectedListItems.First();
-            var createNoteViewModel = new CreateNoteViewModel()
-            {
-                AvailableThreads = selectedListItems,
-                SelectedThread = firstThread != null ? firstThread.Value : string.Empty
-            };
-
-            return View(createNoteViewModel);
+            return View(new CreateNoteViewModel());
         }
 
         [HttpPost]
         [Route("Notes/Create")]
         public async Task<IActionResult> Create(CreateNoteViewModel createNoteVM)
         {
+            _logger.LogInformation($"(Notes/Create) Note '{createNoteVM.Title}': selected thread: {createNoteVM.SelectedThread}");
+
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = _languageService.GetKey("NoteCreate_WrongInput");
@@ -119,33 +106,11 @@ namespace MyWebApp.Controllers
                 return View("Error");
             }
 
-            var availableThreads = await _notesRepository.GetAvailableNoteThreads();
-            var selectedListItems = availableThreads.Select(x => new SelectListItem()
-            {
-                Value = x.Thread,
-                Text = x.Thread,
-            });
-
-            var threadOfNote = await _notesRepository.GetNoteThread(note.NoteId);
-            if (threadOfNote != null)
-            {
-                foreach (var selectedListItem in selectedListItems)
-                {
-                    if (selectedListItem.Value == threadOfNote.Thread)
-                    {
-                        selectedListItem.Selected = true;
-                        break;
-                    }
-                }
-            }
-
             var editNoteVM = new EditNoteViewModel()
             {
+                NoteId = noteId,
                 Title = note.Title,
                 Description = note.Description,
-                AvailableThreads = selectedListItems,
-                SelectedThread = threadOfNote == null ? string.Empty : threadOfNote.Thread,
-                ExistingImages = await _notesRepository.GetNoteImagesNoTracking(note.NoteId)
             };
 
             return View(editNoteVM);

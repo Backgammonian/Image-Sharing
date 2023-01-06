@@ -146,3 +146,18 @@ body
     margin-bottom: 5px;
     font-size: 18px;
 }
+
+.note-textarea
+{
+    height: 300px;
+}
+
+.status-textarea
+{
+    height: 200px;
+}
+
+.note-description 
+{
+    white-space: pre-line;
+}

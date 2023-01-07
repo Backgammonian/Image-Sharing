@@ -8,6 +8,10 @@ namespace MyWebApp.ViewModels
         [Required(ErrorMessage = "Email address is required")]
         public string Email { get; set; } = string.Empty;
 
+        [Display(Name = "User name")]
+        [Required(ErrorMessage = "User name is required")]
+        public string UserName { get; set; } = string.Empty;
+
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;

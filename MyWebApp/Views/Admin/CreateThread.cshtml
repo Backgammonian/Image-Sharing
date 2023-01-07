@@ -3,6 +3,7 @@
 *@
 
 @inject LanguageService LanguageService
+@inject ThreadsRepository ThreadsRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("CreateThread_Title");
@@ -13,12 +14,15 @@
 @if (Model != null &&
     User.IsAdmin())
 {
-    if (Model.ExistingThreadNames.Any())
+    var allThreads = await ThreadsRepository.GetAllThreads();
+    var existingThreadNames = allThreads.Select(x => x.Thread);
+
+    if (existingThreadNames.Any())
     {
         <h4>@LanguageService.GetKey("CreateThread_ExistingThreadNames"):</h4>
 
         var i = 0;
-        foreach (var existingThreadName in Model.ExistingThreadNames)
+        foreach (var existingThreadName in existingThreadNames)
         {
             i += 1;
 

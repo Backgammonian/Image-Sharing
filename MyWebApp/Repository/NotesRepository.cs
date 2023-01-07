@@ -229,7 +229,7 @@ namespace MyWebApp.Repository
             var updatedNote = new NoteModel()
             {
                 NoteId = note.NoteId,
-                UserId = currentUser.Id,
+                UserId = note.UserId,
                 Title = editNoteVM.Title,
                 Description = editNoteVM.Description
             };

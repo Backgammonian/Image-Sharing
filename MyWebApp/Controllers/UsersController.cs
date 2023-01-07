@@ -14,6 +14,36 @@ namespace MyWebApp.Controllers
         }
 
         [HttpGet]
+        [Route("Users")]
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+        {
+            if (page < 1 ||
+                pageSize < 1)
+            {
+                return RedirectToAction("ErrorWrongPage", "Error", new WrongPageViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize
+                });
+            }
+
+            var users = await _usersRepository.GetUsers((page - 1) * pageSize, pageSize);
+            var count = await _usersRepository.GetCount();
+
+            return View(new AllUsersViewModel()
+            {
+                Users = users,
+                PagingViewModel = new PagingViewModel()
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalItems = count,
+                    TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                }
+            });
+        }
+
+        [HttpGet]
         [Route("Users/Details/{userId}")]
         public async Task<IActionResult> Details(string userId)
         {

@@ -46,15 +46,17 @@
             </div>
         </div>
 
-        <h4 class="title-text"><b>@note.Title</b></h4>
-        <p class="title-text note-description">@note.Description</p>
-
         @if (thread != null)
         {
-            <div class="note-controls">
-                <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary my-button">@thread.Thread</a>
+            <div>
+                <div class="note-controls">
+                    <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary my-button">@thread.Thread</a>
+                </div>
             </div>
         }
+
+        <h4 class="title-text"><b>@note.Title</b></h4>
+        <p class="title-text note-description">@note.Description</p>
 
         <div class="gallery-column">
             @foreach (var image in images)

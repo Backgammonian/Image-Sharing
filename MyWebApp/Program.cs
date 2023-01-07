@@ -42,7 +42,6 @@ namespace MyWebApp
                         return factory.Create("ShareResource", assemblyName.Name);
                     };
                 });
-
             builder.Services.Configure<RequestLocalizationOptions>(
                 options =>
                 {
@@ -68,10 +67,12 @@ namespace MyWebApp
             builder.Services.AddScoped<UsersRepository>();
             builder.Services.AddScoped<ThreadsRepository>();
             builder.Services.AddScoped<DashboardRepository>();
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
             builder.Services.AddIdentity<UserModel, IdentityRole>(opt =>
             {
                 opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+()=";
@@ -82,7 +83,8 @@ namespace MyWebApp
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequireDigit = false;
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
             builder.Services.AddMemoryCache();
             builder.Services.AddSession();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -330,11 +330,50 @@
   <data name="EditNote_WrongInput" xml:space="preserve">
     <value>Не удалось редактировать запись: недопустимые входные данные.</value>
   </data>
+  <data name="EditPasswordButton" xml:space="preserve">
+    <value>Сменить пароль</value>
+  </data>
+  <data name="EditPassword_ConfirmNewPassword" xml:space="preserve">
+    <value>Подтвердите новый пароль</value>
+  </data>
+  <data name="EditPassword_ConfirmNewPasswordPlaceholder" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="EditPassword_FormTitle" xml:space="preserve">
+    <value>Создание нового пароля</value>
+  </data>
+  <data name="EditPassword_NewPassword" xml:space="preserve">
+    <value>Введите новый пароль</value>
+  </data>
+  <data name="EditPassword_NewPasswordPlaceholder" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="EditPassword_NoEditPermission" xml:space="preserve">
+    <value>У вас нет прав для изменения своего пароля.</value>
+  </data>
+  <data name="EditPassword_NoPermission" xml:space="preserve">
+    <value>У вас нет доступа к этой странице.</value>
+  </data>
+  <data name="EditPassword_OldPassword" xml:space="preserve">
+    <value>Введите свой текущий пароль</value>
+  </data>
+  <data name="EditPassword_OldPasswordPlaceholder" xml:space="preserve">
+    <value>Текущий пароль</value>
+  </data>
+  <data name="EditPassword_Submit" xml:space="preserve">
+    <value>Сменить пароль</value>
+  </data>
+  <data name="EditPassword_Title" xml:space="preserve">
+    <value>Смена пароля</value>
+  </data>
+  <data name="EditPassword_WrongInput" xml:space="preserve">
+    <value>Не удалось изменить пароль!</value>
+  </data>
   <data name="EditProfile" xml:space="preserve">
     <value>Редактировать профиль</value>
   </data>
   <data name="EditUserProfile_NoEditPermission" xml:space="preserve">
-    <value>У вас нет прав для редактирования этого профиля.</value>
+    <value>У вас нет прав для редактирования своего профиля.</value>
   </data>
   <data name="EditUserProfile_NoPermission" xml:space="preserve">
     <value>Вы не выполнили вход!</value>
@@ -359,6 +398,12 @@
   </data>
   <data name="EditUserProfile_Title" xml:space="preserve">
     <value>Редактировать профиль</value>
+  </data>
+  <data name="EditUserProfile_Username" xml:space="preserve">
+    <value>Имя вашего аккаунта</value>
+  </data>
+  <data name="EditUserProfile_UsernamePlaceholder" xml:space="preserve">
+    <value>Имя пользователя</value>
   </data>
   <data name="EditUserProfile_WrongInput" xml:space="preserve">
     <value>Не удалось отредактировать профиль: недействительные введённые данные.</value>
@@ -555,6 +600,12 @@
   <data name="Register_Title" xml:space="preserve">
     <value>Регистрация</value>
   </data>
+  <data name="Register_Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Register_UsernamePlaceholder" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
   <data name="RegistrationFailed" xml:space="preserve">
     <value>Регистрация не удалась</value>
   </data>
@@ -582,6 +633,12 @@
   <data name="Threads_Title" xml:space="preserve">
     <value>Все темы</value>
   </data>
+  <data name="UserDetails_GoToMyDashboard" xml:space="preserve">
+    <value>Вернуться в профиль</value>
+  </data>
+  <data name="UserDetails_ItsMe" xml:space="preserve">
+    <value>Это я!</value>
+  </data>
   <data name="UserDetails_NotesButton" xml:space="preserve">
     <value>Смотреть записи</value>
   </data>
@@ -605,6 +662,18 @@
   </data>
   <data name="UserNotes_Title" xml:space="preserve">
     <value>Записи пользователя</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="UsersList_Nothing" xml:space="preserve">
+    <value>Пользователей нет. Пока что.</value>
+  </data>
+  <data name="UsersList_Title" xml:space="preserve">
+    <value>Все пользователи</value>
+  </data>
+  <data name="UsersList_Users" xml:space="preserve">
+    <value>Список всех участников данной платформы</value>
   </data>
   <data name="WrongCredentials" xml:space="preserve">
     <value>Неверные данные для входа в аккаунт! Пожалуйста, попробуйте в другой раз.</value>

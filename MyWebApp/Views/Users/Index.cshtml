@@ -1,0 +1,51 @@
+﻿@*
+    List of users
+*@
+
+@inject LanguageService LanguageService
+@inject ImagePathHelper ImagePathHelper
+
+@{
+    ViewData["Title"] = LanguageService.GetKey("UsersList_Title");
+}
+
+@model AllUsersViewModel
+
+@if (!Model.Users.Any())
+{
+    <h3>@LanguageService.GetKey("UsersList_Nothing")</h3>
+}
+else
+{
+    var userSummaries = Model.Users;
+    var pagingVM = Model.PagingViewModel;
+
+    <h1>@LanguageService.GetKey("UsersList_Users")</h1>
+
+    foreach (var userSummary in userSummaries)
+    {
+        var user = userSummary.User;
+        if (user == null)
+        {
+            continue;
+        }
+
+        var profilePicture = userSummary.ProfilePicture;
+
+        <div>
+            <div class="note" style="display: inline-block;">
+                <div class="note-author">
+                    <div class="thumb">
+                        <a class="fancybox-frame profile-picture" data-fancybox href="@ImagePathHelper.GetHref(profilePicture.ImageFileName)">
+                            <img src="@ImagePathHelper.GetPath(profilePicture.ImageFileName)" asp-append-version="true">
+                        </a>
+
+                        <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary my-button avatar-button">@user.UserName</a>
+                    </div>
+
+                    <p class="title-text">@user.Status</p>
+                </div>
+            </div>
+        </div>
+    }
+}

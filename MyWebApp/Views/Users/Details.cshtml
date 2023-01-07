@@ -37,7 +37,7 @@
 
                 @if (isOwner)
                 {
-                    <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary my-button avatar-button">@user.UserName</a>
+                    <a class="btn btn-sm btn-outline-secondary my-button avatar-button">@LanguageService.GetKey("UserDetails_ItsMe")</a>
                 }
                 else
                 {
@@ -52,12 +52,7 @@
         {
             <div>
                 <div class="note-controls">
-                    <a asp-controller="Dashboard" asp-action="EditUserProfile" class="btn btn-sm btn-outline-secondary my-button edit-profile-button">@LanguageService.GetKey("EditProfile")</a>
-                </div>
-            </div>
-            <div>
-                <div class="note-controls">
-                    <a asp-controller="Users" asp-action="Notes" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("UserDetails_YourNotes")</a>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-sm btn-outline-secondary my-button edit-profile-button">@LanguageService.GetKey("UserDetails_GoToMyDashboard")</a>
                 </div>
             </div>
         }

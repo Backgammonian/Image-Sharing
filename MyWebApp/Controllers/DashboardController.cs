@@ -59,7 +59,7 @@ namespace MyWebApp.Controllers
         [Route("Dashboard/EditUserProfile")]
         public async Task<IActionResult> EditUserProfile()
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser(true);
+            var credentials = await _credentialsRepository.GetLoggedInUser();
             var currentUser = credentials.User;
 
             if (currentUser == null)
@@ -69,7 +69,8 @@ namespace MyWebApp.Controllers
 
             var editUserProfileViewModel = new EditUserProfileViewModel()
             {
-                Status = currentUser.Status
+                Status = currentUser.Status,
+                UserName = currentUser.UserName
             };
 
             return View(editUserProfileViewModel);
@@ -102,12 +103,64 @@ namespace MyWebApp.Controllers
             }
             else
             {
-                _logger.LogInformation($"(Dashboard/EditUserProfile) ⚠️ User {currentUser.UserName} ({currentUser.Id}) failed to updated his profile");
+                _logger.LogInformation($"(Dashboard/EditUserProfile) ⚠️ User {currentUser.UserName} ({currentUser.Id}) failed to update his profile");
             }
 
             TempData["Error"] = _languageService.GetKey("EditUserProfile_NoEditPermission");
 
             return View(editUserProfileVM);
+        }
+
+        [HttpGet]
+        [Route("Dashboard/EditPassword")]
+        public async Task<IActionResult> EditPassword()
+        {
+            var credentials = await _credentialsRepository.GetLoggedInUser();
+            var currentUser = credentials.User;
+
+            if (currentUser == null)
+            {
+                return View("Error");
+            }
+
+            _logger.LogInformation($"(Dashboard/EditUserProfile) User {currentUser.UserName} ({currentUser.Id}) is going to update his PASSWORD");
+
+            return View(new EditPasswordViewModel());
+        }
+
+        [HttpPost]
+        [Route("Dashboard/EditPassword")]
+        public async Task<IActionResult> EditPassword(EditPasswordViewModel editPasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = _languageService.GetKey("EditPassword_WrongInput");
+
+                return View(editPasswordVM);
+            }
+
+            var credentials = await _credentialsRepository.GetLoggedInUser();
+            var currentUser = credentials.User;
+
+            if (currentUser == null)
+            {
+                return View("Error");
+            }
+
+            if (await _dashboardRepository.UpdatePassword(currentUser.Id, editPasswordVM))
+            {
+                _logger.LogInformation($"(Dashboard/EditUserProfile) User {currentUser.UserName} ({currentUser.Id}) updated his PASSWORD");
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                _logger.LogInformation($"(Dashboard/EditUserProfile) ⚠️ User {currentUser.UserName} ({currentUser.Id}) failed to update his PASSWORD");
+            }
+
+            TempData["Error"] = _languageService.GetKey("EditPassword_NoEditPermission");
+
+            return View(editPasswordVM);
         }
     }
 }

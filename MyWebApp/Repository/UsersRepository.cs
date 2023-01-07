@@ -21,6 +21,33 @@ namespace MyWebApp.Repository
             _notesRepository = notesRepository;
         }
 
+        public async Task<IEnumerable<UserModel>> GetUsersSlice(int offset, int size)
+        {
+            return await _dbContext.Users.AsNoTracking().Skip(offset).Take(size).ToListAsync();
+        }
+
+        public async Task<IEnumerable<UserSummaryViewModel>> GetUsers(int offset, int size)
+        {
+            var users = await GetUsersSlice(offset, size);
+
+            var userSummaries = new List<UserSummaryViewModel>();
+            foreach (var user in users)
+            {
+                userSummaries.Add(new UserSummaryViewModel()
+                {
+                    User = user,
+                    ProfilePicture = await GetUsersCurrentProfilePicture(user),
+                });
+            }
+
+            return userSummaries;
+        }
+
+        public async Task<int> GetCount()
+        {
+            return await _dbContext.Users.CountAsync();
+        }
+
         public async Task<UserModel?> GetUser(string userId)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);

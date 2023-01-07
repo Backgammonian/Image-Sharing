@@ -44,6 +44,11 @@ else
     </div>
     <div>
         <div class="note-controls">
+            <a asp-controller="Dashboard" asp-action="EditPassword" class="btn btn-sm btn-outline-secondary my-button edit-profile-button">@LanguageService.GetKey("EditPasswordButton")</a>
+        </div>
+    </div>
+    <div>
+        <div class="note-controls">
             <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Dashboard_CreateNewNote")</a>
         </div>
     </div>
@@ -69,15 +74,17 @@ else
             var thread = noteDetail.Thread;
 
             <div class="note">
-                <h4 class="title-text"><b>@note.Title</b></h4>
-                <p class="title-text note-description">@note.Description</p>
-
                 @if (thread != null)
                 {
-                    <div class="note-controls">
-                        <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary my-button">@thread.Thread</a>
+                    <div>
+                        <div class="note-controls">
+                            <a asp-controller="Threads" asp-action="GetByThread" asp-route-thread="@thread.Thread" class="btn btn-sm btn-outline-secondary my-button">@thread.Thread</a>
+                        </div>
                     </div>
                 }
+
+                <h4 class="title-text"><b>@note.Title</b></h4>
+                <p class="title-text note-description">@note.Description</p>
 
                 <div class="gallery-column">
                     @foreach (var image in images)

@@ -2,6 +2,7 @@
 using MyWebApp.Models;
 using MyWebApp.Data;
 using MyWebApp.PicturesModule;
+using Microsoft.AspNetCore.Identity;
 
 namespace MyWebApp.Repository
 {
@@ -12,18 +13,21 @@ namespace MyWebApp.Repository
         private readonly UsersRepository _usersRepository;
         private readonly PicturesLoader _picturesLoader;
         private readonly ApplicationDbContext _dbContext;
+        private readonly UserManager<UserModel> _userManager;
 
         public DashboardRepository(CredentialsRepository credentialsRepository,
             NotesRepository notesRepository,
             UsersRepository usersRepository,
             PicturesLoader picturesLoader,
-            ApplicationDbContext dbContext)
+            ApplicationDbContext dbContext,
+            UserManager<UserModel> userManager)
         {
             _credentialsRepository = credentialsRepository;
             _notesRepository = notesRepository;
             _usersRepository = usersRepository;
             _picturesLoader = picturesLoader;
             _dbContext = dbContext;
+            _userManager = userManager;
         }
 
         public async Task<UserImageModel> GetCurrentUserProfilePicture()
@@ -89,6 +93,26 @@ namespace MyWebApp.Repository
             _dbContext.Users.Update(user);
 
             return await Save();
+        }
+
+        public async Task<bool> UpdatePassword(string userId, EditPasswordViewModel editPasswordVM)
+        {
+            if (editPasswordVM.NewPassword != editPasswordVM.ConfirmNewPassword)
+            {
+                return false;
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, editPasswordVM.OldPassword);
+            if (!passwordCheck)
+            {
+                return false;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, editPasswordVM.NewPassword);
+
+            return result.Succeeded;
         }
 
         public async Task<bool> Save()

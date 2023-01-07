@@ -27,6 +27,11 @@
 
     <form method="post" asp-action="EditUserProfile" enctype="multipart/form-data">
         <div class="form-group">
+            <label asp-for="UserName">@LanguageService.GetKey("EditUserProfile_Username")</label>
+            <input asp-for="UserName" class="form-control" placeholder="@LanguageService.GetKey("EditUserProfile_UsernamePlaceholder")" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <label asp-for="Status">@LanguageService.GetKey("EditUserProfile_StatusTitle")</label>
             <textarea asp-for="Status" class="form-control status-textarea" placeholder="@LanguageService.GetKey("EditUserProfile_StatusPlaceholder")"></textarea>
             <span asp-validation-for="Status" class="text-danger"></span>
@@ -45,7 +50,8 @@
             <span asp-validation-for="NewProfilePicture" class="text-danger"></span>
         </div>
         <div class="form-group account-buttons">
-            <button type="submit" class="btn btn-primary">@LanguageService.GetKey("EditUserProfile_Submit")</button>
+            <button type="submit" class="btn btn-danger float-right my-button">@LanguageService.GetKey("EditUserProfile_Submit")</button>
+            <a class="btn btn-outline-secondary my-button" asp-controller="Dashboard" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
         </div>
     </form>
 }

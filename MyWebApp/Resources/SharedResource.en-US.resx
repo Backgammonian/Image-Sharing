@@ -330,11 +330,50 @@
   <data name="EditNote_WrongInput" xml:space="preserve">
     <value>Failed to edit the note: invalid input.</value>
   </data>
+  <data name="EditPasswordButton" xml:space="preserve">
+    <value>Change the password</value>
+  </data>
+  <data name="EditPassword_ConfirmNewPassword" xml:space="preserve">
+    <value>Confirm new password</value>
+  </data>
+  <data name="EditPassword_ConfirmNewPasswordPlaceholder" xml:space="preserve">
+    <value>A new password</value>
+  </data>
+  <data name="EditPassword_FormTitle" xml:space="preserve">
+    <value>Create new password</value>
+  </data>
+  <data name="EditPassword_NewPassword" xml:space="preserve">
+    <value>Enter your new password</value>
+  </data>
+  <data name="EditPassword_NewPasswordPlaceholder" xml:space="preserve">
+    <value>A new password</value>
+  </data>
+  <data name="EditPassword_NoEditPermission" xml:space="preserve">
+    <value>You don't have permission to edit your password.</value>
+  </data>
+  <data name="EditPassword_NoPermission" xml:space="preserve">
+    <value>You don't have permission for this page.</value>
+  </data>
+  <data name="EditPassword_OldPassword" xml:space="preserve">
+    <value>Enter your current password</value>
+  </data>
+  <data name="EditPassword_OldPasswordPlaceholder" xml:space="preserve">
+    <value>The old password</value>
+  </data>
+  <data name="EditPassword_Submit" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="EditPassword_Title" xml:space="preserve">
+    <value>Password change</value>
+  </data>
+  <data name="EditPassword_WrongInput" xml:space="preserve">
+    <value>Failed to change the password!</value>
+  </data>
   <data name="EditProfile" xml:space="preserve">
     <value>Edit the profile</value>
   </data>
   <data name="EditUserProfile_NoEditPermission" xml:space="preserve">
-    <value>You have no permission to edit this profile.</value>
+    <value>You have no permission to edit your profile.</value>
   </data>
   <data name="EditUserProfile_NoPermission" xml:space="preserve">
     <value>You are not logged in!</value>
@@ -359,6 +398,12 @@
   </data>
   <data name="EditUserProfile_Title" xml:space="preserve">
     <value>Edit the profile</value>
+  </data>
+  <data name="EditUserProfile_Username" xml:space="preserve">
+    <value>Your user name</value>
+  </data>
+  <data name="EditUserProfile_UsernamePlaceholder" xml:space="preserve">
+    <value>User name</value>
   </data>
   <data name="EditUserProfile_WrongInput" xml:space="preserve">
     <value>Failed to edit the profile: invalid input.</value>
@@ -555,6 +600,12 @@
   <data name="Register_Title" xml:space="preserve">
     <value>Sign up</value>
   </data>
+  <data name="Register_Username" xml:space="preserve">
+    <value>User name</value>
+  </data>
+  <data name="Register_UsernamePlaceholder" xml:space="preserve">
+    <value>User name</value>
+  </data>
   <data name="RegistrationFailed" xml:space="preserve">
     <value>Registration failed</value>
   </data>
@@ -582,6 +633,12 @@
   <data name="Threads_Title" xml:space="preserve">
     <value>All threads</value>
   </data>
+  <data name="UserDetails_GoToMyDashboard" xml:space="preserve">
+    <value>Go to my dashboard</value>
+  </data>
+  <data name="UserDetails_ItsMe" xml:space="preserve">
+    <value>It's me!</value>
+  </data>
   <data name="UserDetails_NotesButton" xml:space="preserve">
     <value>View the notes of</value>
   </data>
@@ -605,6 +662,18 @@
   </data>
   <data name="UserNotes_Title" xml:space="preserve">
     <value>User's notes</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="UsersList_Nothing" xml:space="preserve">
+    <value>There are no users yet.</value>
+  </data>
+  <data name="UsersList_Title" xml:space="preserve">
+    <value>All users</value>
+  </data>
+  <data name="UsersList_Users" xml:space="preserve">
+    <value>List of all members of this platform</value>
   </data>
   <data name="WrongCredentials" xml:space="preserve">
     <value>Wrong credentials, please try again</value>

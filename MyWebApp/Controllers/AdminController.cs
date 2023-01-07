@@ -48,11 +48,9 @@ namespace MyWebApp.Controllers
                 return View(null);
             }
 
-            var allThreads = await _threadsRepository.GetAllThreads();
             var createThreadVM = new CreateThreadViewModel()
             {
-                NewThreadName = string.Empty,
-                ExistingThreadNames = allThreads.Select(x => x.Thread)
+                NewThreadName = string.Empty
             };
 
             return View(createThreadVM);

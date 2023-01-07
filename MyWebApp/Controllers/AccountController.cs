@@ -89,9 +89,7 @@ namespace MyWebApp.Controllers
         [Route("Account/Register")]
         public IActionResult Register()
         {
-            var response = new RegisterViewModel();
-
-            return View(response);
+            return View(new RegisterViewModel());
         }
 
         [HttpPost]
@@ -120,7 +118,7 @@ namespace MyWebApp.Controllers
             {
                 Id = _randomGenerator.GetRandomId(),
                 Email = registerVM.Email,
-                UserName = registerVM.Email
+                UserName = registerVM.UserName
             };
 
             var newUserCreateResponse = await _userManager.CreateAsync(newUser, registerVM.Password);

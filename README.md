@@ -3,7 +3,7 @@ Simple Web platform for image sharing built using ASP.NET Core MVC.
 ## Features
 * Registration
 * Authentication & authorization
-* User's dashboard
+* User's dashboard (+ ability to edit user data)
 * Users' profiles
 * Image uploading
 * Ability to add new notes with images and to edit the existing notes

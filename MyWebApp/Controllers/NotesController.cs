@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Localization;
-using MyWebApp.Repository;
+using MyWebApp.Localization.Interfaces;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
@@ -8,12 +8,12 @@ namespace MyWebApp.Controllers
     public sealed class NotesController : Controller
     {
         private readonly ILogger<NotesController> _logger;
-        private readonly NotesRepository _notesRepository;
-        private readonly LanguageService _languageService;
+        private readonly ILanguageService _languageService;
+        private readonly INotesRepository _notesRepository;
 
         public NotesController(ILogger<NotesController> logger,
-            NotesRepository notesRepository,
-            LanguageService languageService)
+            ILanguageService languageService,
+            INotesRepository notesRepository)
         {
             _logger = logger;
             _notesRepository = notesRepository;

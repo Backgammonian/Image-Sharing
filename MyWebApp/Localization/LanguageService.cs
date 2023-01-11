@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Localization;
+using MyWebApp.Localization.Interfaces;
 using System.Reflection;
 
 namespace MyWebApp.Localization
 {
-    public sealed class LanguageService
+    public sealed class LanguageService : ILanguageService
     {
         private readonly IStringLocalizer _localizer;
 

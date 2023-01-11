@@ -1,36 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
+using MyWebApp.Data.Interfaces;
 using MyWebApp.Models;
+using MyWebApp.PicturesModule.Interfaces;
 
 namespace MyWebApp.PicturesModule
 {
-    public sealed class PicturesLoader
+    public sealed class PicturesLoader : IPicturesLoader
     {
-        #region Constants
-        private const string _imagesFolderName = "images";
-        private const string _demoNoteImagesFolderName = "demo-note-images";
-        private const string _demoProfileImagesFolderName = "demo-profile-images";
-        private const string _defaultImageFolderName = "default-images";
-        private const string _defaultImageNameWithouExtension = "default";
-        public const string DefaultImageName = "default.jpg";
-        #endregion
-
-        #region Static methods
-        private static async Task SaveFile(IFormFile file, string destinationPath)
-        {
-            using var stream = new FileStream(destinationPath, FileMode.Create);
-            await file.CopyToAsync(stream);
-        }
-
-        private static void SaveFile(string sourcePath, string destinationPath)
-        {
-            File.Copy(sourcePath, destinationPath, true);
-        }
-        #endregion
-
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IPicturesSaver _picturesSaver;
+        private readonly IRandomGenerator _randomGenerator;
         private readonly ApplicationDbContext _dbContext;
-        private readonly RandomGenerator _randomGenerator;
         private readonly string _wwwRootPath;
         private readonly string _imagesPath;
         private readonly string _demoNoteImagesPath;
@@ -38,20 +19,22 @@ namespace MyWebApp.PicturesModule
         private readonly string _defaultImagePath;
 
         public PicturesLoader(IWebHostEnvironment webHostEnvironment,
-            ApplicationDbContext dbContext,
-            RandomGenerator randomGenerator)
+            IPicturesSaver picturesSaver,
+            IRandomGenerator randomGenerator,
+            ApplicationDbContext dbContext)
         {
             _webHostEnvironment = webHostEnvironment;
+            _picturesSaver = picturesSaver;
             _dbContext = dbContext;
             _randomGenerator = randomGenerator;
             _wwwRootPath = _webHostEnvironment.WebRootPath;
-            _imagesPath = $"{_wwwRootPath}/{_imagesFolderName}";
-            _demoNoteImagesPath = $"{_wwwRootPath}/{_demoNoteImagesFolderName}";
-            _demoProfileImagesPath = $"{_wwwRootPath}/{_demoProfileImagesFolderName}";
-            _defaultImagePath = $"{_wwwRootPath}/{_defaultImageFolderName}";
+            _imagesPath = $"{_wwwRootPath}/{Constants.ImagesFolderName}";
+            _demoNoteImagesPath = $"{_wwwRootPath}/{Constants.DemoNoteImagesFolderName}";
+            _demoProfileImagesPath = $"{_wwwRootPath}/{Constants.DemoProfileImagesFolderName}";
+            _defaultImagePath = $"{_wwwRootPath}/{Constants.DefaultImageFolderName}";
         }
 
-        private string GetNewFileName(string filePath)
+        public string GetNewFileName(string filePath)
         {
             var name = _randomGenerator.GetRandomString(60);
             var extension = Path.GetExtension(filePath);
@@ -59,12 +42,12 @@ namespace MyWebApp.PicturesModule
             return $"{name}{extension}";
         }
 
-        private string GetNewFileName(IFormFile file)
+        public string GetNewFileName(IFormFile file)
         {
             return GetNewFileName(file.FileName);
         }
 
-        private void EnsureFolderIsCreated()
+        public void EnsureFolderIsCreated()
         {
             if (!Directory.Exists(_imagesPath))
             {
@@ -78,7 +61,7 @@ namespace MyWebApp.PicturesModule
 
             var fileName = GetNewFileName(image);
             var savePath = Path.Combine(_imagesPath, fileName);
-            await SaveFile(image, savePath);
+            await _picturesSaver.SaveFile(image, savePath);
 
             return new NoteImageModel()
             {
@@ -95,7 +78,7 @@ namespace MyWebApp.PicturesModule
 
             var fileName = GetNewFileName(image);
             var savePath = Path.Combine(_imagesPath, fileName);
-            await SaveFile(image, savePath);
+            await _picturesSaver.SaveFile(image, savePath);
 
             return new UserImageModel()
             {
@@ -110,18 +93,18 @@ namespace MyWebApp.PicturesModule
         {
             EnsureFolderIsCreated();
 
-            var sourcePath = Path.Combine(_defaultImagePath, DefaultImageName);
-            var savePath = Path.Combine(_imagesPath, DefaultImageName);
-            SaveFile(sourcePath, savePath);
+            var sourcePath = Path.Combine(_defaultImagePath, Constants.DefaultImageName);
+            var savePath = Path.Combine(_imagesPath, Constants.DefaultImageName);
+            _picturesSaver.SaveFile(sourcePath, savePath);
         }
 
         public UserImageModel GetDefaultProfileImage()
         {
             return new UserImageModel()
             {
-                ImageId = _defaultImageNameWithouExtension,
-                UserId = _defaultImageNameWithouExtension,
-                ImageFileName = DefaultImageName,
+                ImageId = Constants.DefaultImageNameWithouExtension,
+                UserId = Constants.DefaultImageNameWithouExtension,
+                ImageFileName = Constants.DefaultImageName,
                 UploadTime = DateTimeOffset.MinValue
             };
         }
@@ -130,9 +113,9 @@ namespace MyWebApp.PicturesModule
         {
             return new NoteImageModel()
             {
-                ImageId = _defaultImageNameWithouExtension,
-                NoteId = _defaultImageNameWithouExtension,
-                ImageFileName = DefaultImageName,
+                ImageId = Constants.DefaultImageNameWithouExtension,
+                NoteId = Constants.DefaultImageNameWithouExtension,
+                ImageFileName = Constants.DefaultImageName,
                 UploadTime = DateTimeOffset.MinValue
             };
         }
@@ -148,7 +131,7 @@ namespace MyWebApp.PicturesModule
             {
                 var fileName = Path.GetFileName(imagePath);
                 var savePath = Path.Combine(_imagesPath, fileName);
-                SaveFile(imagePath, savePath);
+                _picturesSaver.SaveFile(imagePath, savePath);
                 var currentModelIndex = i % notes.Length;
 
                 images.Add(new NoteImageModel()
@@ -176,7 +159,7 @@ namespace MyWebApp.PicturesModule
             {
                 var fileName = Path.GetFileName(imagePath);
                 var savePath = Path.Combine(_imagesPath, fileName);
-                SaveFile(imagePath, savePath);
+                _picturesSaver.SaveFile(imagePath, savePath);
                 var currentModelIndex = i % users.Length;
 
                 images.Add(new UserImageModel()

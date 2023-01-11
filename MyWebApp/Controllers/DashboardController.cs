@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Localization;
-using MyWebApp.Repository;
+using MyWebApp.Localization.Interfaces;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
@@ -8,14 +8,14 @@ namespace MyWebApp.Controllers
     public sealed class DashboardController : Controller
     {
         private readonly ILogger<DashboardController> _logger;
-        private readonly CredentialsRepository _credentialsRepository;
-        private readonly DashboardRepository _dashboardRepository;
-        private readonly LanguageService _languageService;
+        private readonly ILanguageService _languageService;
+        private readonly ICredentialsRepository _credentialsRepository;
+        private readonly IDashboardRepository _dashboardRepository;
 
         public DashboardController(ILogger<DashboardController> logger,
-            CredentialsRepository credentialsRepository,
-            DashboardRepository dashboardRepository,
-            LanguageService languageService)
+            ILanguageService languageService,
+            ICredentialsRepository credentialsRepository,
+            IDashboardRepository dashboardRepository)
         {
             _logger = logger;
             _credentialsRepository = credentialsRepository;

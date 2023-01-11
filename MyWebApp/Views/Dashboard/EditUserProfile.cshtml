@@ -2,9 +2,9 @@
     Profile edit page
 *@
 
-@inject LanguageService LanguageService
-@inject ImagePathHelper ImagePathHelper
-@inject DashboardRepository DashboardRepository
+@inject ILanguageService LanguageService
+@inject IImagePathHelper ImagePathHelper
+@inject IDashboardRepository DashboardRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("EditUserProfile_Title");

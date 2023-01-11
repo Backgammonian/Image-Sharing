@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Data;
-using MyWebApp.Localization;
+using MyWebApp.Data.Interfaces;
+using MyWebApp.Localization.Interfaces;
 using MyWebApp.Models;
 using MyWebApp.ViewModels;
 
@@ -10,16 +11,16 @@ namespace MyWebApp.Controllers
     public sealed class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
+        private readonly IRandomGenerator _randomGenerator;
+        private readonly ILanguageService _languageService;
         private readonly UserManager<UserModel> _userManager;
         private readonly SignInManager<UserModel> _signInManager;
-        private readonly RandomGenerator _randomGenerator;
-        private readonly LanguageService _languageService;
 
         public AccountController(ILogger<AccountController> logger,
+            IRandomGenerator randomGenerator,
+            ILanguageService languageService,
             UserManager<UserModel> userManager,
-            SignInManager<UserModel> signInManager,
-            RandomGenerator randomGenerator,
-            LanguageService languageService)
+            SignInManager<UserModel> signInManager)
         {
             _logger = logger;
             _userManager = userManager;

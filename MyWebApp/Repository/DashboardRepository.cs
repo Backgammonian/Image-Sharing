@@ -1,24 +1,25 @@
 ﻿using MyWebApp.ViewModels;
 using MyWebApp.Models;
 using MyWebApp.Data;
-using MyWebApp.PicturesModule;
 using Microsoft.AspNetCore.Identity;
+using MyWebApp.PicturesModule.Interfaces;
+using MyWebApp.Repository.Interfaces;
 
 namespace MyWebApp.Repository
 {
-    public sealed class DashboardRepository
+    public sealed class DashboardRepository : IDashboardRepository
     {
-        private readonly CredentialsRepository _credentialsRepository;
-        private readonly NotesRepository _notesRepository;
-        private readonly UsersRepository _usersRepository;
-        private readonly PicturesLoader _picturesLoader;
+        private readonly IPicturesLoader _picturesLoader;
+        private readonly ICredentialsRepository _credentialsRepository;
+        private readonly INotesRepository _notesRepository;
+        private readonly IUsersRepository _usersRepository;
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<UserModel> _userManager;
 
-        public DashboardRepository(CredentialsRepository credentialsRepository,
-            NotesRepository notesRepository,
-            UsersRepository usersRepository,
-            PicturesLoader picturesLoader,
+        public DashboardRepository(IPicturesLoader picturesLoader,
+            ICredentialsRepository credentialsRepository,
+            INotesRepository notesRepository,
+            IUsersRepository usersRepository,
             ApplicationDbContext dbContext,
             UserManager<UserModel> userManager)
         {

@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Extensions;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
-    public sealed class CredentialsRepository
+    public sealed class CredentialsRepository : ICredentialsRepository
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly ApplicationDbContext _dbContext;

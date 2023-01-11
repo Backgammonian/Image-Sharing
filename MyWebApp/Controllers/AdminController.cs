@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWebApp.Extensions;
-using MyWebApp.Localization;
-using MyWebApp.Repository;
+using MyWebApp.Localization.Interfaces;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
@@ -10,14 +9,15 @@ namespace MyWebApp.Controllers
     public sealed class AdminController : Controller
     {
         private readonly ILogger<AdminController> _logger;
-        private readonly ThreadsRepository _threadsRepository;
-        private readonly CredentialsRepository _credentialsRepository;
-        private readonly LanguageService _languageService;
+        private readonly ILanguageService _languageService;
+        private readonly ICredentialsRepository _credentialsRepository;
+        private readonly IThreadsRepository _threadsRepository;
+        
 
         public AdminController(ILogger<AdminController> logger,
-            ThreadsRepository threadsRepository,
-            CredentialsRepository credentialsRepository,
-            LanguageService languageService)
+            ILanguageService languageService,
+            ICredentialsRepository credentialsRepository,
+            IThreadsRepository threadsRepository)
         {
             _logger = logger;
             _threadsRepository = threadsRepository;

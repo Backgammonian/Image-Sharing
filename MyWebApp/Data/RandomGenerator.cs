@@ -1,12 +1,11 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
+using MyWebApp.Data.Interfaces;
 
 namespace MyWebApp.Data
 {
-    public sealed class RandomGenerator
+    public sealed class RandomGenerator : IRandomGenerator
     {
-        private const string _chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
-
         public int GetRandomInt()
         {
             var randomBytes = RandomNumberGenerator.GetBytes(sizeof(int));
@@ -40,8 +39,8 @@ namespace MyWebApp.Data
             var result = new StringBuilder();
             for (var j = 0; j < length; j++)
             {
-                var randomNumber = RandomNumberGenerator.GetInt32(0, _chars.Length - 1);
-                result.Append(_chars[randomNumber]);
+                var randomNumber = RandomNumberGenerator.GetInt32(0, Constants.Chars.Length - 1);
+                result.Append(Constants.Chars[randomNumber]);
             }
 
             return result.ToString();

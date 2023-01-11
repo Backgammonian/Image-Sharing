@@ -12,6 +12,11 @@ using MyWebApp.Extensions;
 using MyWebApp.Localization;
 using MyWebApp.IpApiService;
 using MyWebApp.PicturesModule;
+using MyWebApp.PicturesModule.Interfaces;
+using MyWebApp.Data.Interfaces;
+using MyWebApp.IpApiService.Interfaces;
+using MyWebApp.Localization.Interfaces;
+using MyWebApp.Repository.Interfaces;
 
 namespace MyWebApp
 {
@@ -30,7 +35,7 @@ namespace MyWebApp
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddSingleton<LanguageService>();
+            builder.Services.AddSingleton<ILanguageService, LanguageService>();
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.AddMvc()
                 .AddViewLocalization()
@@ -46,10 +51,10 @@ namespace MyWebApp
                 options =>
                 {
                     var supportedCultures = new List<CultureInfo>
-                        {
-                            new CultureInfo("en-US"),
-                            new CultureInfo("ru-RU")
-                        };
+                    {
+                        new CultureInfo("en-US"),
+                        new CultureInfo("ru-RU")
+                    };
 
                     options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
                     options.SupportedCultures = supportedCultures;
@@ -58,15 +63,17 @@ namespace MyWebApp
                     options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
                 });
 
-            builder.Services.AddScoped<ImagePathHelper>();
-            builder.Services.AddScoped<IpLocationHelper>();
-            builder.Services.AddScoped<RandomGenerator>();
-            builder.Services.AddScoped<PicturesLoader>();
-            builder.Services.AddScoped<CredentialsRepository>();
-            builder.Services.AddScoped<NotesRepository>();
-            builder.Services.AddScoped<UsersRepository>();
-            builder.Services.AddScoped<ThreadsRepository>();
-            builder.Services.AddScoped<DashboardRepository>();
+            builder.Services.AddScoped<ICultureHelper, CultureHelper>();
+            builder.Services.AddScoped<IRandomGenerator, RandomGenerator>();
+            builder.Services.AddScoped<IIpLocationHelper, IpLocationHelper>();
+            builder.Services.AddScoped<IImagePathHelper, ImagePathHelper>();
+            builder.Services.AddScoped<IPicturesSaver, PicturesSaver>();
+            builder.Services.AddScoped<IPicturesLoader, PicturesLoader>();
+            builder.Services.AddScoped<ICredentialsRepository, CredentialsRepository>();
+            builder.Services.AddScoped<INotesRepository, NotesRepository>();
+            builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+            builder.Services.AddScoped<IThreadsRepository, ThreadsRepository>();
+            builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {

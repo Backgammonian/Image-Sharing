@@ -2,8 +2,8 @@
     Thread creating page for admin
 *@
 
-@inject LanguageService LanguageService
-@inject ThreadsRepository ThreadsRepository
+@inject ILanguageService LanguageService
+@inject IThreadsRepository ThreadsRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("CreateThread_Title");

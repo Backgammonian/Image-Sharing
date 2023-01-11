@@ -1,20 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Models;
-using MyWebApp.PicturesModule;
+using MyWebApp.PicturesModule.Interfaces;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
-    public sealed class UsersRepository
+    public sealed class UsersRepository : IUsersRepository
     {
+        private readonly IPicturesLoader _picturesLoader;
+        private readonly INotesRepository _notesRepository;
         private readonly ApplicationDbContext _dbContext;
-        private readonly PicturesLoader _picturesLoader;
-        private readonly NotesRepository _notesRepository;
 
-        public UsersRepository(ApplicationDbContext dbContext,
-            PicturesLoader picturesLoader,
-            NotesRepository notesRepository)
+        public UsersRepository(IPicturesLoader picturesLoader,
+            INotesRepository notesRepository,
+            ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _picturesLoader = picturesLoader;

@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Repository;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
 {
     public sealed class UsersController : Controller
     {
-        private readonly UsersRepository _usersRepository;
+        private readonly IUsersRepository _usersRepository;
 
-        public UsersController(UsersRepository usersRepository)
+        public UsersController(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }

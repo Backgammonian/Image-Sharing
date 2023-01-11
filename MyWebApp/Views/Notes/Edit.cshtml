@@ -2,9 +2,9 @@
     Edit note page
 *@
 
-@inject LanguageService LanguageService
-@inject ImagePathHelper ImagePathHelper
-@inject NotesRepository NotesRepository
+@inject ILanguageService LanguageService
+@inject IImagePathHelper ImagePathHelper
+@inject INotesRepository NotesRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("EditNote_Title");

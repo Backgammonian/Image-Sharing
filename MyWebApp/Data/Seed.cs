@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using MyWebApp.Data.Interfaces;
 using MyWebApp.Models;
 using MyWebApp.PicturesModule;
+using MyWebApp.PicturesModule.Interfaces;
 
 namespace MyWebApp.Data
 {
@@ -21,7 +23,7 @@ namespace MyWebApp.Data
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
             }
 
-            var randomGenetator = serviceScope.ServiceProvider.GetService<RandomGenerator>();
+            var randomGenetator = serviceScope.ServiceProvider.GetService<IRandomGenerator>();
             if (randomGenetator == null)
             {
                 return new SeedUsersModel()
@@ -99,7 +101,7 @@ namespace MyWebApp.Data
                 return;
             }
 
-            var picturesLoader = serviceScope.ServiceProvider.GetService<PicturesLoader>();
+            var picturesLoader = serviceScope.ServiceProvider.GetService<IPicturesLoader>();
             if (picturesLoader == null)
             {
                 return;

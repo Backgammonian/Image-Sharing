@@ -1,10 +1,11 @@
-﻿using System.Globalization;
+﻿using MyWebApp.Localization.Interfaces;
+using System.Globalization;
 
 namespace MyWebApp.Localization
 {
-    public static class CultureHelper
+    public sealed class CultureHelper : ICultureHelper
     {
-        public static string GetCulture()
+        public string GetCulture()
         {
             return CultureInfo.CurrentCulture.ToString();
         }

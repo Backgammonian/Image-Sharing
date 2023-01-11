@@ -1,17 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Models;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
-    public sealed class ThreadsRepository
+    public sealed class ThreadsRepository : IThreadsRepository
     {
+        private readonly INotesRepository _notesRepository;
         private readonly ApplicationDbContext _dbContext;
-        private readonly NotesRepository _notesRepository;
 
-        public ThreadsRepository(ApplicationDbContext dbContext,
-            NotesRepository notesRepository)
+        public ThreadsRepository(INotesRepository notesRepository,
+            ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _notesRepository = notesRepository;

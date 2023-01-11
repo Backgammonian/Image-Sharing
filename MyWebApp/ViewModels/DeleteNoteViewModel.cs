@@ -1,6 +1,6 @@
 ﻿namespace MyWebApp.ViewModels
 {
-    public class DeleteNoteViewModel
+    public sealed class DeleteNoteViewModel
     {
         public string NoteId { get; set; } = string.Empty;
         public NoteDetailsViewModel? NoteDetails { get; set; }

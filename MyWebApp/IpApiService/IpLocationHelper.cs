@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using MyWebApp.Data;
+using MyWebApp.IpApiService.Interfaces;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace MyWebApp.IpApiService
 {
-    public sealed class IpLocationHelper
+    public sealed class IpLocationHelper : IIpLocationHelper
     {
-        private const string _unknownIP = "Unknown IP";
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public IpLocationHelper(IHttpContextAccessor httpContextAccessor)
@@ -45,12 +46,13 @@ namespace MyWebApp.IpApiService
                     return $"{ipInfo.Country}, {ipInfo.City}";
                 }
 
-                return $"{_unknownIP} ({clientIpAddress})";
+                return $"{Constants.UnknownIP} ({clientIpAddress})";
             }
             catch (Exception)
-            {
-                return _unknownIP;
+            { 
             }
+
+            return Constants.UnknownIP;
         }
     }
 }

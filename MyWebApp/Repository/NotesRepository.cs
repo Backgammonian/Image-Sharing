@@ -1,23 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
+using MyWebApp.Data.Interfaces;
 using MyWebApp.Extensions;
 using MyWebApp.Models;
-using MyWebApp.PicturesModule;
+using MyWebApp.PicturesModule.Interfaces;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Repository
 {
-    public sealed class NotesRepository
+    public sealed class NotesRepository : INotesRepository
     {
+        private readonly IRandomGenerator _randomGenerator;
+        private readonly IPicturesLoader _picturesLoader;
+        private readonly ICredentialsRepository _credentialsRepository;
         private readonly ApplicationDbContext _dbContext;
-        private readonly PicturesLoader _picturesLoader;
-        private readonly RandomGenerator _randomGenerator;
-        private readonly CredentialsRepository _credentialsRepository;
 
-        public NotesRepository(ApplicationDbContext dbContext,
-            PicturesLoader picturesLoader,
-            RandomGenerator randomGenerator,
-            CredentialsRepository credentialsRepository)
+        public NotesRepository(IRandomGenerator randomGenerator,
+            IPicturesLoader picturesLoader,
+            ICredentialsRepository credentialsRepository,
+            ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _picturesLoader = picturesLoader;

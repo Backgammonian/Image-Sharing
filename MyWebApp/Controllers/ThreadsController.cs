@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Repository;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
 {
     public sealed class ThreadsController : Controller
     {
-        private readonly ThreadsRepository _threadsRepository;
+        private readonly IThreadsRepository _threadsRepository;
 
-        public ThreadsController(ThreadsRepository threadsRepository)
+        public ThreadsController(IThreadsRepository threadsRepository)
         {
             _threadsRepository = threadsRepository;
         }

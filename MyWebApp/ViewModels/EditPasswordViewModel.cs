@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class EditPasswordViewModel
+    public class EditPasswordViewModel
     {
         [Required]
         [DataType(DataType.Password)]

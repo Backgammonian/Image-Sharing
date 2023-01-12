@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class CreateThreadViewModel
+    public class CreateThreadViewModel
     {
         [Required]
         public string NewThreadName { get; set; } = string.Empty;

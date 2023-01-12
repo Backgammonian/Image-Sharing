@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Extensions;
+using MyWebApp.Credentials;
 using MyWebApp.Localization.Interfaces;
 using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
@@ -12,7 +12,6 @@ namespace MyWebApp.Controllers
         private readonly ILanguageService _languageService;
         private readonly ICredentialsRepository _credentialsRepository;
         private readonly IThreadsRepository _threadsRepository;
-        
 
         public AdminController(ILogger<AdminController> logger,
             ILanguageService languageService,
@@ -41,9 +40,10 @@ namespace MyWebApp.Controllers
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
             var user = credentials.User;
+            var currentUser = new ClaimsPrincipalWrapper(claims);
 
             if (user == null || 
-                !claims.IsAdmin())
+                !currentUser.IsAdmin())
             {
                 return View(null);
             }
@@ -63,9 +63,10 @@ namespace MyWebApp.Controllers
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
             var user = credentials.User;
+            var currentUser = new ClaimsPrincipalWrapper(claims);
 
             if (user == null ||
-                !claims.IsAdmin())
+                !currentUser.IsAdmin())
             {
                 return View(null);
             }
@@ -102,9 +103,10 @@ namespace MyWebApp.Controllers
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
             var user = credentials.User;
+            var currentUser = new ClaimsPrincipalWrapper(claims);
 
             if (user == null ||
-                !claims.IsAdmin())
+                !currentUser.IsAdmin())
             {
                 return View(null);
             }
@@ -119,9 +121,10 @@ namespace MyWebApp.Controllers
             var credentials = await _credentialsRepository.GetLoggedInUser();
             var claims = credentials.ClaimsPrincipal;
             var user = credentials.User;
+            var currentUser = new ClaimsPrincipalWrapper(claims);
 
             if (user == null ||
-                !claims.IsAdmin())
+                !currentUser.IsAdmin())
             {
                 return View(null);
             }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using MyWebApp.Credentials;
 using MyWebApp.Data.Interfaces;
 using MyWebApp.Models;
 using MyWebApp.PicturesModule;

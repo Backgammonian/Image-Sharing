@@ -8,7 +8,6 @@ using System.Reflection;
 using MyWebApp.Data;
 using MyWebApp.Repository;
 using MyWebApp.Models;
-using MyWebApp.Extensions;
 using MyWebApp.Localization;
 using MyWebApp.IpApiService;
 using MyWebApp.PicturesModule;
@@ -25,10 +24,11 @@ namespace MyWebApp
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var dateTimeWrapper = new DateTimeWrapper();
 
             builder.Services.AddLogging(configure =>
             {
-                configure.AddFile($"Logs\\log file {DateTime.Now.GetMyTimeFormat()}.txt");
+                configure.AddFile($"Logs\\log file {dateTimeWrapper.GetMyTimeFormat(DateTime.Now)}.txt");
                 configure.AddConsole();
                 configure.AddDebug();
             });

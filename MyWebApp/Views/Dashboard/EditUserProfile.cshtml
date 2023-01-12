@@ -8,11 +8,13 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("EditUserProfile_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model EditUserProfileViewModel
 
-@if (User.IsAuthenticated())
+@if (currentUser.IsAuthenticated())
 {
     @if (TempData["Error"] != null)
     {

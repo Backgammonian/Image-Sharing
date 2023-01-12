@@ -6,13 +6,15 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("Login_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model LoginViewModel
 
 <div class="row">
     <div class="col-md-6 offset-3">
-        @if (User.IsAuthenticated())
+        @if (currentUser.IsAuthenticated())
         {
             <h3>@LanguageService.GetKey("AlreadyLoggedIn")</h3>
         }

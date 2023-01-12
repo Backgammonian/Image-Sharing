@@ -7,12 +7,14 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("DeleteThread_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model DeleteThreadViewModel
 
 @if (Model != null &&
-    User.IsAdmin())
+    currentUser.IsAdmin())
 {
     @if (TempData["Error"] != null)
     {

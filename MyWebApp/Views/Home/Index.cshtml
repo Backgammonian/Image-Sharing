@@ -6,6 +6,8 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("Home_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 <div class="text-center">
@@ -28,7 +30,7 @@
     </div>
 
     <div>
-        @if (User.IsAuthenticated())
+        @if (currentUser.IsAuthenticated())
         {
             <a asp-controller="Notes" asp-action="Create" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Home_CreateNewNote")</a>
         }

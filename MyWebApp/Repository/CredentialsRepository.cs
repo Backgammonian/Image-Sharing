@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
-using MyWebApp.Extensions;
 using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
+using MyWebApp.Credentials;
 
 namespace MyWebApp.Repository
 {
@@ -21,13 +21,14 @@ namespace MyWebApp.Repository
         {
             var credentials = new CredentialsViewModel();
 
-            var currentUser = _contextAccessor.HttpContext?.User;
-            if (currentUser == null)
+            var user = _contextAccessor.HttpContext?.User;
+            if (user == null)
             {
                 return credentials;
             }
 
-            if (!currentUser.IsAuthenticated())
+            var currentUser = new ClaimsPrincipalWrapper(user);
+            if (currentUser.IsNotAuthenticated())
             {
                 return credentials;
             }
@@ -43,7 +44,7 @@ namespace MyWebApp.Repository
                 User = asNoTracking ?
                     await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == currentUserId) :
                     await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == currentUserId),
-                ClaimsPrincipal = currentUser
+                ClaimsPrincipal = user
             };
         }
     }

@@ -7,6 +7,8 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("DeleteNote_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model DeleteNoteViewModel
@@ -19,7 +21,7 @@
     return;
 }
 
-@if (User.IsAuthenticated())
+@if (currentUser.IsAuthenticated())
 {
     var noteDetails = Model.NoteDetails;
     var note = noteDetails.Note;

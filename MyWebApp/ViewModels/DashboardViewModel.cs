@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class DashboardViewModel
+    public class DashboardViewModel
     {
         public IEnumerable<NoteDetailsViewModel> UserNotes { get; set; } = Enumerable.Empty<NoteDetailsViewModel>();
         public UserModel User { get; set; } = new UserModel();

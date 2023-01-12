@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class EditNoteViewModel
+    public class EditNoteViewModel
     {
         [Required]
         public string Title { get; set; } = string.Empty;

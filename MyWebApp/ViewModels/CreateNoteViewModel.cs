@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class CreateNoteViewModel
+    public class CreateNoteViewModel
     {
         [Required]
         public string Title { get; set; } = string.Empty;

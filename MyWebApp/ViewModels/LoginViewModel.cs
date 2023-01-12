@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class LoginViewModel
+    public class LoginViewModel
     {
         [Required(ErrorMessage = "Email address is required")]
         [Display(Name = "Email address")]

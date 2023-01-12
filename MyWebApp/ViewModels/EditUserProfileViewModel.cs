@@ -1,6 +1,6 @@
 ﻿namespace MyWebApp.ViewModels
 {
-    public sealed class EditUserProfileViewModel
+    public class EditUserProfileViewModel
     {
 
         public string UserName { get; set; } = string.Empty;

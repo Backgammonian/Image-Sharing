@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class AvailableThreadsViewModel
+    public class AvailableThreadsViewModel
     {
         public IEnumerable<ThreadModel> Threads { get; set; } = Enumerable.Empty<ThreadModel>();
     }

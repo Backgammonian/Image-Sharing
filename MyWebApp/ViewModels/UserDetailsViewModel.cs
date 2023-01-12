@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class UserDetailsViewModel
+    public class UserDetailsViewModel
     {
         public UserModel? User { get; set; }
         public UserImageModel ProfilePicture { get; set; } = new UserImageModel();

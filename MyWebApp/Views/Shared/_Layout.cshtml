@@ -14,6 +14,10 @@
 @inject IIpLocationHelper IpLocationHelper
 @inject ICultureHelper CultureHelper
 
+@{
+    var currentUser = new ClaimsPrincipalWrapper(User);
+}
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -38,14 +42,14 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Threads" asp-action="Index">@LanguageService.GetKey("Threads")</a>
                         </li>
 
-                        @if (User.IsAdmin())
+                        @if (currentUser.IsAdmin())
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index"><b>-- @LanguageService.GetKey("AdminPanel") --</b></a>
                             </li>
                         }
 
-                        @if (User.IsAuthenticated())
+                        @if (currentUser.IsAuthenticated())
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">@LanguageService.GetKey("Dashboard")</a>

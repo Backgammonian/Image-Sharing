@@ -7,12 +7,14 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("CreateThread_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model CreateThreadViewModel
 
 @if (Model != null &&
-    User.IsAdmin())
+    currentUser.IsAdmin())
 {
     var allThreads = await ThreadsRepository.GetAllThreads();
     var existingThreadNames = allThreads.Select(x => x.Thread);

@@ -7,6 +7,8 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("GetByThread_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model NotesFromThreadViewModel
@@ -87,8 +89,8 @@
                 </div>
 
                 <div class="note-controls">
-                    @if (User.IsAdmin() ||
-                        User.IsOwner(note))
+                    @if (currentUser.IsAdmin() ||
+                        currentUser.IsOwner(note))
                     {
                         <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Edit")</a>
                         <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Delete")</a>

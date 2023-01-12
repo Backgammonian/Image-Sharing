@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Data.Interfaces;
-using MyWebApp.Extensions;
+using MyWebApp.Credentials;
 using MyWebApp.Models;
 using MyWebApp.PicturesModule.Interfaces;
 using MyWebApp.Repository.Interfaces;
@@ -171,13 +171,14 @@ namespace MyWebApp.Repository
         public async Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM)
         {
             var credentials = await _credentialsRepository.GetLoggedInUser();
-            var currentUser = credentials.User;
+            var user = credentials.User;
             var claims = credentials.ClaimsPrincipal;
+            var currentUser = new ClaimsPrincipalWrapper(claims);
 
-            if (currentUser == null ||
+            if (user == null ||
                 claims == null ||
-                !claims.IsOwner(note) &&
-                !claims.IsAdmin())
+                !currentUser.IsOwner(note) &&
+                !currentUser.IsAdmin())
             {
                 return false;
             }
@@ -244,13 +245,14 @@ namespace MyWebApp.Repository
         public async Task<bool> Delete(NoteModel note)
         {
             var credentials = await _credentialsRepository.GetLoggedInUser();
-            var currentUser = credentials.User;
+            var user = credentials.User;
             var claims = credentials.ClaimsPrincipal;
+            var currentUser = new ClaimsPrincipalWrapper(claims);
 
-            if (currentUser == null ||
+            if (user == null ||
                 claims == null ||
-                !claims.IsOwner(note) &&
-                !claims.IsAdmin())
+                !currentUser.IsOwner(note) &&
+                !currentUser.IsAdmin())
             {
                 return false;
             }
@@ -259,7 +261,7 @@ namespace MyWebApp.Repository
             {
                 Id = _randomGenerator.GetRandomId(),
                 FormerId = note.NoteId,
-                UserId = currentUser.Id,
+                UserId = user.Id,
                 Title = note.Title,
                 Description = note.Description
             };

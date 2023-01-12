@@ -1,7 +1,7 @@
-﻿using MyWebApp.ViewModels;
+﻿using Microsoft.AspNetCore.Identity;
+using MyWebApp.ViewModels;
 using MyWebApp.Models;
 using MyWebApp.Data;
-using Microsoft.AspNetCore.Identity;
 using MyWebApp.PicturesModule.Interfaces;
 using MyWebApp.Repository.Interfaces;
 

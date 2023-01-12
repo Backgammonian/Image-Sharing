@@ -1,6 +1,6 @@
 ﻿namespace MyWebApp.ViewModels
 {
-    public sealed class PagingViewModel
+    public class PagingViewModel
     {
         public int PageSize { get; set; }
         public int Page { get; set; }

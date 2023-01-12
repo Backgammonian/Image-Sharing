@@ -21,7 +21,9 @@
     }
     else
     {
-        var currentUserId = User.GetUserId();
+        var currentUser = new ClaimsPrincipalWrapper(User);
+        var currentUserId = currentUser.GetUserId();
+
         var isOwner = currentUserId != string.Empty &&
             currentUserId == user.Id;
 

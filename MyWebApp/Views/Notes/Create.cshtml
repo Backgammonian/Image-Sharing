@@ -7,11 +7,13 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("CreateNote_PageTitle");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model CreateNoteViewModel
 
-@if (User.IsAuthenticated())
+@if (currentUser.IsAuthenticated())
 {
     @if (TempData["Error"] != null)
     {

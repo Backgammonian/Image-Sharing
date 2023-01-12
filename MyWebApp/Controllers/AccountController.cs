@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Data;
+using MyWebApp.Credentials;
 using MyWebApp.Data.Interfaces;
 using MyWebApp.Localization.Interfaces;
 using MyWebApp.Models;

@@ -2,7 +2,7 @@
 
 namespace MyWebApp.ViewModels
 {
-    public sealed class NoteSummaryViewModel
+    public class NoteSummaryViewModel
     {
         public NoteModel? Note { get; set; }
         public NoteThreadModel? Thread { get; set; }

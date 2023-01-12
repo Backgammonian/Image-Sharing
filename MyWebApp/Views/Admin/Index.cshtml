@@ -6,6 +6,8 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("AdminPanel_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model CredentialsViewModel
@@ -16,7 +18,7 @@
 
     if (user == null ||
         claims == null ||
-        !claims.IsAdmin())
+        !currentUser.IsAdmin())
     {
         <h3>@LanguageService.GetKey("AdminPanel_NoPermission")</h3>
     }

@@ -8,11 +8,13 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("EditNote_Title");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model EditNoteViewModel
 
-@if (User.IsAuthenticated())
+@if (currentUser.IsAuthenticated())
 {
     @if (TempData["Error"] != null)
     {

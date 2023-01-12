@@ -7,6 +7,8 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("NoteDetails_PageTitle");
+
+    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model NoteDetailsViewModel
@@ -73,8 +75,8 @@
         </div>
 
 
-        @if (User.IsAdmin() ||
-            User.IsOwner(note))
+        @if (currentUser.IsAdmin() ||
+            currentUser.IsOwner(note))
         {
             <div class="note-controls">
                 <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Edit")</a>

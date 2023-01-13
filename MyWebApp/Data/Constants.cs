@@ -15,5 +15,7 @@
         public static string DefaultImageName { get; } = "default.jpg";
 
         public static string UnknownIP { get; } = "Unknown IP";
+
+        public static string AllowedUserNameCharacters { get; } = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZйцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ0123456789.,-+()=";
     }
 }

@@ -82,7 +82,7 @@ namespace MyWebApp
 
             builder.Services.AddIdentity<UserModel, IdentityRole>(opt =>
             {
-                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+()=";
+                opt.User.AllowedUserNameCharacters = Constants.AllowedUserNameCharacters;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequiredUniqueChars = 0;
                 opt.Password.RequiredLength = 8;

@@ -91,6 +91,7 @@ namespace MyWebApp.Repository
             }
 
             user.Status = editUserProfileVM.Status;
+            user.UserName = editUserProfileVM.UserName;
             _dbContext.Users.Update(user);
 
             return await Save();

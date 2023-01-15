@@ -18,8 +18,8 @@ namespace MyWebApp.Repository.Interfaces
         Task<IEnumerable<NoteSummaryViewModel>> GetNotesSummaries(int offset, int size);
         Task<NoteDetailsViewModel> GetNoteDetails(string noteId);
         Task<string> Create(UserModel author, CreateNoteViewModel createNoteVM);
-        Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM);
-        Task<bool> Delete(UserModel author, NoteModel note);
+        Task<bool> Update(string noteId, EditNoteViewModel editNoteVM);
+        Task<bool> Delete(DeleteNoteViewModel deleteNoteVM);
         Task<bool> Save();
     }
 }

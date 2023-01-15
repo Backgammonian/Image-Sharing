@@ -4,7 +4,7 @@ using MyWebApp.Data;
 
 namespace MyWebApp.Models
 {
-    public sealed class UserImageModel
+    public class UserImageModel
     {
         [Key]
         public string ImageId { get; set; } = string.Empty;

@@ -2,7 +2,7 @@
 
 namespace MyWebApp.Models
 {
-    public sealed class ThreadModel
+    public class ThreadModel
     {
         [Key]
         public string Thread { get; set; } = string.Empty;

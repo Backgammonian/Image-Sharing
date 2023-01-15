@@ -2,7 +2,7 @@
 
 namespace MyWebApp.Models
 {
-    public sealed class UserModel : IdentityUser
+    public class UserModel : IdentityUser
     {
         public string Status { get; set; } = string.Empty;
     }

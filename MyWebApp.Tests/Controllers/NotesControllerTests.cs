@@ -12,6 +12,7 @@ namespace MyWebApp.Tests.Controllers
         private readonly ILogger<NotesController> _logger;
         private readonly ILanguageService _languageService;
         private readonly INotesRepository _notesRepository;
+        private readonly ICredentialsRepository _credentialsRepository;
         private readonly NotesController _notesController;
 
         public NotesControllerTests()
@@ -19,7 +20,8 @@ namespace MyWebApp.Tests.Controllers
             _logger = A.Fake<ILogger<NotesController>>();
             _languageService = A.Fake<ILanguageService>();
             _notesRepository = A.Fake<INotesRepository>();
-            _notesController = new NotesController(_logger, _languageService, _notesRepository);
+            _credentialsRepository = A.Fake<ICredentialsRepository>();
+            _notesController = new NotesController(_logger, _languageService, _notesRepository, _credentialsRepository);
         }
 
         [Fact]
@@ -40,7 +42,7 @@ namespace MyWebApp.Tests.Controllers
         }
 
         [Fact]
-        public async Task NotesControlles_Details_ReturnsSuccess()
+        public async Task NotesController_Details_ReturnsSuccess()
         {
             var noteId = "1";
             var note = A.Fake<NoteDetailsViewModel>();

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyWebApp.Credentials;
 using MyWebApp.Localization.Interfaces;
 using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
@@ -28,7 +27,13 @@ namespace MyWebApp.Controllers
         [Route("Admin")]
         public async Task<IActionResult> Index()
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAdmin())
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
 
             return View(credentials);
         }
@@ -37,15 +42,12 @@ namespace MyWebApp.Controllers
         [Route("Admin/CreateThread")]
         public async Task<IActionResult> CreateThread()
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var claims = credentials.ClaimsPrincipal;
-            var user = credentials.User;
-            var currentUser = new ClaimsPrincipalWrapper(claims);
-
-            if (user == null || 
-                !currentUser.IsAdmin())
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAdmin())
             {
-                return View(null);
+                return RedirectToAction("ErrorNoAuthorization", "Error");
             }
 
             var createThreadVM = new CreateThreadViewModel()
@@ -60,18 +62,23 @@ namespace MyWebApp.Controllers
         [Route("Admin/CreateThread")]
         public async Task<IActionResult> CreateThread(CreateThreadViewModel createThreadVM)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var claims = credentials.ClaimsPrincipal;
-            var user = credentials.User;
-            var currentUser = new ClaimsPrincipalWrapper(claims);
-
-            if (user == null ||
-                !currentUser.IsAdmin())
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAdmin())
             {
-                return View(null);
+                return RedirectToAction("ErrorNoAuthorization", "Error");
             }
 
-            _logger.LogInformation($"(Admin/CreateThread) User {user.UserName} ({user.Id}) is using the admin panel to create a new thread called '{createThreadVM.NewThreadName}'");
+            var user = credentialsVM.User;
+            if (user != null)
+            {
+                _logger.LogInformation($"(Admin/CreateThread) User {user.UserName} ({user.Id}) is using the admin panel to create a new thread called '{createThreadVM.NewThreadName}'");
+            }
+            else
+            {
+                _logger.LogInformation($"(Admin/CreateThread) Unknown user is using the admin panel to create a new thread called '{createThreadVM.NewThreadName}'");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -100,15 +107,12 @@ namespace MyWebApp.Controllers
         [Route("Admin/DeleteThread")]
         public async Task<IActionResult> DeleteThread()
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var claims = credentials.ClaimsPrincipal;
-            var user = credentials.User;
-            var currentUser = new ClaimsPrincipalWrapper(claims);
-
-            if (user == null ||
-                !currentUser.IsAdmin())
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAdmin())
             {
-                return View(null);
+                return RedirectToAction("ErrorNoAuthorization", "Error");
             }
 
             return View(new DeleteThreadViewModel());
@@ -118,18 +122,23 @@ namespace MyWebApp.Controllers
         [Route("Admin/DeleteThread")]
         public async Task<IActionResult> DeleteThread(DeleteThreadViewModel deleteThreadVM)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var claims = credentials.ClaimsPrincipal;
-            var user = credentials.User;
-            var currentUser = new ClaimsPrincipalWrapper(claims);
-
-            if (user == null ||
-                !currentUser.IsAdmin())
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAdmin())
             {
-                return View(null);
+                return RedirectToAction("ErrorNoAuthorization", "Error");
             }
 
-            _logger.LogInformation($"(Admin/DeleteThread) User {user.UserName} ({user.Id}) is using the admin panel to delete the thread '{deleteThreadVM.SelectedThreadName}'");
+            var user = credentialsVM.User;
+            if (user != null)
+            {
+                _logger.LogInformation($"(Admin/DeleteThread) User {user.UserName} ({user.Id}) is using the admin panel to delete the thread '{deleteThreadVM.SelectedThreadName}'");
+            }
+            else
+            {
+                _logger.LogInformation($"(Admin/DeleteThread) Unknown user is using the admin panel to delete the thread '{deleteThreadVM.SelectedThreadName}'");
+            }
 
             if (await _threadsRepository.Delete(deleteThreadVM))
             {

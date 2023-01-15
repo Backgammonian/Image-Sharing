@@ -10,14 +10,17 @@ namespace MyWebApp.Controllers
         private readonly ILogger<NotesController> _logger;
         private readonly ILanguageService _languageService;
         private readonly INotesRepository _notesRepository;
+        private readonly ICredentialsRepository _credentialsRepository;
 
         public NotesController(ILogger<NotesController> logger,
             ILanguageService languageService,
-            INotesRepository notesRepository)
+            INotesRepository notesRepository,
+            ICredentialsRepository credentialsRepository)
         {
             _logger = logger;
             _notesRepository = notesRepository;
             _languageService = languageService;
+            _credentialsRepository = credentialsRepository;
         }
 
         [HttpGet]
@@ -61,8 +64,16 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Notes/Create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAuthenticated())
+            {
+                return RedirectToAction("ErrorNoAuthentication", "Error");
+            }
+
             return View(new CreateNoteViewModel());
         }
 
@@ -70,6 +81,20 @@ namespace MyWebApp.Controllers
         [Route("Notes/Create")]
         public async Task<IActionResult> Create(CreateNoteViewModel createNoteVM)
         {
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAuthenticated())
+            {
+                return RedirectToAction("ErrorNoAuthentication", "Error");
+            }
+
+            var user = credentialsVM.User;
+            if (user == null)
+            {
+                return RedirectToAction("ErrorNoAuthentication", "Error");
+            }
+
             _logger.LogInformation($"(Notes/Create) Note '{createNoteVM.Title}': selected thread: {createNoteVM.SelectedThread}");
 
             if (!ModelState.IsValid)
@@ -79,7 +104,7 @@ namespace MyWebApp.Controllers
                 return View(createNoteVM);
             }
 
-            var createdNoteId = await _notesRepository.Create(createNoteVM);
+            var createdNoteId = await _notesRepository.Create(user, createNoteVM);
             if (createdNoteId != string.Empty)
             {
                 _logger.LogInformation($"(Notes/Create) Note '{createNoteVM.Title}' ({createdNoteId}) has been created");
@@ -100,10 +125,24 @@ namespace MyWebApp.Controllers
         [Route("Notes/Edit/{noteId}")]
         public async Task<IActionResult> Edit(string noteId)
         {
-            var note = await _notesRepository.GetNote(noteId);
+            var note = await _notesRepository.GetNoteNoTracking(noteId);
             if (note == null)
             {
                 return View("Error");
+            }
+
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotOwner(note))
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
+
+            var user = credentialsVM.User;
+            if (user == null)
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
             }
 
             var editNoteVM = new EditNoteViewModel()
@@ -120,6 +159,26 @@ namespace MyWebApp.Controllers
         [Route("Notes/Edit/{noteId}")]
         public async Task<IActionResult> Edit(string noteId, EditNoteViewModel editNoteVM)
         {
+            var note = await _notesRepository.GetNote(noteId);
+            if (note == null)
+            {
+                return View("Error");
+            }
+
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotOwner(note))
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
+
+            var user = credentialsVM.User;
+            if (user == null)
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = _languageService.GetKey("EditNote_WrongInput");
@@ -127,13 +186,7 @@ namespace MyWebApp.Controllers
                 return View(editNoteVM);
             }
 
-            var originalNote = await _notesRepository.GetNoteNoTracking(noteId);
-            if (originalNote == null)
-            {
-                return View("Error");
-            }
-
-            if (await _notesRepository.Update(originalNote, editNoteVM))
+            if (await _notesRepository.Update(note, editNoteVM))
             {
                 _logger.LogInformation($"(Notes/Create) The note '{editNoteVM.Title}' ({noteId}) has been edited");
 
@@ -153,16 +206,29 @@ namespace MyWebApp.Controllers
         [Route("Notes/Delete/{noteId}")]
         public async Task<IActionResult> Delete(string noteId)
         {
-            var note = await _notesRepository.GetNote(noteId);
+            var note = await _notesRepository.GetNoteNoTracking(noteId);
             if (note == null)
             {
                 return View("Error");
             }
 
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotOwner(note))
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
+
+            var user = credentialsVM.User;
+            if (user == null)
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
+
             var deleteNoteVM = new DeleteNoteViewModel()
             {
-                NoteId = note.NoteId,
-                NoteDetails = await _notesRepository.GetNoteDetails(noteId)
+                NoteId = note.NoteId
             };
 
             _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({noteId}) is preparing to be deleted!");
@@ -174,13 +240,27 @@ namespace MyWebApp.Controllers
         [Route("Notes/Delete/{noteId}")]
         public async Task<IActionResult> Delete(string noteId, DeleteNoteViewModel deleteNoteVM)
         {
-            var note = await _notesRepository.GetNoteNoTracking(noteId);
+            var note = await _notesRepository.GetNote(noteId);
             if (note == null)
             {
                 return View("Error");
             }
 
-            if (await _notesRepository.Delete(note))
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotOwner(note))
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
+
+            var user = credentialsVM.User;
+            if (user == null)
+            {
+                return RedirectToAction("ErrorNoAuthorization", "Error");
+            }
+
+            if (await _notesRepository.Delete(user, note))
             {
                 _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({noteId}) has been deleted");
 

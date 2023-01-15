@@ -429,6 +429,33 @@
   <data name="Error500_Title" xml:space="preserve">
     <value>Внутренняя ошибка</value>
   </data>
+  <data name="ErrorLogOutFirst_PageTitle" xml:space="preserve">
+    <value>Нет доступа</value>
+  </data>
+  <data name="ErrorLogOutFirst_Text" xml:space="preserve">
+    <value>Для регистрации или входа в другой аккаунт сначала нужно выйти из системы.</value>
+  </data>
+  <data name="ErrorLogOutFirst_Title" xml:space="preserve">
+    <value>Вы уже вошли в систему</value>
+  </data>
+  <data name="ErrorNoAuthentication_PageTitle" xml:space="preserve">
+    <value>Нет входа в систему</value>
+  </data>
+  <data name="ErrorNoAuthentication_Text" xml:space="preserve">
+    <value>Для получения доступа к этой странице необходимо войти в систему.</value>
+  </data>
+  <data name="ErrorNoAuthentication_Title" xml:space="preserve">
+    <value>Вы не вошли в систему</value>
+  </data>
+  <data name="ErrorNoAuthorization_PageTitle" xml:space="preserve">
+    <value>Нет прав для доступа</value>
+  </data>
+  <data name="ErrorNoAuthorization_Text" xml:space="preserve">
+    <value>Похоже, вы пытаетесь получить доступ к странице, которая не принадлежит вам.</value>
+  </data>
+  <data name="ErrorNoAuthorization_Title" xml:space="preserve">
+    <value>Отсутствуют необходимые права для доступа</value>
+  </data>
   <data name="ErrorPage_Text" xml:space="preserve">
     <value>Произошла ошибка при обработке вашего запроса.</value>
   </data>

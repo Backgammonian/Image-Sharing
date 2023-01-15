@@ -59,6 +59,13 @@ namespace MyWebApp.Repository
             return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
         }
 
+        public async Task<UserImageModel> GetUsersCurrentProfilePicture(string userId)
+        {
+            var user = await GetUserNoTracking(userId);
+
+            return await GetUsersCurrentProfilePicture(user);
+        }
+
         public async Task<UserImageModel> GetUsersCurrentProfilePicture(UserModel? user)
         {
             if (user == null)

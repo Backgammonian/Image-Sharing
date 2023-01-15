@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyWebApp.Credentials;
 using MyWebApp.Data.Interfaces;
 using MyWebApp.Localization.Interfaces;
 using MyWebApp.Models;
+using MyWebApp.Repository;
+using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
 namespace MyWebApp.Controllers
@@ -13,15 +16,18 @@ namespace MyWebApp.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IRandomGenerator _randomGenerator;
         private readonly ILanguageService _languageService;
+        private readonly ICredentialsRepository _credentialsRepository;
         private readonly UserManager<UserModel> _userManager;
         private readonly SignInManager<UserModel> _signInManager;
 
         public AccountController(ILogger<AccountController> logger,
             IRandomGenerator randomGenerator,
             ILanguageService languageService,
+            ICredentialsRepository credentialsRepository,
             UserManager<UserModel> userManager,
             SignInManager<UserModel> signInManager)
         {
+            _credentialsRepository = credentialsRepository;
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -31,17 +37,31 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Account/Login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
-            var response = new LoginViewModel();
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsAuthenticated())
+            {
+                return RedirectToAction("ErrorLogOutFirst", "Error");
+            }
 
-            return View(response);
+            return View(new LoginViewModel());
         }
 
         [HttpPost]
         [Route("Account/Login")]
         public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsAuthenticated())
+            {
+                return RedirectToAction("ErrorLogOutFirst", "Error");
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = _languageService.GetKey("InputIsNotValid");
@@ -88,8 +108,16 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("Account/Register")]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsAuthenticated())
+            {
+                return RedirectToAction("ErrorLogOutFirst", "Error");
+            }
+
             return View(new RegisterViewModel());
         }
 
@@ -97,6 +125,14 @@ namespace MyWebApp.Controllers
         [Route("Account/Register")]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsAuthenticated())
+            {
+                return RedirectToAction("ErrorLogOutFirst", "Error");
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = _languageService.GetKey("InputIsNotValid");
@@ -157,6 +193,14 @@ namespace MyWebApp.Controllers
         [Route("Account/Logout")]
         public async Task<IActionResult> Logout()
         {
+            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
+            var credentials = credentialsVM.Credentials;
+            if (credentials != null &&
+                credentials.IsNotAuthenticated())
+            {
+                return RedirectToAction("ErrorNoAuthentication", "Error");
+            }
+
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");

@@ -13,13 +13,7 @@
 
 @model DashboardViewModel
 
-@if (Model == null ||
-    !currentUser.IsAuthenticated())
-{
-    <h3>@LanguageService.GetKey("Dashboard_NotFound")</h3>
-}
-else
-{
+@{
     var notesDetails = Model.UserNotes;
     var user = Model.User;
     var profilePicture = Model.ProfilePicture;
@@ -103,13 +97,8 @@ else
                 </div>
 
                 <div class="note-controls">
-                    @if (currentUser.IsAdmin() ||
-                        currentUser.IsOwner(note))
-                    {
-                        <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Edit")</a>
-                        <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Delete")</a>
-                    }
-
+                    <a asp-controller="Notes" asp-action="Edit" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Edit")</a>
+                    <a asp-controller="Notes" asp-action="Delete" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Delete")</a>
                     <a asp-controller="Notes" asp-action="Details" asp-route-noteId="@note.NoteId" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("Details")</a>
                 </div>
             </div>

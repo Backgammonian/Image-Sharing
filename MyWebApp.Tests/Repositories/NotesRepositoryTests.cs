@@ -4,7 +4,6 @@ using MyWebApp.Data.Interfaces;
 using MyWebApp.Models;
 using MyWebApp.PicturesModule.Interfaces;
 using MyWebApp.Repository;
-using MyWebApp.Repository.Interfaces;
 
 namespace MyWebApp.Tests.Repositories
 {
@@ -12,13 +11,11 @@ namespace MyWebApp.Tests.Repositories
     {
         private readonly IRandomGenerator _randomGenerator;
         private readonly IPicturesLoader _picturesLoader;
-        private readonly ICredentialsRepository _credentialsRepository;
 
         public NotesRepositoryTests()
         {
             _randomGenerator = A.Fake<IRandomGenerator>();
             _picturesLoader = A.Fake<IPicturesLoader>();
-            _credentialsRepository = A.Fake<ICredentialsRepository>();
         }
 
         private async Task<ApplicationDbContext> GetDbContext()
@@ -114,7 +111,6 @@ namespace MyWebApp.Tests.Repositories
             var dbContext = await GetDbContext();
             return new NotesRepository(_randomGenerator,
                 _picturesLoader,
-                _credentialsRepository,
                 dbContext);
         }
 

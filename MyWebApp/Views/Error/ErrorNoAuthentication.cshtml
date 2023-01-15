@@ -1,0 +1,12 @@
+﻿@*
+    No authentication error page
+*@
+
+@inject ILanguageService LanguageService
+
+@{
+    ViewData["Title"] = LanguageService.GetKey("ErrorNoAuthentication_PageTitle");
+}
+
+<h1>@LanguageService.GetKey("ErrorNoAuthentication_Title")</h1>
+<p>@LanguageService.GetKey("ErrorNoAuthentication_Text")</p>

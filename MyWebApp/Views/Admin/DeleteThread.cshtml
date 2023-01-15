@@ -7,24 +7,11 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("DeleteThread_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model DeleteThreadViewModel
 
-@if (Model != null &&
-    currentUser.IsAdmin())
-{
-    @if (TempData["Error"] != null)
-    {
-        <div class="col-md-12 alert alert-danger">
-            <span>
-                <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
-            </span>
-        </div>
-    }
-
+@{
     var allThreads = await ThreadsRepository.GetAllThreads();
     var availableThreads = allThreads.Select(x => new SelectListItem()
     {
@@ -34,6 +21,15 @@
 
     var firstThread = availableThreads.First();
     Model.SelectedThreadName = firstThread != null ? firstThread.Value : string.Empty;
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="col-md-12 alert alert-danger">
+            <span>
+                <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+            </span>
+        </div>
+    }
 
     <h4>@LanguageService.GetKey("DeleteThread_Select"):</h4>
 
@@ -50,8 +46,4 @@
             <a class="btn btn-outline-secondary my-button" asp-controller="Admin" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
         </div>
     </form>
-}
-else
-{
-    <h3>@LanguageService.GetKey("DeleteThread_NoPermission")</h3>
 }

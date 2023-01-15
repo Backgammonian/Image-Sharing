@@ -7,14 +7,11 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("CreateNote_PageTitle");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model CreateNoteViewModel
 
-@if (currentUser.IsAuthenticated())
-{
+@{
     @if (TempData["Error"] != null)
     {
         <div class="col-md-12 alert alert-danger">
@@ -63,8 +60,4 @@
         </div>
        
     </form>
-}
-else
-{
-    <h3>@LanguageService.GetKey("CreateNote_NoPermission")</h3>
 }

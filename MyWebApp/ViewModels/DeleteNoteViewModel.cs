@@ -3,6 +3,5 @@
     public class DeleteNoteViewModel
     {
         public string NoteId { get; set; } = string.Empty;
-        public NoteDetailsViewModel? NoteDetails { get; set; }
     }
 }

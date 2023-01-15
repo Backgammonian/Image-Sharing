@@ -7,15 +7,11 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("CreateThread_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model CreateThreadViewModel
 
-@if (Model != null &&
-    currentUser.IsAdmin())
-{
+@{
     var allThreads = await ThreadsRepository.GetAllThreads();
     var existingThreadNames = allThreads.Select(x => x.Thread);
 
@@ -56,8 +52,4 @@
             <a class="btn btn-outline-secondary my-button" asp-controller="Admin" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
         </div>
     </form>
-}
-else
-{
-    <h3>@LanguageService.GetKey("CreateThread_NoPermission")</h3>
 }

@@ -8,14 +8,11 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("EditNote_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model EditNoteViewModel
 
-@if (currentUser.IsAuthenticated())
-{
+@{
     @if (TempData["Error"] != null)
     {
         <div class="col-md-12 alert alert-danger">
@@ -94,8 +91,4 @@
             <a class="btn btn-outline-secondary my-button" asp-controller="Dashboard" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
         </div>
     </form>
-}
-else
-{
-    <h3>@LanguageService.GetKey("EditNote_NoPermission")</h3>
 }

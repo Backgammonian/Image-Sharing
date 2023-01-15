@@ -11,7 +11,8 @@ namespace MyWebApp.Repository
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly ApplicationDbContext _dbContext;
 
-        public CredentialsRepository(IHttpContextAccessor contextAccessor, ApplicationDbContext dbContext)
+        public CredentialsRepository(IHttpContextAccessor contextAccessor,
+            ApplicationDbContext dbContext)
         {
             _contextAccessor = contextAccessor;
             _dbContext = dbContext;
@@ -19,24 +20,24 @@ namespace MyWebApp.Repository
 
         public async Task<CredentialsViewModel> GetLoggedInUser(bool asNoTracking = true)
         {
-            var credentials = new CredentialsViewModel();
+            var credentialsVM = new CredentialsViewModel();
 
-            var user = _contextAccessor.HttpContext?.User;
-            if (user == null)
+            var claimsPrincipal = _contextAccessor.HttpContext?.User;
+            if (claimsPrincipal == null)
             {
-                return credentials;
+                return credentialsVM;
             }
 
-            var currentUser = new ClaimsPrincipalWrapper(user);
-            if (currentUser.IsNotAuthenticated())
+            var credentials = new ClaimsPrincipalWrapper(claimsPrincipal);
+            if (credentials.IsNotAuthenticated())
             {
-                return credentials;
+                return credentialsVM;
             }
 
-            var currentUserId = currentUser.GetUserId();
+            var currentUserId = credentials.GetUserId();
             if (currentUserId == string.Empty)
             {
-                return credentials;
+                return credentialsVM;
             }
 
             return new CredentialsViewModel() 
@@ -44,7 +45,7 @@ namespace MyWebApp.Repository
                 User = asNoTracking ?
                     await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == currentUserId) :
                     await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == currentUserId),
-                ClaimsPrincipal = user
+                Credentials = credentials
             };
         }
     }

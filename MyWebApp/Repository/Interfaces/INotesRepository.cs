@@ -17,9 +17,9 @@ namespace MyWebApp.Repository.Interfaces
         Task<IEnumerable<NoteImageModel>> GetNoteImagesNoTracking(string noteId);
         Task<IEnumerable<NoteSummaryViewModel>> GetNotesSummaries(int offset, int size);
         Task<NoteDetailsViewModel> GetNoteDetails(string noteId);
-        Task<string> Create(CreateNoteViewModel createNoteVM);
+        Task<string> Create(UserModel author, CreateNoteViewModel createNoteVM);
         Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM);
-        Task<bool> Delete(NoteModel note);
+        Task<bool> Delete(UserModel author, NoteModel note);
         Task<bool> Save();
     }
 }

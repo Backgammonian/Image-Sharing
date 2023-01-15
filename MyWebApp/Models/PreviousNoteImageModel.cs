@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp.Models
 {
-    public sealed class PreviousNoteImageModel
+    public class PreviousNoteImageModel
     {
         [Key]
         public string Id { get; set; } = string.Empty;

@@ -1,9 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions.Equivalency;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Data.Interfaces;
 using MyWebApp.Models;
 using MyWebApp.PicturesModule.Interfaces;
 using MyWebApp.Repository;
+using MyWebApp.ViewModels;
+using System.Security.Principal;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MyWebApp.Tests.Repositories
 {
@@ -11,107 +16,27 @@ namespace MyWebApp.Tests.Repositories
     {
         private readonly IRandomGenerator _randomGenerator;
         private readonly IPicturesLoader _picturesLoader;
+        private readonly PlaceholderDatabaseGenerator _placeholderDatabaseGenerator;
+        private readonly PlaceholderImageGenerator _placeholderImageGenerator;
 
         public NotesRepositoryTests()
         {
             _randomGenerator = A.Fake<IRandomGenerator>();
             _picturesLoader = A.Fake<IPicturesLoader>();
-        }
-
-        private async Task<ApplicationDbContext> GetDbContext()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            var dbContext = new ApplicationDbContext(options);
-            dbContext.Database.EnsureCreated();
-
-            if (!dbContext.Notes.Any() &&
-                !dbContext.NoteThreads.Any())
-            {
-                var notes = new List<NoteModel>();
-                var noteThreads = new List<NoteThreadModel>();
-                for (int i = 0; i < 10; i++)
-                {
-                    notes.Add(new NoteModel()
-                    {
-                        NoteId = (i + 1).ToString(),
-                        UserId = i >= 5 ? "1" : "2",
-                        Title = "Simple note title",
-                        Description = "Sample text of note"
-                    });
-
-                    noteThreads.Add(new NoteThreadModel()
-                    {
-                        Id = (i + 1).ToString(),
-                        NoteId = (i + 1).ToString(),
-                        Thread = i >= 5 ? "funny" : "photos"
-                    });
-                }
-
-                await dbContext.Notes.AddRangeAsync(notes);
-                await dbContext.NoteThreads.AddRangeAsync(noteThreads);
-            }
-
-            if (!dbContext.Threads.Any())
-            {
-                await dbContext.Threads.AddAsync(new ThreadModel()
-                {
-                    Thread = "funny"
-                });
-
-                await dbContext.Threads.AddAsync(new ThreadModel()
-                {
-                    Thread = "photos"
-                });
-            }
-
-            if (!dbContext.Users.Any())
-            {
-                await dbContext.Users.AddAsync(new UserModel()
-                {
-                    Id = "1",
-                    UserName = "first"
-                });
-
-                await dbContext.Users.AddAsync(new UserModel()
-                {
-                    Id = "2",
-                    UserName = "theSecond"
-                });
-            }
-
-            if (!dbContext.NoteImages.Any())
-            {
-                await dbContext.NoteImages.AddAsync(new NoteImageModel()
-                {
-                    ImageId = "1",
-                    NoteId = "1",
-                    ImageFileName = "image1.jpg",
-                    UploadTime = DateTimeOffset.Now.AddDays(-1)
-                });
-
-                await dbContext.NoteImages.AddAsync(new NoteImageModel()
-                {
-                    ImageId = "2",
-                    NoteId = "2",
-                    ImageFileName = "image2.jpg",
-                    UploadTime = DateTimeOffset.Now.AddDays(-2)
-                });
-            }
-
-            await dbContext.SaveChangesAsync();
-
-            return dbContext;
+            _placeholderDatabaseGenerator = new PlaceholderDatabaseGenerator();
+            _placeholderImageGenerator = new PlaceholderImageGenerator();
         }
 
         private async Task<NotesRepository> GetRepository()
         {
-            var dbContext = await GetDbContext();
             return new NotesRepository(_randomGenerator,
                 _picturesLoader,
-                dbContext);
+                await _placeholderDatabaseGenerator.GetDatabase());
+        }
+
+        private async Task<ApplicationDbContext> GetDatabase()
+        {
+            return await _placeholderDatabaseGenerator.GetDatabase();
         }
 
         [Fact]
@@ -242,6 +167,107 @@ namespace MyWebApp.Tests.Repositories
 
             result.Should().NotBeNull();
             result.Should().BeOfType<List<NoteImageModel>>();
+        }
+
+        [Fact]
+        public async Task NotesRepository_Create_ReturnsSuccess()
+        {
+            var database = await GetDatabase();
+            var oldNotesCount = await database.Notes.CountAsync();
+            var oldNoteImagesCount = await database.NoteImages.CountAsync();
+            var oldNoteThreadsCount = await database.NoteThreads.CountAsync();
+
+            var notesRepository = new NotesRepository(_randomGenerator, _picturesLoader, database);
+            var user = await database.Users.AsNoTracking().FirstOrDefaultAsync();
+            var threads = await database.Threads.AsNoTracking().ToListAsync();
+            var thread = threads[0];
+
+            var createNoteVM = new CreateNoteViewModel()
+            {
+                Title = "New title",
+                Description = "New description",
+                SelectedThread = thread.Thread,
+                Images = new List<IFormFile>()
+                {
+                    _placeholderImageGenerator.GetImage()
+                }
+            };
+
+            var noteImage = A.Fake<NoteImageModel>();
+            var image = A.Fake<IFormFile>();
+            var note = A.Fake<NoteModel>();
+            var newNoteId = "1234";
+            A.CallTo(() => _randomGenerator.GetRandomId()).Returns(newNoteId);
+            A.CallTo(() => _picturesLoader.LoadNoteImage(image, note)).Returns(noteImage);
+
+            var result = await notesRepository.Create(user, createNoteVM);
+            var newNotesCount = await database.Notes.CountAsync();
+            var newNoteImagesCount = await database.NoteImages.CountAsync();
+            var newNoteThreadsCount = await database.NoteThreads.CountAsync();
+            var newNote = await database.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == newNoteId);
+            var newNoteThread = await database.NoteThreads.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == newNote.NoteId);
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType<string>();
+            result.Should().NotBeEmpty();
+            newNotesCount.Should().Be(oldNotesCount + 1);
+            newNoteImagesCount.Should().Be(oldNoteImagesCount + 1);
+            newNoteThreadsCount.Should().Be(oldNoteThreadsCount + 1);
+            newNote.Title.Should().BeEquivalentTo(createNoteVM.Title);
+            newNote.Description.Should().BeEquivalentTo(createNoteVM.Description);
+            newNoteThread.Thread.Should().BeEquivalentTo(createNoteVM.SelectedThread);
+        }
+
+        [Fact]
+        public async Task NotesRepository_Update_ReturnsSuccess()
+        {
+            var database = await GetDatabase();
+            var notesRepository = new NotesRepository(_randomGenerator, _picturesLoader, database);
+            var editableNoteId = "0";
+
+            var editNoteVM = new EditNoteViewModel()
+            {
+                Title = "NEWEST title",
+                Description = "NEWEST description",
+                NoteId = editableNoteId,
+            };
+
+            var noteImage = A.Fake<NoteImageModel>();
+            var image = A.Fake<IFormFile>();
+            var note = A.Fake<NoteModel>();
+            A.CallTo(() => _randomGenerator.GetRandomId()).Returns("4321");
+            A.CallTo(() => _picturesLoader.LoadNoteImage(image, note)).Returns(noteImage);
+
+            var result = await notesRepository.Update(editableNoteId, editNoteVM);
+            var editedNote = await database.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == editableNoteId);
+
+            result.Should().BeTrue();
+            editedNote.Title.Should().BeEquivalentTo(editNoteVM.Title);
+            editedNote.Description.Should().BeEquivalentTo(editNoteVM.Description);
+        }
+
+        [Fact]
+        public async Task NotesRepository_Delete_ReturnsSuccess()
+        {
+            var database = await GetDatabase();
+            var oldNotesCount = await database.Notes.CountAsync();
+            var notesRepository = new NotesRepository(_randomGenerator, _picturesLoader, database);
+            var deletableNoteId = "0";
+
+            var deleteNoteVM = new DeleteNoteViewModel()
+            {
+                NoteId = deletableNoteId,
+            };
+
+            A.CallTo(() => _randomGenerator.GetRandomId()).Returns("4321");
+
+            var result = await notesRepository.Delete(deleteNoteVM);
+            var newNotesCount = await database.Notes.CountAsync();
+            var previousNotesCount = await database.PreviousNotes.CountAsync();
+
+            result.Should().BeTrue();
+            previousNotesCount.Should().Be(1);
+            newNotesCount.Should().Be(oldNotesCount - 1);
         }
     }
 }

@@ -159,7 +159,7 @@ namespace MyWebApp.Controllers
         [Route("Notes/Edit/{noteId}")]
         public async Task<IActionResult> Edit(string noteId, EditNoteViewModel editNoteVM)
         {
-            var note = await _notesRepository.GetNote(noteId);
+            var note = await _notesRepository.GetNoteNoTracking(noteId);
             if (note == null)
             {
                 return View("Error");
@@ -186,15 +186,15 @@ namespace MyWebApp.Controllers
                 return View(editNoteVM);
             }
 
-            if (await _notesRepository.Update(note, editNoteVM))
+            if (await _notesRepository.Update(note.NoteId, editNoteVM))
             {
-                _logger.LogInformation($"(Notes/Create) The note '{editNoteVM.Title}' ({noteId}) has been edited");
+                _logger.LogInformation($"(Notes/Create) The note '{editNoteVM.Title}' ({note.NoteId}) has been edited");
 
                 return RedirectToAction("Details", new { noteId });
             }
             else
             {
-                _logger.LogInformation($"(Notes/Create) Can't edit the note '{editNoteVM.Title}' ({noteId})");
+                _logger.LogInformation($"(Notes/Create) Can't edit the note '{editNoteVM.Title}' ({note.NoteId})");
             }
 
             TempData["Error"] = _languageService.GetKey("EditNote_NoEditPermission");
@@ -231,7 +231,7 @@ namespace MyWebApp.Controllers
                 NoteId = note.NoteId
             };
 
-            _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({noteId}) is preparing to be deleted!");
+            _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({note.NoteId}) is preparing to be deleted!");
 
             return View(deleteNoteVM);
         }
@@ -240,7 +240,7 @@ namespace MyWebApp.Controllers
         [Route("Notes/Delete/{noteId}")]
         public async Task<IActionResult> Delete(string noteId, DeleteNoteViewModel deleteNoteVM)
         {
-            var note = await _notesRepository.GetNote(noteId);
+            var note = await _notesRepository.GetNoteNoTracking(noteId);
             if (note == null)
             {
                 return View("Error");
@@ -260,15 +260,15 @@ namespace MyWebApp.Controllers
                 return RedirectToAction("ErrorNoAuthorization", "Error");
             }
 
-            if (await _notesRepository.Delete(user, note))
+            if (await _notesRepository.Delete(deleteNoteVM))
             {
-                _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({noteId}) has been deleted");
+                _logger.LogInformation($"(Notes/Delete) The note '{note.Title}' ({note.NoteId}) has been deleted");
 
                 return RedirectToAction("Index", "Dashboard");
             }
             else
             {
-                _logger.LogInformation($"(Notes/Delete) Can't delete the note '{note.Title}' ({noteId})");
+                _logger.LogInformation($"(Notes/Delete) Can't delete the note '{note.Title}' ({note.NoteId})");
             }
 
             TempData["Error"] = _languageService.GetKey("DeleteNote_NoDeletePermission");

@@ -60,7 +60,7 @@ namespace MyWebApp.Repository
 
         public async Task<NoteThreadModel?> GetNoteThread(string noteId)
         {
-            return await _dbContext.NoteThreads.AsNoTracking().Where(x => x.NoteId == noteId).FirstOrDefaultAsync();
+            return await _dbContext.NoteThreads.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
         public async Task<NoteImageModel?> GetNoteFirstImage(string noteId)
@@ -155,8 +155,14 @@ namespace MyWebApp.Repository
             return note.NoteId;
         }
 
-        public async Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM)
+        public async Task<bool> Update(string noteId, EditNoteViewModel editNoteVM)
         {
+            var note = await GetNote(noteId);
+            if (note == null)
+            {
+                return false;
+            }
+
             var newImages = editNoteVM.Images;
             if (newImages.Any())
             {
@@ -210,13 +216,22 @@ namespace MyWebApp.Repository
             return await Save();
         }
 
-        public async Task<bool> Delete(UserModel author, NoteModel note)
+        public async Task<bool> Delete(DeleteNoteViewModel deleteNoteVM)
         {
+            var noteId = deleteNoteVM.NoteId;
+            var note = await GetNote(noteId);
+            if (note == null)
+            {
+                return false;
+            }
+
+            var author = await GetNoteAuthor(note);
+
             var noteModelArchiveCopy = new PreviousNoteModel()
             {
                 Id = _randomGenerator.GetRandomId(),
                 FormerId = note.NoteId,
-                UserId = author.Id,
+                UserId = author == null ? string.Empty : author.Id,
                 Title = note.Title,
                 Description = note.Description
             };

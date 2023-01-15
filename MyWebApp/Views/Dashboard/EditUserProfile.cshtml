@@ -4,18 +4,15 @@
 
 @inject ILanguageService LanguageService
 @inject IImagePathHelper ImagePathHelper
-@inject IDashboardRepository DashboardRepository
+@inject IUsersRepository UsersRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("EditUserProfile_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model EditUserProfileViewModel
 
-@if (currentUser.IsAuthenticated())
-{
+@{
     @if (TempData["Error"] != null)
     {
         <div class="col-md-12 alert alert-danger">
@@ -25,7 +22,7 @@
         </div>
     }
 
-    var profilePicture = await DashboardRepository.GetCurrentUserProfilePicture();
+    var profilePicture = await UsersRepository.GetUsersCurrentProfilePicture(Model.UserId);
 
     <form method="post" asp-action="EditUserProfile" enctype="multipart/form-data">
         <div class="form-group">
@@ -56,8 +53,4 @@
             <a class="btn btn-outline-secondary my-button" asp-controller="Dashboard" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
         </div>
     </form>
-}
-else
-{
-    <h3>@LanguageService.GetKey("EditUserProfile_NoPermission")</h3>
 }

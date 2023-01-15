@@ -6,64 +6,55 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("Register_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model RegisterViewModel
 
 <div class="row">
     <div class="col-md-6 offset-3">
-        @if (currentUser.IsAuthenticated())
-        {
-            <h3>@LanguageService.GetKey("LogoutBeforehand")</h3>
-        }
-        else
-        {
-            <p>
-                <h4>@LanguageService.GetKey("SignUpForNewAccount")</h4>
-            </p>
+        <p>
+            <h4>@LanguageService.GetKey("SignUpForNewAccount")</h4>
+        </p>
 
-            @if (TempData["Error"] != null)
-            {
-                <div class="col-md-12 alert alert-danger">
-                    <span>
-                        <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"] 
-                    </span>
-                </div>
-            }
-
-            <div class="row">
-                <div class="col-md-8 offset-2">
-                    <form method="post" asp-action="Register">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
-                            <label asp-for="Email" class="control-label">@LanguageService.GetKey("Register_Email")</label>
-                            <input asp-for="Email" class="form-control" placeholder="@LanguageService.GetKey("Register_EmailPlaceholder")" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="UserName" class="control-label">@LanguageService.GetKey("Register_Username")</label>
-                            <input asp-for="UserName" class="form-control" placeholder="@LanguageService.GetKey("Register_UsernamePlaceholder")" />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Password" class="control-label">@LanguageService.GetKey("Register_Password")</label>
-                            <input asp-for="Password" class="form-control" placeholder="@LanguageService.GetKey("Register_PasswordPlaceholder")" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="ConfirmPassword" class="control-label">@LanguageService.GetKey("Register_ConfirmPassword")</label>
-                            <input asp-for="ConfirmPassword" class="form-control" placeholder="@LanguageService.GetKey("Register_ConfirmPasswordPlaceholder")" />
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                        </div>
-                        <div class="form-group account-buttons">
-                            <input class="btn btn-outline-success float-right my-button" type="submit" value="@LanguageService.GetKey("Register_Submit")" />
-                            <a class="btn btn-outline-secondary my-button" asp-controller="Home" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
-                        </div>
-                    </form>
-                </div>
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span>
+                    <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"] 
+                </span>
             </div>
         }
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form method="post" asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label">@LanguageService.GetKey("Register_Email")</label>
+                        <input asp-for="Email" class="form-control" placeholder="@LanguageService.GetKey("Register_EmailPlaceholder")" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UserName" class="control-label">@LanguageService.GetKey("Register_Username")</label>
+                        <input asp-for="UserName" class="form-control" placeholder="@LanguageService.GetKey("Register_UsernamePlaceholder")" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label">@LanguageService.GetKey("Register_Password")</label>
+                        <input asp-for="Password" class="form-control" placeholder="@LanguageService.GetKey("Register_PasswordPlaceholder")" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label">@LanguageService.GetKey("Register_ConfirmPassword")</label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="@LanguageService.GetKey("Register_ConfirmPasswordPlaceholder")" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group account-buttons">
+                        <input class="btn btn-outline-success float-right my-button" type="submit" value="@LanguageService.GetKey("Register_Submit")" />
+                        <a class="btn btn-outline-secondary my-button" asp-controller="Home" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>

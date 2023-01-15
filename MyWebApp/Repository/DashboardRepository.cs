@@ -10,20 +10,17 @@ namespace MyWebApp.Repository
     public sealed class DashboardRepository : IDashboardRepository
     {
         private readonly IPicturesLoader _picturesLoader;
-        private readonly ICredentialsRepository _credentialsRepository;
         private readonly INotesRepository _notesRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<UserModel> _userManager;
 
         public DashboardRepository(IPicturesLoader picturesLoader,
-            ICredentialsRepository credentialsRepository,
             INotesRepository notesRepository,
             IUsersRepository usersRepository,
             ApplicationDbContext dbContext,
             UserManager<UserModel> userManager)
         {
-            _credentialsRepository = credentialsRepository;
             _notesRepository = notesRepository;
             _usersRepository = usersRepository;
             _picturesLoader = picturesLoader;
@@ -31,36 +28,19 @@ namespace MyWebApp.Repository
             _userManager = userManager;
         }
 
-        public async Task<UserImageModel> GetCurrentUserProfilePicture()
+        public async Task<int> GetNotesCount(UserModel? user)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var currentUser = credentials.User;
-
-            return await _usersRepository.GetUsersCurrentProfilePicture(currentUser);
-        }
-
-        public async Task<int> GetNotesCount()
-        {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var currentUser = credentials.User;
-            if (currentUser == null)
+            if (user == null)
             {
                 return 0;
             }
 
-            return await _usersRepository.GetCountOfUserNotes(currentUser.Id);
+            return await _usersRepository.GetCountOfUserNotes(user.Id);
         }
 
-        public async Task<DashboardViewModel?> GetDashboard(int offset, int size)
+        public async Task<DashboardViewModel> GetDashboard(UserModel user, int offset, int size)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var currentUser = credentials.User;
-            if (currentUser == null)
-            {
-                return null;
-            }
-
-            var userNotes = await _usersRepository.GetNotesOfUser(currentUser.Id, offset, size);
+            var userNotes = await _usersRepository.GetNotesOfUser(user.Id, offset, size);
             var notesDetails = new List<NoteDetailsViewModel>();
             foreach (var userNote in userNotes)
             {
@@ -71,18 +51,13 @@ namespace MyWebApp.Repository
             return new DashboardViewModel()
             {
                 UserNotes = notesDetails,
-                User = currentUser,
-                ProfilePicture = await _usersRepository.GetUsersCurrentProfilePicture(currentUser)
+                User = user,
+                ProfilePicture = await _usersRepository.GetUsersCurrentProfilePicture(user)
             };
         }
 
         public async Task<bool> Update(UserModel user, EditUserProfileViewModel editUserProfileVM)
-        {
-            if (user == null)
-            {
-                return false;
-            }
-            
+        {           
             var newProfileImage = editUserProfileVM.NewProfilePicture;
             if (newProfileImage != null)
             {

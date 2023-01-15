@@ -19,5 +19,20 @@ namespace MyWebApp.Controllers
         {
             return View(wrongPageVM);
         }
+
+        public IActionResult ErrorNoAuthorization()
+        {
+            return View();
+        }
+
+        public IActionResult ErrorNoAuthentication()
+        {
+            return View();
+        }
+
+        public IActionResult ErrorLogOutFirst()
+        {
+            return View();
+        }
     }
 }

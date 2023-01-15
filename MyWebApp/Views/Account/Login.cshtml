@@ -6,54 +6,45 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("Login_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model LoginViewModel
 
 <div class="row">
     <div class="col-md-6 offset-3">
-        @if (currentUser.IsAuthenticated())
-        {
-            <h3>@LanguageService.GetKey("AlreadyLoggedIn")</h3>
-        }
-        else
-        {
-            <p>
-                <h4>@LanguageService.GetKey("SingInToYourAccount")</h4>
-            </p>
+        <p>
+            <h4>@LanguageService.GetKey("SingInToYourAccount")</h4>
+        </p>
 
-            @if (TempData["Error"] != null)
-            {
-                <div class="col-md-12 alert alert-danger">
-                    <span>
-                        <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
-                    </span>
-                </div>
-            }
-
-            <div class="row">
-                <div class="col-md-8 offset-2">
-                    <form method="post" asp-action="Login">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
-                            <label asp-for="Email" class="control-label">@LanguageService.GetKey("Login_Email")</label>
-                            <input asp-for="Email" class="form-control" placeholder="@LanguageService.GetKey("Login_EmailPlaceholder")" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Password" class="control-label">@LanguageService.GetKey("Login_Password")</label>
-                            <input asp-for="Password" class="form-control" placeholder="@LanguageService.GetKey("Login_PasswordPlaceholder")" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group account-buttons">
-                            <input class="btn btn-outline-success float right my-button" type="submit" value="@LanguageService.GetKey("Login_Submit")" />
-                            <a class="btn btn-outline-secondary my-button" asp-controller="Home" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
-                        </div>
-                    </form>
-                </div>
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span>
+                    <b>@LanguageService.GetKey("SorryErrorOccured")</b> - @TempData["Error"]
+                </span>
             </div>
         }
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form method="post" asp-action="Login">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label">@LanguageService.GetKey("Login_Email")</label>
+                        <input asp-for="Email" class="form-control" placeholder="@LanguageService.GetKey("Login_EmailPlaceholder")" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label">@LanguageService.GetKey("Login_Password")</label>
+                        <input asp-for="Password" class="form-control" placeholder="@LanguageService.GetKey("Login_PasswordPlaceholder")" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group account-buttons">
+                        <input class="btn btn-outline-success float right my-button" type="submit" value="@LanguageService.GetKey("Login_Submit")" />
+                        <a class="btn btn-outline-secondary my-button" asp-controller="Home" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>

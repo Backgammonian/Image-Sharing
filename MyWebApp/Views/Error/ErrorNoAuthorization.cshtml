@@ -1,0 +1,12 @@
+﻿@*
+    No authorization error page
+*@
+
+@inject ILanguageService LanguageService
+
+@{
+    ViewData["Title"] = LanguageService.GetKey("ErrorNoAuthorization_PageTitle");
+}
+
+<h1>@LanguageService.GetKey("ErrorNoAuthorization_Title")</h1>
+<p>@LanguageService.GetKey("ErrorNoAuthorization_Text")</p>

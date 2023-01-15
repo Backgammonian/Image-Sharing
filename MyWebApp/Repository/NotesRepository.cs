@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Data.Interfaces;
-using MyWebApp.Credentials;
 using MyWebApp.Models;
 using MyWebApp.PicturesModule.Interfaces;
 using MyWebApp.Repository.Interfaces;
@@ -13,18 +12,15 @@ namespace MyWebApp.Repository
     {
         private readonly IRandomGenerator _randomGenerator;
         private readonly IPicturesLoader _picturesLoader;
-        private readonly ICredentialsRepository _credentialsRepository;
         private readonly ApplicationDbContext _dbContext;
 
         public NotesRepository(IRandomGenerator randomGenerator,
             IPicturesLoader picturesLoader,
-            ICredentialsRepository credentialsRepository,
             ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _picturesLoader = picturesLoader;
             _randomGenerator = randomGenerator;
-            _credentialsRepository = credentialsRepository;
         }
 
         public async Task<IEnumerable<ThreadModel>> GetAvailableNoteThreads()
@@ -121,22 +117,12 @@ namespace MyWebApp.Repository
             };
         }
 
-        public async Task<string> Create(CreateNoteViewModel createNoteVM)
+        public async Task<string> Create(UserModel author, CreateNoteViewModel createNoteVM)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var currentUser = credentials.User;
-            var claims = credentials.ClaimsPrincipal;
-
-            if (currentUser == null ||
-                claims == null)
-            {
-                return string.Empty;
-            }
-
             var note = new NoteModel()
             {
                 NoteId = _randomGenerator.GetRandomId(),
-                UserId = currentUser.Id,
+                UserId = author.Id,
                 Title = createNoteVM.Title,
                 Description = createNoteVM.Description,
             };
@@ -163,6 +149,7 @@ namespace MyWebApp.Repository
                     });
                 }
             }
+
             await Save();
 
             return note.NoteId;
@@ -170,19 +157,6 @@ namespace MyWebApp.Repository
 
         public async Task<bool> Update(NoteModel note, EditNoteViewModel editNoteVM)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var user = credentials.User;
-            var claims = credentials.ClaimsPrincipal;
-            var currentUser = new ClaimsPrincipalWrapper(claims);
-
-            if (user == null ||
-                claims == null ||
-                !currentUser.IsOwner(note) &&
-                !currentUser.IsAdmin())
-            {
-                return false;
-            }
-
             var newImages = editNoteVM.Images;
             if (newImages.Any())
             {
@@ -229,39 +203,20 @@ namespace MyWebApp.Repository
                 }
             }
 
-            var updatedNote = new NoteModel()
-            {
-                NoteId = note.NoteId,
-                UserId = note.UserId,
-                Title = editNoteVM.Title,
-                Description = editNoteVM.Description
-            };
-
-            _dbContext.Notes.Update(updatedNote);
+            note.Title = editNoteVM.Title;
+            note.Description = editNoteVM.Description;
+            _dbContext.Notes.Update(note);
 
             return await Save();
         }
 
-        public async Task<bool> Delete(NoteModel note)
+        public async Task<bool> Delete(UserModel author, NoteModel note)
         {
-            var credentials = await _credentialsRepository.GetLoggedInUser();
-            var user = credentials.User;
-            var claims = credentials.ClaimsPrincipal;
-            var currentUser = new ClaimsPrincipalWrapper(claims);
-
-            if (user == null ||
-                claims == null ||
-                !currentUser.IsOwner(note) &&
-                !currentUser.IsAdmin())
-            {
-                return false;
-            }
-
             var noteModelArchiveCopy = new PreviousNoteModel()
             {
                 Id = _randomGenerator.GetRandomId(),
                 FormerId = note.NoteId,
-                UserId = user.Id,
+                UserId = author.Id,
                 Title = note.Title,
                 Description = note.Description
             };

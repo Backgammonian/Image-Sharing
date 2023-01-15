@@ -4,31 +4,29 @@
 
 @inject ILanguageService LanguageService
 @inject IImagePathHelper ImagePathHelper
+@inject INotesRepository NotesRepository
 
 @{
     ViewData["Title"] = LanguageService.GetKey("DeleteNote_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model DeleteNoteViewModel
 
-@if (Model.NoteDetails == null ||
-    Model.NoteDetails.Note == null)
-{
-    <h3>@LanguageService.GetKey("DeleteNote_Nothing")</h3>
-
-    return;
-}
-
-@if (currentUser.IsAuthenticated())
-{
-    var noteDetails = Model.NoteDetails;
+@{
+    var noteId = Model.NoteId;
+    var noteDetails = await NotesRepository.GetNoteDetails(noteId);
     var note = noteDetails.Note;
     var thread = noteDetails.Thread;
     var images = noteDetails.Images;
     var author = noteDetails.Author;
     var authorProfilePicture = noteDetails.ProfilePicture;
+
+    @if (note == null)
+    {
+        <h3>@LanguageService.GetKey("DeleteNote_Nothing")</h3>
+
+        return;
+    }
 
     @if (TempData["Error"] != null)
     {
@@ -97,8 +95,4 @@
             <a class="btn btn-outline-secondary my-button" asp-controller="Dashboard" asp-action="Index">@LanguageService.GetKey("Cancel")</a>
         </div>
     </form>
-}
-else
-{
-    <h3>@LanguageService.GetKey("DeleteNote_NoPermission")</h3>
 }

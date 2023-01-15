@@ -6,32 +6,28 @@
 
 @{
     ViewData["Title"] = LanguageService.GetKey("AdminPanel_Title");
-
-    var currentUser = new ClaimsPrincipalWrapper(User);
 }
 
 @model CredentialsViewModel
 
 @{
-    var claims = Model.ClaimsPrincipal;
+    var credentials = Model.Credentials;
     var user = Model.User;
 
-    if (user == null ||
-        claims == null ||
-        !currentUser.IsAdmin())
+    if (user == null)
     {
         <h3>@LanguageService.GetKey("AdminPanel_NoPermission")</h3>
-    }
-    else
-    {
-        <h3>@LanguageService.GetKey("AdminPanel_HelloAdmin") <b>@user.UserName</b>!</h3>
 
-        <div class="admin-button-block">
-            <a asp-controller="Admin" asp-action="CreateThread" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("AdminPanel_CreateThread")</a>
-        </div>
-
-        <div class="admin-button-block">
-            <a asp-controller="Admin" asp-action="DeleteThread" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("AdminPanel_DeleteThread")</a>
-        </div>
+        return;
     }
+   
+    <h3>@LanguageService.GetKey("AdminPanel_HelloAdmin") <b>@user.UserName</b>!</h3>
+
+    <div class="admin-button-block">
+        <a asp-controller="Admin" asp-action="CreateThread" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("AdminPanel_CreateThread")</a>
+    </div>
+
+    <div class="admin-button-block">
+        <a asp-controller="Admin" asp-action="DeleteThread" class="btn btn-sm btn-outline-secondary my-button">@LanguageService.GetKey("AdminPanel_DeleteThread")</a>
+    </div>
 }

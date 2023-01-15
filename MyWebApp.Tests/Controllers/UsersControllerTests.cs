@@ -35,7 +35,7 @@ namespace MyWebApp.Tests.Controllers
         }
 
         [Fact]
-        public async Task UsersControlles_Details_ReturnsSuccess()
+        public async Task UsersController_Details_ReturnsSuccess()
         {
             var userId = "1";
             var userDetails = A.Fake<UserDetailsViewModel>();

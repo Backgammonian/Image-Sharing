@@ -10,6 +10,7 @@ namespace MyWebApp.Repository.Interfaces
         Task<int> GetCount();
         Task<UserModel?> GetUser(string userId);
         Task<UserModel?> GetUserNoTracking(string userId);
+        Task<UserImageModel> GetUsersCurrentProfilePicture(string userId);
         Task<UserImageModel> GetUsersCurrentProfilePicture(UserModel? user);
         Task<IEnumerable<NoteModel>> GetNotesOfUser(string userId, int offset, int size);
         Task<int> GetCountOfUserNotes(string userId);

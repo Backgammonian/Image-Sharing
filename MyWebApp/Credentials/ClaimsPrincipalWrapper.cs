@@ -48,12 +48,22 @@ namespace MyWebApp.Credentials
                 _user.IsInRole(UserRoles.Admin);
         }
 
+        public bool IsNotAdmin()
+        {
+            return !IsAdmin();
+        }
+
         public bool IsOwner(NoteModel note)
         {
             return _user != null &&
                 IsAuthenticated() &&
                 (_user.IsInRole(UserRoles.User) || _user.IsInRole(UserRoles.Admin)) &&
                 note.UserId == GetUserId();
+        }
+
+        public bool IsNotOwner(NoteModel note)
+        {
+            return !IsOwner(note);
         }
     }
 }

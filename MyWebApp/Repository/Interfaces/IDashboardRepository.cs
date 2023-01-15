@@ -5,9 +5,8 @@ namespace MyWebApp.Repository.Interfaces
 {
     public interface IDashboardRepository
     {
-        Task<UserImageModel> GetCurrentUserProfilePicture();
-        Task<int> GetNotesCount();
-        Task<DashboardViewModel?> GetDashboard(int offset, int size);
+        Task<int> GetNotesCount(UserModel? user);
+        Task<DashboardViewModel> GetDashboard(UserModel user, int offset, int size);
         Task<bool> Update(UserModel user, EditUserProfileViewModel editUserProfileVM);
         Task<bool> UpdatePassword(string userId, EditPasswordViewModel editPasswordVM);
         Task<bool> Save();

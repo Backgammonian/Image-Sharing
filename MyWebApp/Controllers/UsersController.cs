@@ -64,7 +64,7 @@ namespace MyWebApp.Controllers
                 });
             }
 
-            var userNotes = await _usersRepository.GetUserNotes(userId, (page - 1) * pageSize, pageSize);
+            var userNotes = await _usersRepository.GetDetailedUserNotes(userId, (page - 1) * pageSize, pageSize);
             if (userNotes != null)
             {
                 var count = await _usersRepository.GetCountOfUserNotes(userId);

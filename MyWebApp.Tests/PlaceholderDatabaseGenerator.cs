@@ -65,7 +65,7 @@ namespace MyWebApp.Tests
 
                 noteThreads.Add(new NoteThreadModel()
                 {
-                    Id = id,
+                    Id = id + "nt",
                     NoteId = id,
                     Thread = thread
                 });
@@ -98,6 +98,32 @@ namespace MyWebApp.Tests
                 }
             };
 
+            var profilePictures = new List<UserImageModel>
+            {
+                new UserImageModel()
+                {
+                    ImageId = "0",
+                    UserId = "0",
+                    ImageFileName = "profile_image1.jpg",
+                    UploadTime = DateTimeOffset.Now.AddDays(-1)
+                },
+
+                new UserImageModel()
+                {
+                    ImageId = "1",
+                    UserId = "0",
+                    ImageFileName = "profile_image2.jpg",
+                    UploadTime = DateTimeOffset.Now.AddDays(-0.5)
+                },
+
+                new UserImageModel()
+                {
+                    ImageId = "2",
+                    UserId = "1",
+                    ImageFileName = "profile_image3.jpg",
+                    UploadTime = DateTimeOffset.Now.AddDays(-3.5)
+                },
+            };
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -111,6 +137,7 @@ namespace MyWebApp.Tests
             await dbContext.Notes.AddRangeAsync(notes);
             await dbContext.NoteThreads.AddRangeAsync(noteThreads);
             await dbContext.NoteImages.AddRangeAsync(noteImages);
+            await dbContext.ProfileImages.AddRangeAsync(profilePictures);
             await dbContext.SaveChangesAsync();
 
             return dbContext;

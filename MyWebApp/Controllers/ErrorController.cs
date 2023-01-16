@@ -29,10 +29,5 @@ namespace MyWebApp.Controllers
         {
             return View();
         }
-
-        public IActionResult ErrorLogOutFirst()
-        {
-            return View();
-        }
     }
 }

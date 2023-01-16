@@ -56,7 +56,7 @@ namespace MyWebApp.Tests.Controllers
             var page = 1;
             var pageSize = 6;
             var offset = (page - 1) * pageSize;
-            A.CallTo(() => _usersRepository.GetUserNotes(userId, offset, pageSize)).Returns(userNotes);
+            A.CallTo(() => _usersRepository.GetDetailedUserNotes(userId, offset, pageSize)).Returns(userNotes);
             A.CallTo(() => _usersRepository.GetCountOfUserNotes(userId)).Returns(count);
 
             var result = await _usersController.Notes(userId, page, pageSize);

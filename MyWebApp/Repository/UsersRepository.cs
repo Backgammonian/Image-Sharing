@@ -104,7 +104,7 @@ namespace MyWebApp.Repository
             };
         }
 
-        public async Task<UserNotesViewModel?> GetUserNotes(string userId, int offset, int size)
+        public async Task<UserNotesViewModel?> GetDetailedUserNotes(string userId, int offset, int size)
         {
             var user = await GetUserNoTracking(userId);
             if (user == null)

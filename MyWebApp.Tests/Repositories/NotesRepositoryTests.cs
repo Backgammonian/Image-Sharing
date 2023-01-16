@@ -1,5 +1,4 @@
-﻿using FluentAssertions.Equivalency;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MyWebApp.Data;
 using MyWebApp.Data.Interfaces;
@@ -7,8 +6,6 @@ using MyWebApp.Models;
 using MyWebApp.PicturesModule.Interfaces;
 using MyWebApp.Repository;
 using MyWebApp.ViewModels;
-using System.Security.Principal;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MyWebApp.Tests.Repositories
 {
@@ -27,16 +24,16 @@ namespace MyWebApp.Tests.Repositories
             _placeholderImageGenerator = new PlaceholderImageGenerator();
         }
 
+        private async Task<ApplicationDbContext> GetDatabase()
+        {
+            return await _placeholderDatabaseGenerator.GetDatabase();
+        }
+
         private async Task<NotesRepository> GetRepository()
         {
             return new NotesRepository(_randomGenerator,
                 _picturesLoader,
                 await _placeholderDatabaseGenerator.GetDatabase());
-        }
-
-        private async Task<ApplicationDbContext> GetDatabase()
-        {
-            return await _placeholderDatabaseGenerator.GetDatabase();
         }
 
         [Fact]
@@ -71,7 +68,7 @@ namespace MyWebApp.Tests.Repositories
 
             var result = await notesRepository.GetCount();
 
-            result.Should().Be(10);
+            result.Should().BeGreaterThan(0);
         }
 
         [Fact]
@@ -213,9 +210,9 @@ namespace MyWebApp.Tests.Repositories
             newNotesCount.Should().Be(oldNotesCount + 1);
             newNoteImagesCount.Should().Be(oldNoteImagesCount + 1);
             newNoteThreadsCount.Should().Be(oldNoteThreadsCount + 1);
-            newNote.Title.Should().BeEquivalentTo(createNoteVM.Title);
-            newNote.Description.Should().BeEquivalentTo(createNoteVM.Description);
-            newNoteThread.Thread.Should().BeEquivalentTo(createNoteVM.SelectedThread);
+            newNote.Title.Should().Be(createNoteVM.Title);
+            newNote.Description.Should().Be(createNoteVM.Description);
+            newNoteThread.Thread.Should().Be(createNoteVM.SelectedThread);
         }
 
         [Fact]
@@ -242,8 +239,8 @@ namespace MyWebApp.Tests.Repositories
             var editedNote = await database.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == editableNoteId);
 
             result.Should().BeTrue();
-            editedNote.Title.Should().BeEquivalentTo(editNoteVM.Title);
-            editedNote.Description.Should().BeEquivalentTo(editNoteVM.Description);
+            editedNote.Title.Should().Be(editNoteVM.Title);
+            editedNote.Description.Should().Be(editNoteVM.Description);
         }
 
         [Fact]

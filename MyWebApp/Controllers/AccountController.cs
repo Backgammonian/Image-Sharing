@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyWebApp.Credentials;
 using MyWebApp.Data.Interfaces;
 using MyWebApp.Localization.Interfaces;
 using MyWebApp.Models;
-using MyWebApp.Repository;
 using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
 
@@ -44,7 +42,7 @@ namespace MyWebApp.Controllers
             if (credentials != null &&
                 credentials.IsAuthenticated())
             {
-                return RedirectToAction("ErrorLogOutFirst", "Error");
+                return RedirectToAction("Index", "Home");
             }
 
             return View(new LoginViewModel());
@@ -59,7 +57,7 @@ namespace MyWebApp.Controllers
             if (credentials != null &&
                 credentials.IsAuthenticated())
             {
-                return RedirectToAction("ErrorLogOutFirst", "Error");
+                return RedirectToAction("Index", "Home");
             }
 
             if (!ModelState.IsValid)
@@ -115,7 +113,7 @@ namespace MyWebApp.Controllers
             if (credentials != null &&
                 credentials.IsAuthenticated())
             {
-                return RedirectToAction("ErrorLogOutFirst", "Error");
+                return RedirectToAction("Index", "Home");
             }
 
             return View(new RegisterViewModel());
@@ -130,7 +128,7 @@ namespace MyWebApp.Controllers
             if (credentials != null &&
                 credentials.IsAuthenticated())
             {
-                return RedirectToAction("ErrorLogOutFirst", "Error");
+                return RedirectToAction("Index", "Home");
             }
 
             if (!ModelState.IsValid)
@@ -193,14 +191,6 @@ namespace MyWebApp.Controllers
         [Route("Account/Logout")]
         public async Task<IActionResult> Logout()
         {
-            var credentialsVM = await _credentialsRepository.GetLoggedInUser();
-            var credentials = credentialsVM.Credentials;
-            if (credentials != null &&
-                credentials.IsNotAuthenticated())
-            {
-                return RedirectToAction("ErrorNoAuthentication", "Error");
-            }
-
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");

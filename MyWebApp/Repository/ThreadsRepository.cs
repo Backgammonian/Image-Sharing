@@ -61,8 +61,7 @@ namespace MyWebApp.Repository
         public async Task<bool> Create(CreateThreadViewModel createThreadVM)
         {
             var newThreadName = createThreadVM.NewThreadName.ToLower();
-            var allThreads = await GetAllThreads();
-            if (allThreads.Any(x => x.Thread == newThreadName)) 
+            if (await _dbContext.Threads.AsNoTracking().AnyAsync(x => x.Thread == newThreadName))
             {
                 return false;
             }
@@ -78,18 +77,15 @@ namespace MyWebApp.Repository
         public async Task<bool> Delete(DeleteThreadViewModel deleteThreadVM)
         {
             var threadName = deleteThreadVM.SelectedThreadName.ToLower();
-            var allThreads = await GetAllThreads();
-            if (!allThreads.Any(x => x.Thread == threadName))
+            var thread = await _dbContext.Threads.FirstOrDefaultAsync(x => x.Thread == threadName);
+            if (thread == null)
             {
                 return false;
             }
 
-            _dbContext.Threads.Remove(new ThreadModel()
-            {
-                Thread = threadName
-            });
+            _dbContext.Threads.Remove(thread);
 
-            var noteThreads = await _dbContext.NoteThreads.AsNoTracking().Where(x => x.Thread == threadName).ToListAsync();
+            var noteThreads = await _dbContext.NoteThreads.Where(x => x.Thread == threadName).ToListAsync();
             foreach (var noteThread in noteThreads)
             {
                 _dbContext.NoteThreads.Remove(noteThread);

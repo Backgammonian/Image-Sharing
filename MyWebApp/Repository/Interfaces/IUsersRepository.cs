@@ -15,6 +15,6 @@ namespace MyWebApp.Repository.Interfaces
         Task<IEnumerable<NoteModel>> GetNotesOfUser(string userId, int offset, int size);
         Task<int> GetCountOfUserNotes(string userId);
         Task<UserDetailsViewModel> GetUserDetails(string userId);
-        Task<UserNotesViewModel?> GetUserNotes(string userId, int offset, int size);
+        Task<UserNotesViewModel?> GetDetailedUserNotes(string userId, int offset, int size);
     }
 }

@@ -12,7 +12,6 @@ Simple Web platform for image sharing built using ASP.NET Core MVC.
 * Pagination of the notes
 * Image galleries (using [fancyBox](https://github.com/fancyapps/fancybox))
 * Administrative panel (kind of)
-* Logging in console & file (using [NReco.Logging.File](https://github.com/nreco/logging))
 * Localization (🇺🇸 & 🇷🇺)
 * Unit-tests (using [xUnit](https://xunit.net/), [Fluent Assertions](https://fluentassertions.com/) & [FakeItEasy](https://fakeiteasy.github.io/))
 ## Demonstation

@@ -28,7 +28,6 @@ namespace MyWebApp
 
             builder.Services.AddLogging(configure =>
             {
-                configure.AddFile($"Logs\\log file {dateTimeWrapper.GetMyTimeFormat(DateTime.Now)}.txt");
                 configure.AddConsole();
                 configure.AddDebug();
             });
@@ -75,10 +74,16 @@ namespace MyWebApp
             builder.Services.AddScoped<IThreadsRepository, ThreadsRepository>();
             builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
+            var connectionString = Environment.GetEnvironmentVariable("IMAGESHARING_DB_CONNECTION_STRING");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(connectionString);
             });
+
+            /*builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });*/
 
             builder.Services.AddIdentity<UserModel, IdentityRole>(opt =>
             {
@@ -100,14 +105,14 @@ namespace MyWebApp
             var app = builder.Build();
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-            if (args.Length > 0 &&
-                args[0].ToLower() == "seeddata")
+            /*if (app.Environment.IsProduction())
             {
-                Console.WriteLine("(Main) Seeding the database");
-
-                var seedUsersModel = await Seed.SeedUsersAndRolesAsync(app);
-                await Seed.SeedData(app, seedUsersModel.Admin, seedUsersModel.Users);
+                await SeedOnlyAdmin(app);
             }
+            else
+            {
+                await SeedUsersAndData(app);
+            }*/
 
             if (!app.Environment.IsDevelopment())
             {
@@ -150,6 +155,21 @@ namespace MyWebApp
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             await app.RunAsync();
+        }
+
+        private static async Task SeedUsersAndData(IApplicationBuilder app)
+        {
+            Console.WriteLine("(Main) Seeding the database");
+
+            var seedUsersModel = await Seeder.SeedAllUsersWithRolesAndData(app);
+            await Seeder.SeedData(app, seedUsersModel.Admin, seedUsersModel.Users);
+        }
+
+        private static async Task SeedOnlyAdmin(IApplicationBuilder app)
+        {
+            Console.WriteLine("(Main) Slightly seeding the database");
+
+            await Seeder.SeedOnlyAdminAndRoles(app);
         }
     }
 }

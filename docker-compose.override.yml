@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+    mywebapp:
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Production
+            - ASPNETCORE_URLS=https://+:443;http://+:80
+            - IMAGESHARING_DB_CONNECTION_STRING=Host=mywebapp_db;Port=44000;Database=testdb;Username=postgres;Password=12345678
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+            - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+    mywebapp_db:
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=12345678
+            - POSTGRES_DB=TestDB
+            - POSTGRES_PORT=44000
+        ports:
+            - "44000:44000"

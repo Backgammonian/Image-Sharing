@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using MyWebApp.Credentials;
 using MyWebApp.Data.Interfaces;
 using MyWebApp.Models;
-using MyWebApp.PicturesModule;
 using MyWebApp.PicturesModule.Interfaces;
 
 namespace MyWebApp.Data
 {
-    public static class Seed
+    public static class Seeder
     {
-        public static async Task<SeedUsersModel> SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        private static async Task SeedRoles(IApplicationBuilder applicationBuilder)
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -23,19 +23,14 @@ namespace MyWebApp.Data
             {
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
             }
+        }
 
-            var randomGenetator = serviceScope.ServiceProvider.GetService<IRandomGenerator>();
-            if (randomGenetator == null)
-            {
-                return new SeedUsersModel()
-                {
-                    Admin = new UserModel(),
-                    Users = Array.Empty<UserModel>()
-                };
-            }
-
+        private static async Task<UserModel> SeedAdmin(IApplicationBuilder applicationBuilder)
+        {
+            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
             var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
-            string adminUserEmail = "totallynotadmin@gmail.com";
+
+            var adminUserEmail = "totallynotadmin@gmail.com";
             var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
             if (adminUser == null)
             {
@@ -53,6 +48,33 @@ namespace MyWebApp.Data
 
                 adminUser = newAdminUser;
             }
+
+            return adminUser;
+        }
+
+        public static async Task SeedOnlyAdminAndRoles(IApplicationBuilder applicationBuilder)
+        {
+            await SeedRoles(applicationBuilder);
+            await SeedAdmin(applicationBuilder);
+        }
+
+        public static async Task<SeedUsersModel> SeedAllUsersWithRolesAndData(IApplicationBuilder applicationBuilder)
+        {
+            await SeedRoles(applicationBuilder);
+
+            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
+            var randomGenetator = serviceScope.ServiceProvider.GetService<IRandomGenerator>();
+            if (randomGenetator == null)
+            {
+                return new SeedUsersModel()
+                {
+                    Admin = new UserModel(),
+                    Users = Array.Empty<UserModel>()
+                };
+            }
+
+            var adminUser = await SeedAdmin(applicationBuilder);
 
             var users = new List<UserModel>();
             var usersCredentials = new[] { 

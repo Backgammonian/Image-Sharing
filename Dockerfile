@@ -10,7 +10,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal
 WORKDIR /app
 COPY --from=build /app ./
 
-RUN set ASPNETCORE_ENVIRONMENT=Production
+# RUN set ASPNETCORE_ENVIRONMENT=Production
+RUN set IMAGESHARING_DB=Host=localhost;Port=44000;Database=TestDB;Username=postgres;Password=12345678
 
 EXPOSE 5000
 

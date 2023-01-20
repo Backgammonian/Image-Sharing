@@ -46,6 +46,7 @@ namespace MyWebApp
                         return factory.Create("ShareResource", assemblyName.Name);
                     };
                 });
+
             builder.Services.Configure<RequestLocalizationOptions>(
                 options =>
                 {
@@ -105,14 +106,12 @@ namespace MyWebApp
             var app = builder.Build();
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-            /*if (app.Environment.IsProduction())
+            var isSeeding = Environment.GetEnvironmentVariable("IMAGESHARING_SEEDING");
+            if (isSeeding != null &&
+                isSeeding == "True")
             {
-                await SeedOnlyAdmin(app);
+                await SeedData(app);
             }
-            else
-            {
-                await SeedUsersAndData(app);
-            }*/
 
             if (!app.Environment.IsDevelopment())
             {
@@ -157,19 +156,13 @@ namespace MyWebApp
             await app.RunAsync();
         }
 
-        private static async Task SeedUsersAndData(IApplicationBuilder app)
+        private static async Task SeedData(IApplicationBuilder app)
         {
             Console.WriteLine("(Main) Seeding the database");
 
-            var seedUsersModel = await Seeder.SeedAllUsersWithRolesAndData(app);
+            Seeder.EnsureCreated(app);
+            var seedUsersModel = await Seeder.SeedUsersAndRoles(app);
             await Seeder.SeedData(app, seedUsersModel.Admin, seedUsersModel.Users);
-        }
-
-        private static async Task SeedOnlyAdmin(IApplicationBuilder app)
-        {
-            Console.WriteLine("(Main) Slightly seeding the database");
-
-            await Seeder.SeedOnlyAdminAndRoles(app);
         }
     }
 }

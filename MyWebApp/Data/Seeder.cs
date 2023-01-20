@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using MyWebApp.Credentials;
-using MyWebApp.Data.Interfaces;
 using MyWebApp.Models;
 using MyWebApp.PicturesModule.Interfaces;
 
@@ -9,11 +7,25 @@ namespace MyWebApp.Data
 {
     public static class Seeder
     {
-        private static async Task SeedRoles(IApplicationBuilder applicationBuilder)
+        public static void EnsureCreated(IApplicationBuilder applicationBuilder)
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
-            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+            var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+            if (dbContext == null)
+            {
+                return;
+            }
+
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.EnsureCreated();
+        }
+
+        public static async Task<SeedUsersModel> SeedUsersAndRoles(IApplicationBuilder applicationBuilder)
+        {
+            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
+
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
             {
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
@@ -23,14 +35,9 @@ namespace MyWebApp.Data
             {
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
             }
-        }
 
-        private static async Task<UserModel> SeedAdmin(IApplicationBuilder applicationBuilder)
-        {
-            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
             var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
-
-            var adminUserEmail = "totallynotadmin@gmail.com";
+            var adminUserEmail = "notadmin@gmail.com";
             var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
             if (adminUser == null)
             {
@@ -49,39 +56,13 @@ namespace MyWebApp.Data
                 adminUser = newAdminUser;
             }
 
-            return adminUser;
-        }
-
-        public static async Task SeedOnlyAdminAndRoles(IApplicationBuilder applicationBuilder)
-        {
-            await SeedRoles(applicationBuilder);
-            await SeedAdmin(applicationBuilder);
-        }
-
-        public static async Task<SeedUsersModel> SeedAllUsersWithRolesAndData(IApplicationBuilder applicationBuilder)
-        {
-            await SeedRoles(applicationBuilder);
-
-            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
-            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
-            var randomGenetator = serviceScope.ServiceProvider.GetService<IRandomGenerator>();
-            if (randomGenetator == null)
-            {
-                return new SeedUsersModel()
-                {
-                    Admin = new UserModel(),
-                    Users = Array.Empty<UserModel>()
-                };
-            }
-
-            var adminUser = await SeedAdmin(applicationBuilder);
-
             var users = new List<UserModel>();
-            var usersCredentials = new[] { 
-                ("white@gmail.com", "Mr.White", "12345678", "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit."),
+            var usersCredentials = new[] {
+                ("white@gmail.com", "Mr.White", "12345678", "Neque porro quisquam amet, consectetur, adipisci velit."),
                 ("pink@gmail.com", "Mr.Pink", "12345678", "No way this is going to work! Just no way!"),
-                ("brown@gmail.com", "Mr.Brown", "12345678", "Just mindlessly scrolling the Internet pages until the end of the world. =)") };
+                ("brown@gmail.com", "Mr.Brown", "12345678", "Just mindlessly scrolling the Internet pages =)") };
 
+            var i = 1;
             foreach (var userInfo in usersCredentials)
             {
                 var email = userInfo.Item1;
@@ -94,7 +75,7 @@ namespace MyWebApp.Data
                 {
                     var newUser = new UserModel()
                     {
-                        Id = randomGenetator.GetRandomId(),
+                        Id = "user" + i,
                         UserName = nickname,
                         Email = email,
                         EmailConfirmed = true,
@@ -105,6 +86,8 @@ namespace MyWebApp.Data
                     await userManager.AddToRoleAsync(newUser, UserRoles.User);
                     users.Add(newUser);
                 }
+
+                i += 1;
             }
 
             return new SeedUsersModel()
@@ -292,8 +275,6 @@ namespace MyWebApp.Data
             picturesLoader.LoadDefaultImage();
             var noteImages = picturesLoader.LoadDemoNoteImages(notes.ToArray());
             var userImages = picturesLoader.LoadDemoProfileImages(users);
-
-            dbContext.Database.EnsureCreated();
 
             if (dbContext.ProfileImages != null &&
                 !dbContext.ProfileImages.Any())

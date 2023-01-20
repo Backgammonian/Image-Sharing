@@ -8,10 +8,13 @@ namespace MyWebApp.IpApiService
     public sealed class IpLocationHelper : IIpLocationHelper
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<IpLocationHelper> _logger;
 
-        public IpLocationHelper(IHttpContextAccessor httpContextAccessor)
+        public IpLocationHelper(IHttpContextAccessor httpContextAccessor,
+            ILogger<IpLocationHelper> logger)
         {
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public async Task<string> GetLocation()
@@ -31,6 +34,8 @@ namespace MyWebApp.IpApiService
                     clientIpAddress = IPAddress.Loopback;
                 }
 
+                _logger.LogInformation($"(IpLocationHelper) Getting info about address {clientIpAddress}...");
+
                 //fields=66846719 - all fields
                 //fields=16401 - only status, country and city
                 var url = $"http://ip-api.com/json/{clientIpAddress}?fields=16401";
@@ -43,8 +48,13 @@ namespace MyWebApp.IpApiService
                 if (ipInfo != null &&
                     ipInfo.Status == "success")
                 {
-                    return $"{ipInfo.Country}, {ipInfo.City}";
+                    var answer = $"{ipInfo.Country}, {ipInfo.City}";
+                    _logger.LogInformation($"(IpLocationHelper) Address {clientIpAddress} is pointing to {answer}");
+
+                    return answer;
                 }
+
+                _logger.LogInformation($"(IpLocationHelper_Warning) Can't get info about address {clientIpAddress}");
 
                 return $"{Constants.UnknownIP} ({clientIpAddress})";
             }

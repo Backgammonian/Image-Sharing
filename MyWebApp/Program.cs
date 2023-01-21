@@ -76,15 +76,21 @@ namespace MyWebApp
             builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
             var connectionString = Environment.GetEnvironmentVariable("IMAGESHARING_DB_CONNECTION_STRING");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            if (connectionString != null)
             {
-                options.UseNpgsql(connectionString);
-            });
-
-            /*builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                {
+                    options.UseNpgsql(connectionString);
+                });
+            }
+            else
             {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });*/
+                //intended to be used in local debugging process
+                builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                {
+                    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+                });
+            }
 
             builder.Services.AddIdentity<UserModel, IdentityRole>(opt =>
             {
@@ -158,7 +164,7 @@ namespace MyWebApp
 
         private static async Task SeedData(IApplicationBuilder app)
         {
-            Console.WriteLine("(Main) Seeding the database");
+            Console.WriteLine("(SeedData) Seeding the database!");
 
             Seeder.EnsureCreated(app);
             var seedUsersModel = await Seeder.SeedUsersAndRoles(app);

@@ -15,4 +15,5 @@ Simple Web platform for image sharing built using ASP.NET Core MVC.
 * Localization (🇺🇸 & 🇷🇺)
 * Unit-tests (using [xUnit](https://xunit.net/), [Fluent Assertions](https://fluentassertions.com/) & [FakeItEasy](https://fakeiteasy.github.io/))
 ## Demonstation
-* WIP
+![showcase-1](showcase/showcase-1.jpg)
+![showcase-2](showcase/showcase-2.jpg)

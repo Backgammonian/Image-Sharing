@@ -69,30 +69,28 @@
                         }
                     </ul>
                 </div>
-                <div>
-                    <form method="get" action="/Home/ChangeLanguage">
-                        <label for="culture">@LanguageService.GetKey("SelectLanguage"):</label>
-                        <select id="culture" name="culture">
-                            @{
-                                var currentCulture = CultureHelper.GetCulture();
-                                switch (currentCulture)
-                                {
-                                    default:
-                                    case "en-US":
-                                        <option value="en-US" selected="selected">English</option>
-                                        <option value="ru-RU">Русский</option>
-                                        break;
+                <form method="get" action="/Home/ChangeLanguage" class="language-form">
+                    <label for="culture" class="language-control" style="font-size: 15px;">@LanguageService.GetKey("SelectLanguage"):</label>
+                    <select id="culture" name="culture" class="language-control">
+                        @{
+                            var currentCulture = CultureHelper.GetCulture();
+                            switch (currentCulture)
+                            {
+                                default:
+                                case "en-US":
+                                    <option value="en-US" selected="selected">English</option>
+                                    <option value="ru-RU">Русский</option>
+                                    break;
 
-                                    case "ru-RU":
-                                        <option value="en-US">English</option>
-                                        <option value="ru-RU" selected="selected">Русский</option>
-                                        break;
-                                }
+                                case "ru-RU":
+                                    <option value="en-US">English</option>
+                                    <option value="ru-RU" selected="selected">Русский</option>
+                                    break;
                             }
-                        </select>
-                        <input type="submit" value="@LanguageService.GetKey("ChangeLanguage")">
-                    </form>
-                </div>
+                        }
+                    </select>
+                    <input type="submit" value="@LanguageService.GetKey("ChangeLanguage")" class="language-control">
+                </form>
             </div>
         </nav>
     </header>
@@ -102,13 +100,11 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <p>
-                @await IpLocationHelper.GetLocation() |
-                &copy; 2022-2023 - Image Sharing - 
-                <a asp-area="" asp-controller="Home" asp-action="Privacy">@LanguageService.GetKey("Privacy")</a>
-            </p>
+    <footer class="border-top footer text-muted my-footer">
+        <div class="container footer-container">
+            <p>@await IpLocationHelper.GetLocation()</p>
+            <p>&copy; 2022-2023 - Image Sharing</p>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">@LanguageService.GetKey("Privacy")</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

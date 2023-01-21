@@ -161,3 +161,31 @@ body
 {
     white-space: pre-line;
 }
+
+.language-control 
+{
+    margin: 2px;
+    font-size: 14px;
+}
+
+.language-form 
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: baseline;
+    padding: 8px;
+    width: 600px;
+}
+
+.my-footer
+{
+    line-height: 10px;
+}
+
+.footer-container 
+{
+    margin-bottom: 8px;
+    margin-top: 8px;
+}

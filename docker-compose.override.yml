@@ -4,18 +4,19 @@ services:
     mywebapp:
         environment:
             - ASPNETCORE_ENVIRONMENT=Production
-            - ASPNETCORE_URLS=https://+:443;http://+:80
-            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-            - ASPNETCORE_Kestrel__Certificates__Default__Password=SECRETPASSWORD
+            - ASPNETCORE_URLS=http://+:80
+            #- ASPNETCORE_URLS=https://+:443;http://+:80
+            #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+            #- ASPNETCORE_Kestrel__Certificates__Default__Password=SECRETPASSWORD
             - IMAGESHARING_DB_CONNECTION_STRING=Host=mywebapp_db;Port=5432;Database=TestDB;Username=postgres;Password=12345678
             - IMAGESHARING_SEEDING=True
         ports:
             - "80:80"
-            - "443:443"
+            #- "443:443"
         volumes:
             - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
             - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-            - ~/.aspnet/https:/https:ro
+            #- ~/.aspnet/https:/https:ro
 
     mywebapp_db:
         environment:

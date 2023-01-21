@@ -85,7 +85,7 @@ namespace MyWebApp
             }
             else
             {
-                //intended to be used in local debugging process
+                // Intended to be used in local debugging process
                 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 {
                     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));

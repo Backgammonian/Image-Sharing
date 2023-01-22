@@ -17,3 +17,5 @@ Simple Web platform for image sharing built using ASP.NET Core MVC.
 ## Demonstation
 ![showcase-1](showcase/showcase-1.jpg)
 ![showcase-2](showcase/showcase-2.jpg)
+## Entity relationship diagram
+![erd](entity-relationship-diagram/erd.jpg)

@@ -118,6 +118,12 @@ namespace MyWebApp
             {
                 await SeedData(app);
             }
+            else
+            if (args.Length > 0 &&
+                args[0] == "seeddata")
+            {
+                await SeedData(app);
+            }
 
             if (!app.Environment.IsDevelopment())
             {

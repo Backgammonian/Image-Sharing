@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp.Models
 {
@@ -7,11 +6,9 @@ namespace MyWebApp.Models
     {
         [Key]
         public string ImageId { get; set; } = string.Empty;
-
-        [ForeignKey(nameof(NoteModel))]
-        public string NoteId { get; set; } = string.Empty;
-
         public string ImageFileName { get; set; } = string.Empty;
         public DateTimeOffset UploadTime { get; set; }
+        public string NoteId { get; set; } = string.Empty;
+        public NoteModel? Note { get; set; }
     }
 }

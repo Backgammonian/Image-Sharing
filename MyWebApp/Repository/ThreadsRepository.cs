@@ -20,17 +20,24 @@ namespace MyWebApp.Repository
 
         public async Task<IEnumerable<NoteThreadModel>> GetNotesFromThread(string thread, int offset, int size)
         {
-            return await _dbContext.NoteThreads.AsNoTracking().Where(x => x.Thread == thread).Skip(offset).Take(size).ToListAsync();
+            return await _dbContext.NoteThreads
+                .AsNoTracking()
+                .Where(x => x.ThreadId == thread)
+                .Skip(offset)
+                .Take(size).ToListAsync();
         }
 
         public async Task<int> GetCountOfNotesFromThread(string thread)
         {
-            return await _dbContext.NoteThreads.CountAsync(x => x.Thread == thread);
+            return await _dbContext.NoteThreads
+                .CountAsync(x => x.ThreadId == thread);
         }
 
         public async Task<IEnumerable<ThreadModel>> GetAllThreads()
         {
-            return await _dbContext.Threads.AsNoTracking().ToListAsync();
+            return await _dbContext.Threads
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<NotesFromThreadViewModel> GetByThread(string thread, int offset, int size)
@@ -61,7 +68,7 @@ namespace MyWebApp.Repository
         public async Task<bool> Create(CreateThreadViewModel createThreadVM)
         {
             var newThreadName = createThreadVM.NewThreadName.ToLower();
-            if (await _dbContext.Threads.AsNoTracking().AnyAsync(x => x.Thread == newThreadName))
+            if (await _dbContext.Threads.AnyAsync(x => x.Thread == newThreadName))
             {
                 return false;
             }
@@ -77,7 +84,9 @@ namespace MyWebApp.Repository
         public async Task<bool> Delete(DeleteThreadViewModel deleteThreadVM)
         {
             var threadName = deleteThreadVM.SelectedThreadName.ToLower();
-            var thread = await _dbContext.Threads.FirstOrDefaultAsync(x => x.Thread == threadName);
+            var thread = await _dbContext.Threads
+                .FirstOrDefaultAsync(x => x.Thread == threadName);
+
             if (thread == null)
             {
                 return false;
@@ -85,7 +94,10 @@ namespace MyWebApp.Repository
 
             _dbContext.Threads.Remove(thread);
 
-            var noteThreads = await _dbContext.NoteThreads.Where(x => x.Thread == threadName).ToListAsync();
+            var noteThreads = await _dbContext.NoteThreads
+                .Where(x => x.ThreadId == threadName)
+                .ToListAsync();
+
             foreach (var noteThread in noteThreads)
             {
                 _dbContext.NoteThreads.Remove(noteThread);

@@ -120,7 +120,7 @@ namespace MyWebApp
             }
             else
             if (args.Length > 0 &&
-                args[0] == "seeddata")
+                args[0].ToLower() == "seeddata")
             {
                 await SeedData(app);
             }
@@ -172,9 +172,9 @@ namespace MyWebApp
         {
             Console.WriteLine("(SeedData) Seeding the database!");
 
-            Seeder.EnsureCreated(app);
-            var seedUsersModel = await Seeder.SeedUsersAndRoles(app);
-            await Seeder.SeedData(app, seedUsersModel.Admin, seedUsersModel.Users);
+            var seeder = new Seeder(app);
+            seeder.EnsureCreated();
+            await seeder.SeedData();
         }
     }
 }

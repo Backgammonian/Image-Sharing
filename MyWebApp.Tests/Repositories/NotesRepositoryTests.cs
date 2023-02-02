@@ -212,7 +212,7 @@ namespace MyWebApp.Tests.Repositories
             newNoteThreadsCount.Should().Be(oldNoteThreadsCount + 1);
             newNote.Title.Should().Be(createNoteVM.Title);
             newNote.Description.Should().Be(createNoteVM.Description);
-            newNoteThread.Thread.Should().Be(createNoteVM.SelectedThread);
+            newNoteThread.ThreadId.Should().Be(createNoteVM.SelectedThread);
         }
 
         [Fact]
@@ -260,10 +260,8 @@ namespace MyWebApp.Tests.Repositories
 
             var result = await notesRepository.Delete(deleteNoteVM);
             var newNotesCount = await database.Notes.CountAsync();
-            var previousNotesCount = await database.PreviousNotes.CountAsync();
 
             result.Should().BeTrue();
-            previousNotesCount.Should().Be(1);
             newNotesCount.Should().Be(oldNotesCount - 1);
         }
     }

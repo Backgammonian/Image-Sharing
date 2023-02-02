@@ -120,7 +120,7 @@ namespace MyWebApp.PicturesModule
             };
         }
 
-        public List<NoteImageModel> LoadDemoNoteImages(NoteModel[] notes)
+        public List<NoteImageModel> LoadDemoNoteImages(List<NoteModel> notes)
         {
             EnsureFolderIsCreated();
 
@@ -132,7 +132,7 @@ namespace MyWebApp.PicturesModule
                 var fileName = Path.GetFileName(imagePath);
                 var savePath = Path.Combine(_imagesPath, fileName);
                 _picturesSaver.SaveFile(imagePath, savePath);
-                var currentModelIndex = i % notes.Length;
+                var currentModelIndex = i % notes.Count;
 
                 images.Add(new NoteImageModel()
                 {
@@ -148,7 +148,7 @@ namespace MyWebApp.PicturesModule
             return images;
         }
 
-        public List<UserImageModel> LoadDemoProfileImages(UserModel[] users)
+        public List<UserImageModel> LoadDemoProfileImages(List<UserModel> users)
         {
             EnsureFolderIsCreated();
 
@@ -160,7 +160,7 @@ namespace MyWebApp.PicturesModule
                 var fileName = Path.GetFileName(imagePath);
                 var savePath = Path.Combine(_imagesPath, fileName);
                 _picturesSaver.SaveFile(imagePath, savePath);
-                var currentModelIndex = i % users.Length;
+                var currentModelIndex = i % users.Count;
 
                 images.Add(new UserImageModel()
                 {

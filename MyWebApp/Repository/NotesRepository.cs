@@ -25,27 +25,37 @@ namespace MyWebApp.Repository
 
         public async Task<IEnumerable<ThreadModel>> GetAvailableNoteThreads()
         {
-            return await _dbContext.Threads.AsNoTracking().ToListAsync();
+            return await _dbContext.Threads
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<NoteModel>> GetNotesSlice(int offset, int size)
         {
-            return await _dbContext.Notes.AsNoTracking().Skip(offset).Take(size).ToListAsync();
+            return await _dbContext.Notes
+                .AsNoTracking()
+                .Skip(offset)
+                .Take(size)
+                .ToListAsync();
         }
 
         public async Task<int> GetCount()
         {
-            return await _dbContext.Notes.CountAsync();
+            return await _dbContext.Notes
+                .CountAsync();
         }
 
         public async Task<NoteModel?> GetNote(string noteId)
         {
-            return await _dbContext.Notes.FirstOrDefaultAsync(x => x.NoteId == noteId);
+            return await _dbContext.Notes
+                .FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
         public async Task<NoteModel?> GetNoteNoTracking(string noteId)
         {
-            return await _dbContext.Notes.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == noteId);
+            return await _dbContext.Notes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
         public async Task<UserModel?> GetNoteAuthor(NoteModel? note)
@@ -55,27 +65,43 @@ namespace MyWebApp.Repository
                 return null;
             }
 
-            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == note.UserId);
+            return await _dbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == note.UserId);
         }
 
         public async Task<NoteThreadModel?> GetNoteThread(string noteId)
         {
-            return await _dbContext.NoteThreads.AsNoTracking().FirstOrDefaultAsync(x => x.NoteId == noteId);
+            return await _dbContext.NoteThreads
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.NoteId == noteId);
         }
 
         public async Task<NoteImageModel?> GetNoteFirstImage(string noteId)
         {
-            return await _dbContext.NoteImages.AsNoTracking().OrderBy(x => x.UploadTime).FirstOrDefaultAsync(x => x.NoteId == noteId);
+            return await _dbContext.NoteImages
+                .AsNoTracking()
+                .Where(x => x.NoteId == noteId)
+                .OrderBy(x => x.UploadTime)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<NoteImageModel>> GetNoteImages(string noteId)
         {
-            return await _dbContext.NoteImages.AsNoTracking().Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
+            return await _dbContext.NoteImages
+                .AsNoTracking()
+                .Where(x => x.NoteId == noteId)
+                .OrderBy(x => x.UploadTime)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<NoteImageModel>> GetNoteImagesNoTracking(string noteId)
         {
-            return await _dbContext.NoteImages.AsNoTracking().Where(x => x.NoteId == noteId).OrderBy(x => x.UploadTime).ToListAsync();
+            return await _dbContext.NoteImages
+                .AsNoTracking()
+                .Where(x => x.NoteId == noteId)
+                .OrderBy(x => x.UploadTime)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<NoteSummaryViewModel>> GetNotesSummaries(int offset, int size)
@@ -143,8 +169,7 @@ namespace MyWebApp.Repository
                 {
                     await _dbContext.NoteThreads.AddAsync(new NoteThreadModel()
                     {
-                        Id = _randomGenerator.GetRandomId(),
-                        Thread = selectedThread,
+                        ThreadId = selectedThread,
                         NoteId = note.NoteId
                     });
                 }
@@ -169,15 +194,6 @@ namespace MyWebApp.Repository
                 var oldImages = await GetNoteImages(note.NoteId);
                 foreach (var oldImage in oldImages)
                 {
-                    var previousImage = new PreviousNoteImageModel()
-                    {
-                        Id = _randomGenerator.GetRandomId(),
-                        FormerImageId = oldImage.ImageId,
-                        NoteId = oldImage.NoteId,
-                        ImageFileName = oldImage.ImageFileName
-                    };
-
-                    await _dbContext.PreviousNoteImages.AddAsync(previousImage);
                     _dbContext.NoteImages.Remove(oldImage);
                 }
 
@@ -194,18 +210,17 @@ namespace MyWebApp.Repository
                 var availableThreads = await GetAvailableNoteThreads();
                 if (availableThreads.Any(x => x.Thread == selectedThread))
                 {
-                    await _dbContext.NoteThreads.AddAsync(new NoteThreadModel()
-                    {
-                        Id = _randomGenerator.GetRandomId(),
-                        Thread = selectedThread,
-                        NoteId = note.NoteId
-                    });
-
                     var oldThreadOfNote = await GetNoteThread(note.NoteId);
                     if (oldThreadOfNote != null)
                     {
                         _dbContext.NoteThreads.Remove(oldThreadOfNote);
                     }
+
+                    await _dbContext.NoteThreads.AddAsync(new NoteThreadModel()
+                    {
+                        ThreadId = selectedThread,
+                        NoteId = note.NoteId
+                    });
                 }
             }
 
@@ -225,18 +240,6 @@ namespace MyWebApp.Repository
                 return false;
             }
 
-            var author = await GetNoteAuthor(note);
-
-            var noteModelArchiveCopy = new PreviousNoteModel()
-            {
-                Id = _randomGenerator.GetRandomId(),
-                FormerId = note.NoteId,
-                UserId = author == null ? string.Empty : author.Id,
-                Title = note.Title,
-                Description = note.Description
-            };
-
-            await _dbContext.PreviousNotes.AddAsync(noteModelArchiveCopy);
             _dbContext.Notes.Remove(note);
 
             return await Save();

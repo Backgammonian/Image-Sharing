@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230115074557_InitialCreate")]
+    [Migration("20230202113031_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,6 +174,8 @@ namespace MyWebApp.Migrations
 
                     b.HasKey("ImageId");
 
+                    b.HasIndex("NoteId");
+
                     b.ToTable("NoteImages");
                 });
 
@@ -196,73 +198,24 @@ namespace MyWebApp.Migrations
 
                     b.HasKey("NoteId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("MyWebApp.Models.NoteThreadModel", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ThreadId")
                         .HasColumnType("text");
 
                     b.Property<string>("NoteId")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Thread")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.HasKey("ThreadId", "NoteId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("NoteId");
 
                     b.ToTable("NoteThreads");
-                });
-
-            modelBuilder.Entity("MyWebApp.Models.PreviousNoteImageModel", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FormerImageId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageFileName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NoteId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PreviousNoteImages");
-                });
-
-            modelBuilder.Entity("MyWebApp.Models.PreviousNoteModel", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FormerId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PreviousNotes");
                 });
 
             modelBuilder.Entity("MyWebApp.Models.ThreadModel", b =>
@@ -292,6 +245,8 @@ namespace MyWebApp.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("ImageId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProfileImages");
                 });
@@ -413,6 +368,77 @@ namespace MyWebApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyWebApp.Models.NoteImageModel", b =>
+                {
+                    b.HasOne("MyWebApp.Models.NoteModel", "Note")
+                        .WithMany("Images")
+                        .HasForeignKey("NoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Note");
+                });
+
+            modelBuilder.Entity("MyWebApp.Models.NoteModel", b =>
+                {
+                    b.HasOne("MyWebApp.Models.UserModel", "User")
+                        .WithMany("Notes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyWebApp.Models.NoteThreadModel", b =>
+                {
+                    b.HasOne("MyWebApp.Models.NoteModel", "Note")
+                        .WithMany("NoteThreads")
+                        .HasForeignKey("NoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyWebApp.Models.ThreadModel", "Thread")
+                        .WithMany("NoteThreads")
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Note");
+
+                    b.Navigation("Thread");
+                });
+
+            modelBuilder.Entity("MyWebApp.Models.UserImageModel", b =>
+                {
+                    b.HasOne("MyWebApp.Models.UserModel", "User")
+                        .WithMany("ProfilePictures")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyWebApp.Models.NoteModel", b =>
+                {
+                    b.Navigation("Images");
+
+                    b.Navigation("NoteThreads");
+                });
+
+            modelBuilder.Entity("MyWebApp.Models.ThreadModel", b =>
+                {
+                    b.Navigation("NoteThreads");
+                });
+
+            modelBuilder.Entity("MyWebApp.Models.UserModel", b =>
+                {
+                    b.Navigation("Notes");
+
+                    b.Navigation("ProfilePictures");
                 });
 #pragma warning restore 612, 618
         }

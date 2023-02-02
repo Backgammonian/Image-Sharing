@@ -6,7 +6,6 @@ using MyWebApp.PicturesModule.Interfaces;
 using MyWebApp.Repository;
 using MyWebApp.Repository.Interfaces;
 using MyWebApp.ViewModels;
-using System.Drawing;
 
 namespace MyWebApp.Tests.Repositories
 {

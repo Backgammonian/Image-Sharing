@@ -51,90 +51,6 @@ namespace MyWebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NoteImages",
-                columns: table => new
-                {
-                    ImageId = table.Column<string>(type: "text", nullable: false),
-                    NoteId = table.Column<string>(type: "text", nullable: false),
-                    ImageFileName = table.Column<string>(type: "text", nullable: false),
-                    UploadTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NoteImages", x => x.ImageId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Notes",
-                columns: table => new
-                {
-                    NoteId = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Notes", x => x.NoteId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NoteThreads",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Thread = table.Column<string>(type: "text", nullable: false),
-                    NoteId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NoteThreads", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PreviousNoteImages",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    FormerImageId = table.Column<string>(type: "text", nullable: false),
-                    NoteId = table.Column<string>(type: "text", nullable: false),
-                    ImageFileName = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PreviousNoteImages", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PreviousNotes",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    FormerId = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PreviousNotes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProfileImages",
-                columns: table => new
-                {
-                    ImageId = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    ImageFileName = table.Column<string>(type: "text", nullable: false),
-                    UploadTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProfileImages", x => x.ImageId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Threads",
                 columns: table => new
                 {
@@ -251,6 +167,90 @@ namespace MyWebApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Notes",
+                columns: table => new
+                {
+                    NoteId = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notes", x => x.NoteId);
+                    table.ForeignKey(
+                        name: "FK_Notes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfileImages",
+                columns: table => new
+                {
+                    ImageId = table.Column<string>(type: "text", nullable: false),
+                    ImageFileName = table.Column<string>(type: "text", nullable: false),
+                    UploadTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfileImages", x => x.ImageId);
+                    table.ForeignKey(
+                        name: "FK_ProfileImages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NoteImages",
+                columns: table => new
+                {
+                    ImageId = table.Column<string>(type: "text", nullable: false),
+                    ImageFileName = table.Column<string>(type: "text", nullable: false),
+                    UploadTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    NoteId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NoteImages", x => x.ImageId);
+                    table.ForeignKey(
+                        name: "FK_NoteImages_Notes_NoteId",
+                        column: x => x.NoteId,
+                        principalTable: "Notes",
+                        principalColumn: "NoteId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NoteThreads",
+                columns: table => new
+                {
+                    ThreadId = table.Column<string>(type: "text", nullable: false),
+                    NoteId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NoteThreads", x => new { x.ThreadId, x.NoteId });
+                    table.ForeignKey(
+                        name: "FK_NoteThreads_Notes_NoteId",
+                        column: x => x.NoteId,
+                        principalTable: "Notes",
+                        principalColumn: "NoteId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NoteThreads_Threads_ThreadId",
+                        column: x => x.ThreadId,
+                        principalTable: "Threads",
+                        principalColumn: "Thread",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -287,6 +287,26 @@ namespace MyWebApp.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NoteImages_NoteId",
+                table: "NoteImages",
+                column: "NoteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notes_UserId",
+                table: "Notes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NoteThreads_NoteId",
+                table: "NoteThreads",
+                column: "NoteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfileImages_UserId",
+                table: "ProfileImages",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -310,25 +330,19 @@ namespace MyWebApp.Migrations
                 name: "NoteImages");
 
             migrationBuilder.DropTable(
-                name: "Notes");
-
-            migrationBuilder.DropTable(
                 name: "NoteThreads");
-
-            migrationBuilder.DropTable(
-                name: "PreviousNoteImages");
-
-            migrationBuilder.DropTable(
-                name: "PreviousNotes");
 
             migrationBuilder.DropTable(
                 name: "ProfileImages");
 
             migrationBuilder.DropTable(
-                name: "Threads");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Notes");
+
+            migrationBuilder.DropTable(
+                name: "Threads");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

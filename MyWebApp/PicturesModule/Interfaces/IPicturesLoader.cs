@@ -12,8 +12,8 @@ namespace MyWebApp.PicturesModule.Interfaces
         void LoadDefaultImage();
         UserImageModel GetDefaultProfileImage();
         NoteImageModel GetDefaultNoteImage();
-        List<NoteImageModel> LoadDemoNoteImages(NoteModel[] notes);
-        List<UserImageModel> LoadDemoProfileImages(UserModel[] users);
+        List<NoteImageModel> LoadDemoNoteImages(List<NoteModel> notes);
+        List<UserImageModel> LoadDemoProfileImages(List<UserModel> users);
         Task<UserImageModel> GetUserCurrentProfilePicture(UserModel? user);
     }
 }

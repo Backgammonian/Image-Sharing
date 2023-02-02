@@ -43,8 +43,11 @@ namespace MyWebApp.Repository
             return new CredentialsViewModel() 
             { 
                 User = asNoTracking ?
-                    await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == currentUserId) :
-                    await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == currentUserId),
+                    await _dbContext.Users
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Id == currentUserId) :
+                    await _dbContext.Users
+                        .FirstOrDefaultAsync(x => x.Id == currentUserId),
                 Credentials = credentials
             };
         }

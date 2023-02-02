@@ -34,9 +34,9 @@
     {
         foreach (var availableThread in availableThreads)
         {
-            if (availableThread.Value == threadOfNote.Thread)
+            if (availableThread.Value == threadOfNote.ThreadId)
             {
-                Model.SelectedThread = threadOfNote.Thread;
+                Model.SelectedThread = threadOfNote.ThreadId;
                 availableThread.Selected = true;
 
                 break;

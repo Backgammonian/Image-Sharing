@@ -1,19 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MyWebApp.Models
+﻿namespace MyWebApp.Models
 {
     public class NoteThreadModel
     {
-        [Key]
-        public string Id { get; set; } = string.Empty;
-
-
-        [ForeignKey(nameof(ThreadModel))]
-        public string Thread { get; set; } = string.Empty;
-
-
-        [ForeignKey(nameof(NoteModel))]
+        public string ThreadId { get; set; } = string.Empty;
         public string NoteId { get; set; } = string.Empty;
+        public ThreadModel? Thread { get; set; }
+        public NoteModel? Note { get; set; }
     }
 }

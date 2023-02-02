@@ -1,6 +1,4 @@
-﻿using MyWebApp.Models;
-
-namespace MyWebApp.ViewModels
+﻿namespace MyWebApp.ViewModels
 {
     public class AllUsersViewModel
     {

@@ -24,7 +24,11 @@ namespace MyWebApp.Repository
 
         public async Task<IEnumerable<UserModel>> GetUsersSlice(int offset, int size)
         {
-            return await _dbContext.Users.AsNoTracking().Skip(offset).Take(size).ToListAsync();
+            return await _dbContext.Users
+                .AsNoTracking()
+                .Skip(offset)
+                .Take(size)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<UserSummaryViewModel>> GetUsers(int offset, int size)
@@ -51,12 +55,15 @@ namespace MyWebApp.Repository
 
         public async Task<UserModel?> GetUser(string userId)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            return await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Id == userId);
         }
 
         public async Task<UserModel?> GetUserNoTracking(string userId)
         {
-            return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
+            return await _dbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == userId);
         }
 
         public async Task<UserImageModel> GetUsersCurrentProfilePicture(string userId)
@@ -73,7 +80,11 @@ namespace MyWebApp.Repository
                 return _picturesLoader.GetDefaultProfileImage();
             }
 
-            var profilePicture = await _dbContext.ProfileImages.AsNoTracking().OrderBy(x => x.UploadTime).LastOrDefaultAsync(x => x.UserId == user.Id);
+            var profilePicture = await _dbContext.ProfileImages
+                .AsNoTracking()
+                .OrderBy(x => x.UploadTime)
+                .LastOrDefaultAsync(x => x.UserId == user.Id);
+
             return profilePicture ?? _picturesLoader.GetDefaultProfileImage();
         }
 
@@ -85,12 +96,18 @@ namespace MyWebApp.Repository
                 return Enumerable.Empty<NoteModel>();
             }
 
-            return await _dbContext.Notes.AsNoTracking().Where(x => x.UserId == user.Id).Skip(offset).Take(size).ToListAsync();
+            return await _dbContext.Notes
+                .AsNoTracking()
+                .Where(x => x.UserId == user.Id)
+                .Skip(offset)
+                .Take(size)
+                .ToListAsync();
         }
 
         public async Task<int> GetCountOfUserNotes(string userId)
         {
-            return await _dbContext.Notes.CountAsync(x => x.UserId == userId);
+            return await _dbContext.Notes
+                .CountAsync(x => x.UserId == userId);
         }
 
         public async Task<UserDetailsViewModel> GetUserDetails(string userId)

@@ -5,15 +5,24 @@ using MyWebApp.PicturesModule.Interfaces;
 
 namespace MyWebApp.Data
 {
-    public static class Seeder
+    public class Seeder
     {
-        public static void EnsureCreated(IApplicationBuilder applicationBuilder)
+        private readonly IApplicationBuilder _applicationBuilder;
+
+        public Seeder(IApplicationBuilder applicationBuilder)
         {
-            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
+            _applicationBuilder = applicationBuilder;
+        }
+
+        public void EnsureCreated()
+        {
+            using var serviceScope = _applicationBuilder.ApplicationServices.CreateScope();
 
             var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
             if (dbContext == null)
             {
+                Console.WriteLine("(EnsureCreated) Can't get the ApplicationDbContext");
+
                 return;
             }
 
@@ -21,9 +30,9 @@ namespace MyWebApp.Data
             dbContext.Database.EnsureCreated();
         }
 
-        public static async Task<SeedUsersModel> SeedUsersAndRoles(IApplicationBuilder applicationBuilder)
+        public async Task SeedData()
         {
-            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
+            using var serviceScope = _applicationBuilder.ApplicationServices.CreateScope();
 
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
@@ -38,10 +47,10 @@ namespace MyWebApp.Data
 
             var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
             var adminUserEmail = "notadmin@gmail.com";
-            var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
-            if (adminUser == null)
+            var admin = await userManager.FindByEmailAsync(adminUserEmail);
+            if (admin == null)
             {
-                var newAdminUser = new UserModel()
+                var newAdmin = new UserModel()
                 {
                     Id = "notadmin",
                     UserName = "TotallyNotAdmin",
@@ -50,10 +59,10 @@ namespace MyWebApp.Data
                     Status = "Totally not in charge!"
                 };
 
-                var result = await userManager.CreateAsync(newAdminUser, "12345678");
-                await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
+                var result = await userManager.CreateAsync(newAdmin, "12345678");
+                await userManager.AddToRoleAsync(newAdmin, UserRoles.Admin);
 
-                adminUser = newAdminUser;
+                admin = newAdmin;
             }
 
             var users = new List<UserModel>();
@@ -90,26 +99,19 @@ namespace MyWebApp.Data
                 i += 1;
             }
 
-            return new SeedUsersModel()
-            {
-                Admin = adminUser,
-                Users = users.ToArray()
-            };
-        }
-
-        public static async Task SeedData(IApplicationBuilder applicationBuilder, UserModel admin, UserModel[] users)
-        {
-            using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
-
             var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
             if (dbContext == null)
             {
+                Console.WriteLine("(SeedData) Can't get the ApplicationDbContext");
+
                 return;
             }
 
             var picturesLoader = serviceScope.ServiceProvider.GetService<IPicturesLoader>();
             if (picturesLoader == null)
             {
+                Console.WriteLine("(SeedData) Can't get the IPicturesLoader");
+
                 return;
             }
 
@@ -238,76 +240,45 @@ namespace MyWebApp.Data
             {
                 new NoteThreadModel()
                 {
-                    Id = "1",
-                    Thread = tags[0].Thread,
+                    ThreadId = tags[0].Thread,
                     NoteId = notes[0].NoteId
                 },
 
                 new NoteThreadModel()
                 {
-                    Id = "2",
-                    Thread = tags[1].Thread,
+                    ThreadId = tags[1].Thread,
                     NoteId = notes[1].NoteId
                 },
 
                 new NoteThreadModel()
                 {
-                    Id = "3",
-                    Thread = tags[2].Thread,
+                    ThreadId = tags[2].Thread,
                     NoteId = notes[2].NoteId
                 },
 
                 new NoteThreadModel()
                 {
-                    Id = "4",
-                    Thread = tags[0].Thread,
+                    ThreadId = tags[0].Thread,
                     NoteId = notes[3].NoteId
                 },
 
                 new NoteThreadModel()
                 {
-                    Id = "5",
-                    Thread = tags[1].Thread,
+                    ThreadId = tags[1].Thread,
                     NoteId = notes[4].NoteId
                 },
             };
 
             picturesLoader.LoadDefaultImage();
-            var noteImages = picturesLoader.LoadDemoNoteImages(notes.ToArray());
+            var noteImages = picturesLoader.LoadDemoNoteImages(notes);
             var userImages = picturesLoader.LoadDemoProfileImages(users);
 
-            if (dbContext.ProfileImages != null &&
-                !dbContext.ProfileImages.Any())
-            {
-                await dbContext.ProfileImages.AddAsync(picturesLoader.GetDefaultProfileImage());
-                await dbContext.ProfileImages.AddRangeAsync(userImages);
-            }
-
-            if (dbContext.Notes != null &&
-                !dbContext.Notes.Any())
-            {
-                await dbContext.Notes.AddRangeAsync(notes);
-            }
-
-            if (dbContext.NoteImages != null &&
-                !dbContext.NoteImages.Any())
-            {
-                await dbContext.NoteImages.AddAsync(picturesLoader.GetDefaultNoteImage());
-                await dbContext.NoteImages.AddRangeAsync(noteImages);
-            }
-
-            if (dbContext.Threads != null &&
-                !dbContext.Threads.Any())
-            {
-                await dbContext.Threads.AddRangeAsync(tags);
-            }
-
-            if (dbContext.NoteThreads != null &&
-                !dbContext.NoteThreads.Any())
-            {
-                await dbContext.NoteThreads.AddRangeAsync(threadsOfNotes);
-            }
-
+            await dbContext.Notes.AddRangeAsync(notes);
+            await dbContext.NoteImages.AddRangeAsync(noteImages);
+            await dbContext.ProfileImages.AddRangeAsync(userImages);
+            await dbContext.Threads.AddRangeAsync(tags);
+            await dbContext.NoteThreads.AddRangeAsync(threadsOfNotes);
+            
             await dbContext.SaveChangesAsync();
         }
     }

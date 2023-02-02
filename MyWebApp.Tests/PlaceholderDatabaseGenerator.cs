@@ -65,9 +65,8 @@ namespace MyWebApp.Tests
 
                 noteThreads.Add(new NoteThreadModel()
                 {
-                    Id = id + "nt",
                     NoteId = id,
-                    Thread = thread
+                    ThreadId = thread
                 });
             }
 

@@ -19,4 +19,4 @@ Simple Web platform for image sharing. It was built using ASP.NET Core MVC.
 ![showcase-1](showcase/showcase-1.jpg)
 ![showcase-2](showcase/showcase-2.jpg)
 ## Entity relationship diagram
-![erd](entity-relationship-diagram/erd.jpg)
+![Entity relationship diagram](entity-relationship-diagram/imagesharing-erd.png)

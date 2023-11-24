@@ -1,5 +1,7 @@
 # Image-Sharing
 Simple Web platform for image sharing. It was built using ASP.NET Core MVC.
+
+This project was created in educational purposes only.
 ## Features
 * Registration
 * Authentication & authorization
